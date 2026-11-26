@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Pinned verification & figure-generation dependencies
-pytest==9.0.2
+pytest==9.0.3
 hypothesis==6.151.9
 numpy==2.4.3
 scipy==1.17.1
