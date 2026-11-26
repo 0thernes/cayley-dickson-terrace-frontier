@@ -13,6 +13,21 @@ date-released: "2026-11-26"
 license: "Apache-2.0"
 repository-code: "https://github.com/0thernes/cayley-dickson-terrace-frontier"
 url: "https://0thernes.github.io/cayley-dickson-terrace-frontier/"
+abstract: >-
+  Zero-Mathlib Lean 4.35.0 proofs of all-n counting identities for 2-blade
+  nullities in the explicit Cayley-Dickson sign table, for all signatures
+  (Pillar 1 and the midpoint law) or the Euclidean signature (Pillar 2); the
+  bound n+5 for coordinate right-multiplier families in the Euclidean CD_n,
+  which equals the Hurwitz-Radon number for n = 3, 4, 5 and is smaller for
+  n >= 6; and finite certificates for sedenion, pathion and chingon
+  coordinate subsets, including a re-verification of de Marrais's 7
+  box-kites. The Lean statements concern the sign table and block counts;
+  that these counts equal annihilator dimensions is a lemma proved in the
+  paper. The bound r_max(CD_5) = 14 and the CD_6-CD_8 tables rest on exact
+  computation outside Lean. The divisibility of nullities by 4 is the
+  2-blade case of a theorem of Moreno. The title is that of the frozen
+  v1.0.0 manuscript; its "dimension-64 rupture" refers to coordinate
+  right-multiplier families in the Euclidean CD_n only. See ERRATA.md.
 keywords:
   - cayley-dickson-algebras
   - sedenions

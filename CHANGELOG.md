@@ -2,6 +2,12 @@
 
 All notable changes to `cayley-dickson-terrace-frontier` are documented here following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and Semantic Versioning.
 
+## [Unreleased] - 2026-11-26
+
+### Changed
+- **Claim documents corrected to match the 2026-11-26 statement audit** ([audit log](https://github.com/0thernes/0thernes-research-archive/blob/main/docs/reviews/2026-11-26-statement-audit.md)). `README.md`, `CLAIMS.md`, `LIMITATIONS.md`, `CITATION.cff` (abstract) and `docs/` now state that the Lean nullity results concern the explicit sign table and block counts (the link to annihilator dimensions is a paper lemma); describe Pillar 3 as coordinate right-multiplier families in the Euclidean $\mathrm{CD}_n$ and `T3c` as arithmetic on the $\rho(2^n)$ formula; credit Moreno for $4 \mid \nu$ and de Marrais for the 42 assessors and 7 box-kites, and cite Zhilina (2021); restrict "equality only at $n = 4$" to $n \ge 4$; describe `T4d`'s rigidity conjuncts as elementary lemmas unrelated to Zhang–Zhu; drop the comparison of $r_{\max}(\mathrm{CD}_5)$ with Yiu's formula; and replace "24 live-verified / title-verified citations" with "22 of 24 identifiers resolve live; titles not compared".
+- **`ERRATA.md`** now lists the corresponding errors in the frozen manuscript, known issues in the Lean code and CI, and the wrong `hurwitz1898` DOI. No Lean, paper, data or CI file was changed. `MANIFEST.sha256` and `llms-full.txt` were regenerated with `scripts/generate_manifests.py`.
+
 ## [1.0.0] - 2026-11-26
 
 ### Added

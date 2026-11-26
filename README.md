@@ -7,30 +7,46 @@
 
 **The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and the Dimension-64 Hurwitz–Radon Rupture Across Generalized Cayley–Dickson Algebras**
 
+*This is the title of the frozen v1.0.0 manuscript.* The "dimension-64 rupture" in the title concerns coordinate right-multiplier families in the Euclidean $\mathrm{CD}_n$ only. It compares the bound $n+5$ with the classical formula for $\rho(2^n)$; it says nothing about general bilinear maps. See [Scope of the Lean statements](#scope-of-the-lean-statements) and [`ERRATA.md`](ERRATA.md).
+
 *Author:* **Alexander Stephen Donahue** (Independent Researcher, Spokane, WA, USA · ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648) · `0_0@0thernes.art`)  
 *Maintenance status:* **Active** (v1.0.0 — frozen proof & manuscript archive; errata and community verification issues welcomed).
 
 ---
 
-## Executive Highlights
+## Summary
 
-This repository presents a **zero-Mathlib, six-kernel Lean 4.35.0 formalization**, **tri-language differential engine suite (Rust, strict ISO C11, Python)**, **interactive 3D WebGL observatory + Proof Blueprint**, and **17-page AMS-LaTeX white paper** proving four tightly coupled structural laws across the entire infinite tower of generalized Cayley–Dickson algebras $\mathrm{CD}_n(\gamma)$ ($\dim = 2^n$, $\gamma \in \{\pm 1\}^n$):
+This repository contains a zero-Mathlib Lean 4.35.0 formalization, differential checkers in Rust, ISO C11 and Python, an interactive WebGL page with a proof blueprint, and a 17-page manuscript. The results are all-$n$ counting identities for the nullities of 2-blades $e_i+e_j$ in the explicit Cayley–Dickson sign table of $\mathrm{CD}_n(\gamma)$ ($\dim = 2^n$, $\gamma \in \{\pm 1\}^n$), the bound $n+5$ for coordinate right-multiplier families in the Euclidean $\mathrm{CD}_n$, and finite certificates for the sedenions, pathions and chingons. Pillar 1 and the midpoint law `T2f` hold for every signature $\gamma$; the rest of Pillar 2 and all of Pillar 3 concern the Euclidean signature only.
 
-1. **Pillar 1 — Nilpotent Mirror Conservation (`T1a`–`T1e`, `[LEAN-6K]`):**
-   - Every generalized basis sign cocycle factorizes as $\sigma_n^\gamma(i,j) = \sigma_n^{\mathrm{std}}(i,j)\,(-1)^{\mathrm{popcount}(i\,\&\,j\,\&\,\mathrm{flip}(\gamma))}$.
-   - Every $2\times 2$ zero-divisor block determinant sign $\delta_n^\gamma(i,j,k)$ flips by $(-1)^{\mathrm{popcount}((i\oplus j)\,\&\,\mathrm{flip}(\gamma))}$, completely independent of $k$.
-   - Non-nilpotent 2-blades keep their Euclidean nullity while nilpotent 2-blades undergo exact mirror inversion $\nu_n^\gamma(i,j) = 2^{n-1} - \nu_n^{\mathrm{std}}(i,j)$, conserving every mirror-pair histogram sum $H_n^\gamma(v) + H_n^\gamma(2^{n-1}-v)$ and pinning $H_n^\gamma(2^{n-2})$ across all $2^n$ signatures.
-2. **Pillar 2 — The Dyadic-Palindromic Terrace Law & Sharp BDI Separation (`T2a`–`T2f`, `[LEAN-6K]`):**
-   - Exact four-branch doubling recurrence for $\nu_{n+1}^{\mathrm{std}}$, yielding closed-form all-$n$ laws for total nullity mass $M_n = 8(2^{n-1}-1)(2^{n-2}-1)(2^{n-3}-1)$, zero-divisor-free counts $H_n^{\mathrm{std}}(0) = (6n-9)2^{n-2}+3$, exact even/odd bin interleaving $H_{n+1}^{\mathrm{std}}(8m) = H_{n+1}^{\mathrm{std}}(2^n-4-8m) = 2 H_n^{\mathrm{std}}(4m)$, interior palindromic symmetry, and exact top-bin jump $+3(2^n-2)$.
-   - Sharp separation from the Biss–Dugger–Isaksen ceiling $2^n - 4n + 4$: equality holds **uniquely** at $n = 4$ ($4 = 4$) and strict separation holds for **all $n \ge 5$** ($12 < 16$ at $n = 5$, $28 < 44$ at $n = 6$).
-   - **Universal All-Signature Midpoint 42 Law:** $H_n^\gamma(2^{n-2}) = 42 \cdot 2^{n-4}$ for **every $n \ge 4$** and **every signature $\gamma \in \{\pm 1\}^n$**.
-3. **Pillar 3 — The Dimension-64 Hurwitz–Radon Bott Rupture (`T3a`–`T3d`, `[LEAN-6K]`):**
-   - Exact doubling law of the right-compatibility graph $G_n^{\mathrm{comp}}$, uniqueness of the two universal right-multipliers $\{e_0, e_{2^{n-1}}\}$ ($\forall n \ge 4$), and exact clique number $\omega(G_n^{\mathrm{comp}}) = n + 5$ ($\forall n \ge 3$).
-   - Saturates the Hurwitz–Radon ceiling $\rho(2^n)$ at dimensions $8, 16, 32$ ($8, 9, 10$), then ruptures irrevocably at **dimension 64** ($11 < 12 = \rho(64)$) with diverging deficit $\rho(2^n) - (n + 5) \ge n - 5$ for all $n \ge 6$, while an explicit doubling tower constructs $[2^{n-1}, 2(n+4), 2^n]$ pairs for all $n \ge 4$.
-4. **Pillar 4 — Sedenion Triple-42 Duality, Pathion Symmetric Rupture & Base-Field Rigidity (`T4a`–`T4d`, `[LEAN-6K]` + `[EXACT-COMP]`):**
-   - Exhaustive classification over all $2^{16} = 65{,}536$ sedenion coordinate subspaces: **42** bad affine 2-planes, **42** Box-Kite assessors forming $7 \times K_{2,2,2}$ (spectrum $\{4^7, 0^{21}, (-2)^{14}\}$), and **42** maximal 10D norm-multiplicative subspaces with exact Fano split $7 + 28 + 7 = 42$ and **0** subspaces of dimension $\ge 11$.
-   - Exhaustive split-phase tables for $\mathrm{CD}_4(\gamma)$ ($1{:}1{:}7{:}7$) and $\mathrm{CD}_5(\gamma)$ ($4{\times}1 + 4{\times}7$) in Lean (`[LEAN-6K]`), extended to all 448 algebras of $\mathrm{CD}_6(\gamma)$–$\mathrm{CD}_8(\gamma)$ (discovering interior spectral gaps starting at $\dim = 64$) across Rust, C11, and Python (`[EXACT-COMP]`).
-   - Exact HiGHS MILP certificate proving Pathion symmetric coordinate rupture $r_{\max}(\mathrm{CD}_5) = 14 < 16$ relative to Yiu's integral $[16,16,32]$ form (`[EXACT-COMP]`), certified $[14,14,32]$ and $[16,16,64]$ witnesses, and pure-intercalate integral-domain / Gaussian-integer ($\mathbb{Z}[i] \subset \mathbb{Q}(i)$) rigidity illuminating Zhang–Zhu (2026) (`[LEAN-6K]`).
+### Scope of the Lean statements
+
+- The Lean development defines no algebra, linear map or kernel. It proves statements about the explicit sign table (`cdSign`, `cdSignGamma`) and about block counts. `twobladeNullity` is half the number of indices $k$ for which the $2\times 2$ block of left multiplication by $e_i+e_j$ on $\{e_k, e_{k\oplus i\oplus j}\}$ is singular. That this count equals $\dim \mathrm{Ann}(e_i+e_j)$ is a lemma proved in the paper (the $2\times 2$ block argument), not in Lean.
+- Results tagged `[LEAN-6K]` are kernel-checked by Lean (`lake build`, `leanchecker`, `leanchecker-paranoid`); CI also replays them with `lake check --paranoid` and `lake comparator --paranoid` on 6 kernels. The 30 audited declarations use at most `propext`, `Classical.choice` and `Quot.sound` (listed below).
+- Results tagged `[EXACT-COMP]` rest on exact computation outside Lean (Rust, C11, Python and a HiGHS MILP certificate).
+- Prior work. The divisibility $4 \mid \nu$ is the 2-blade case of Moreno's theorem that only multiples of four occur as annihilator dimensions in Cayley–Dickson algebras (as stated by Biss, Dugger and Isaksen, arXiv:math/0511691); the Lean proof is an independent re-proof for 2-blades. The 42 sedenion assessors and their 7 box-kites are due to de Marrais (arXiv:math/0011260). Zhilina (Int. J. Algebra Comput. 31 (2021); arXiv:2608.28176) classifies the zero divisors whose two components are standard basis elements up to sign; the overlap with `T1c`, `T2a` and `T2c` has not been assessed. The manuscript cites neither the Moreno divisibility for `T2b` nor Zhilina; see [`ERRATA.md`](ERRATA.md).
+
+### Results
+
+1. **Pillar 1 — Signature change and 2-blade nullities (`T1a`–`T1e`, `[LEAN-6K]`, all $n$, all $\gamma$):**
+   - The generalized sign table factorizes as $\sigma_n^\gamma(i,j) = \sigma_n^{\mathrm{std}}(i,j)\,(-1)^{\mathrm{popcount}(i\,\&\,j\,\&\,\mathrm{flip}(\gamma))}$.
+   - The sign $\delta_n^\gamma(i,j,k)$ of each $2\times 2$ block determinant flips by $(-1)^{\mathrm{popcount}((i\oplus j)\,\&\,\mathrm{flip}(\gamma))}$, independently of $k$.
+   - Hence the block-count nullity is either kept, $\nu_n^\gamma(i,j) = \nu_n^{\mathrm{std}}(i,j)$, or replaced by $2^{n-1} - \nu_n^{\mathrm{std}}(i,j)$. The mirror-pair sums $H_n^\gamma(v) + H_n^\gamma(2^{n-1}-v)$ and the midpoint bin $H_n^\gamma(2^{n-2})$ do not depend on $\gamma$.
+   - `T1c` states only the scalar part of $(e_i+e_j)^2$: $\sigma_n^\gamma(i,i)+\sigma_n^\gamma(j,j) = 0 \iff \mathrm{parity}_n((i\oplus j)\,\&\,\mathrm{flip}(\gamma)) = 1$. The cross term is not part of the Lean statement.
+2. **Pillar 2 — Euclidean nullity recurrence and closed forms (`T2a`–`T2e`) and the midpoint law (`T2f`), `[LEAN-6K]`:**
+   - A four-branch doubling recurrence for $\nu_{n+1}^{\mathrm{std}}$ gives closed forms for all $n$: total nullity mass $M_n = 8(2^{n-1}-1)(2^{n-2}-1)(2^{n-3}-1)$, the count $H_n^{\mathrm{std}}(0) = (6n-9)2^{n-2}+3$ of 2-blades with nullity $0$, the bin interleaving $H_{n+1}^{\mathrm{std}}(8m) = H_{n+1}^{\mathrm{std}}(2^n-4-8m) = 2 H_n^{\mathrm{std}}(4m)$, an interior palindrome, and the top-bin jump $+3(2^n-2)$.
+   - For $n \ge 3$, $4 \mid \nu_n^{\mathrm{std}}$ (Moreno's divisibility in the 2-blade case, re-proved in Lean), and for $n \ge 4$, $\nu_n^{\mathrm{std}} \le 2^{n-1}-4$, attained. This ceiling is below the Biss–Dugger–Isaksen bound $2^n - 4n + 4$ for every $n \ge 5$ ($12 < 16$ at $n = 5$, $28 < 44$ at $n = 6$); among $n \ge 4$ the two are equal only at $n = 4$ ($4 = 4$). In Lean this comparison is arithmetic on the two closed formulas; the Biss–Dugger–Isaksen theorem itself is not formalized.
+   - **Midpoint law (`T2f`):** $H_n^\gamma(2^{n-2}) = 42 \cdot 2^{n-4}$ for every $n \ge 4$ and every signature $\gamma \in \{\pm 1\}^n$. The case $n = 4$ is de Marrais's count of 42 assessors.
+3. **Pillar 3 — Coordinate right-multiplier families in the Euclidean $\mathrm{CD}_n$ (`T3a`–`T3d`, `[LEAN-6K]`):**
+   - Doubling law of the right-compatibility graph $G_n^{\mathrm{comp}}$; for $n \ge 4$ only $e_0$ and $e_{2^{n-1}}$ are compatible with every index; for $n \ge 3$ the largest pairwise compatible coordinate set has $n + 5$ elements (attained), and each such set gives a norm-multiplicative $[2^n, n+5, 2^n]$ coordinate pair; an explicit doubling tower gives $[2^{n-1}, 2(n+4), 2^n]$ coordinate pairs for $n \ge 4$.
+   - `T3c` is arithmetic on the formula $\rho(2^n) = 8\lfloor n/4\rfloor + 2^{n \bmod 4}$: $n + 5 = \rho(2^n)$ for $n = 3, 4, 5$, and $n + 5 < \rho(2^n)$ with gap $\ge n - 5$ for all $n \ge 6$ (first at dimension 64: $11 < 12$). With `T3b`, coordinate right-multiplier families in the Euclidean $\mathrm{CD}_n$ fall short of $\rho(2^n)$ from dimension 64 on. That the formula is the Hurwitz–Radon number is classical and not proved in Lean. Nothing is shown about non-coordinate subspaces.
+4. **Pillar 4 — Sedenion, pathion and chingon finite certificates (`T4a`–`T4d` `[LEAN-6K]`; `C1`, `C2` `[EXACT-COMP]`):**
+   - Exhaustive check over all $2^{16} = 65{,}536$ sedenion coordinate subsets: 42 of the 140 affine 2-planes are bad; exactly 42 coordinate subsets of size 10 are norm-multiplicative, split $7 + 28 + 7$ by their overlap with $e_0,\dots,e_7$; none has size $\ge 11$.
+   - The 42 sedenion box-kite assessors form de Marrais's 7 box-kites, each an octahedron $K_{2,2,2}$ (4-regular, 84 edges in total; spectrum $\{4^7, 0^{21}, (-2)^{14}\}$). This is a formal re-verification of a known result (de Marrais 2000).
+   - Over all signatures, the histogram profiles of $\mathrm{CD}_4(\gamma)$ and $\mathrm{CD}_5(\gamma)$ occur with multiplicities $1{:}1{:}7{:}7$ and $4{\times}1 + 4{\times}7$ (Lean). For the 448 algebras $\mathrm{CD}_6(\gamma)$–$\mathrm{CD}_8(\gamma)$ the tables were computed in Rust, C11 and Python (`[EXACT-COMP]`); interior spectral gaps first occur at dimension 64.
+   - Norm-multiplicative coordinate sets of size 14 in $\mathrm{CD}_5$ and 16 in $\mathrm{CD}_6$ exist (Lean), giving $[14,14,32]$ and $[16,16,64]$ coordinate pairs. A HiGHS MILP certificate outside Lean shows that no symmetric norm-multiplicative coordinate subset of $\mathrm{CD}_5$ has 16 elements, so $r_{\max}(\mathrm{CD}_5) = 14$ (`[EXACT-COMP]`). This bound concerns coordinate subsets of $\mathrm{CD}_5$ and is not comparable with Yiu's general integral $[16,16,32]$ formula.
+   - `T4d` also contains elementary lemmas: $c^2 = 1$ forces $c = \pm 1$ in an integral domain (with the factorization $(c-1)(c+1) = 0$ taken as a hypothesis), in $\mathbb{Z}$ and in $\mathbb{Z}[i]$. These are textbook facts and do not bear on the result of Zhang and Zhu (2026).
+
+What remains open is listed in [`LIMITATIONS.md`](LIMITATIONS.md); corrections to the frozen manuscript and known issues in the formal code are in [`ERRATA.md`](ERRATA.md).
 
 > **Explore Live:** Open the zero-CDN interactive 3D Box-Kite & Terrace Observatory at **[0thernes.github.io/cayley-dickson-terrace-frontier](https://0thernes.github.io/cayley-dickson-terrace-frontier/)** or the interactive [Proof Dependency Blueprint](https://0thernes.github.io/cayley-dickson-terrace-frontier/blueprint.html).
 
@@ -126,7 +142,7 @@ Every one of the 20 Palomar Comparator headline targets (`T1a`–`T4d` + master 
 | [`rust/`](rust/) | Zero-dependency Rust differential engine auditing all 496 algebras $\mathrm{CD}_4(\gamma)$–$\mathrm{CD}_8(\gamma)$ |
 | [`c/`](c/) | Strict ISO C11 (`-Wall -Wextra -Wpedantic -Werror -Wshadow -Wconversion`) verifier, ASan/UBSan suite, 100k + libFuzzer harnesses |
 | [`src/cd_terrace/`](src/cd_terrace/) & [`reference/`](reference/) | Exact Python engine + independent naive recursive / exact $\mathbb{Q}$ Gaussian elimination oracle |
-| [`paper/`](paper/) & [`dist/`](dist/) | 17-page zero-warning AMS-LaTeX white paper, 5 Okabe-Ito vector figures, 24 live-verified BibTeX entries, frozen PDF & clean-room `arxiv_submission.tar.gz` |
+| [`paper/`](paper/) & [`dist/`](dist/) | 17-page zero-warning AMS-LaTeX white paper, 5 Okabe-Ito vector figures, 24 BibTeX entries (22 carry a DOI or arXiv identifier that resolves live; the checker does not compare titles), frozen PDF & clean-room `arxiv_submission.tar.gz` |
 | [`docs/site/`](docs/site/) | Zero-CDN interactive 3D Sedenion Box-Kite & Terrace Observatory (`index.html`) + Proof Blueprint (`blueprint.html`) |
 | [`data/`](data/) & [`results/`](results/) | Frozen JSON computational certificates, `data/MANIFEST.sha256`, and `results/lean_axioms.txt` |
 | [`CLAIMS.md`](CLAIMS.md) & [`LIMITATIONS.md`](LIMITATIONS.md) | Granular theorem-to-evidence ledger and explicit epistemic boundaries |
