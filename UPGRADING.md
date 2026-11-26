@@ -2,7 +2,7 @@
 
 ## Current Version: `1.0.0`
 
-`1.0.0` is the initial frozen release of `cayley-dickson-terrace-frontier` (`0TH-2026-017`).
+`1.0.0` is the initial frozen release of `cayley-dickson-terrace-frontier` (`0TH-2026-019`).
 
 ### Upgrading Lean Toolchains in Future Releases
 - This repository pins `leanprover/lean4:v4.35.0` in [`lean/lean-toolchain`](lean/lean-toolchain) with zero Mathlib dependencies.

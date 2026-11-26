@@ -192,7 +192,7 @@ def build_html() -> str:
   <header>
     <div class="wrap">
       <h1>Lean 4.35.0 Six-Kernel Proof Blueprint</h1>
-      <p class="sub">Cayley-Dickson Terrace Frontier (0TH-2026-017) — Zero-Mathlib Constructive Dependency Graph</p>
+      <p class="sub">Cayley-Dickson Terrace Frontier (0TH-2026-019) — Zero-Mathlib Constructive Dependency Graph</p>
       <nav aria-label="Primary navigation">
         <a href="index.html">← Interactive 3D Observatory</a>
         <a href="https://github.com/0thernes/cayley-dickson-terrace-frontier">GitHub Repository</a>

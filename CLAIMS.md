@@ -1,6 +1,6 @@
 # Claims & Verification Ledger (`CLAIMS.md`)
 
-Every mathematical and computational claim in `cayley-dickson-terrace-frontier` (`0TH-2026-017`) is explicitly indexed below with its exact epistemic tag, machine-checked declaration or computational witness, and falsification test.
+Every mathematical and computational claim in `cayley-dickson-terrace-frontier` (`0TH-2026-019`) is explicitly indexed below with its exact epistemic tag, machine-checked declaration or computational witness, and falsification test.
 
 - **`[LEAN-6K]`**: Formally proved from scratch in zero-Mathlib Lean 4.35.0, audited via `VerifyAxioms.lean` strictly within `{propext, Classical.choice, Quot.sound}`, and replayed across 6 independent kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`) via `lake check --paranoid` and `lake comparator --config comparator.json --paranoid`.
 - **`[EXACT-COMP]`**: Verified bit-for-bit using exact integer/rational arithmetic or certified zero-gap HiGHS MILP across independent implementations (Rust, ISO C11, Python), with frozen SHA-256 JSON artifacts in `data/`.

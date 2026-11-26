@@ -20,7 +20,7 @@
 
 ## Offsite Mirror, Backup Bundle & Preservation
 - **Offline Git Bundle Backup:** Create a full self-contained backup bundle with `git bundle create cayley-dickson-terrace-frontier-v1.0.0.bundle --all`.
-- **Master Research Archive Mirror:** Every frozen PDF, pinned commit hash, and SHA-256 manifest is mirrored and registered under `0TH-2026-017` in [`0thernes/0thernes-research-archive`](https://github.com/0thernes/0thernes-research-archive).
+- **Master Research Archive Mirror:** Every frozen PDF, pinned commit hash, and SHA-256 manifest is mirrored and registered under `0TH-2026-019` in [`0thernes/0thernes-research-archive`](https://github.com/0thernes/0thernes-research-archive).
 - **Software Heritage Mirror:** The public repository is archived via Software Heritage Save Code Now for permanent SWHID preservation.
 
 ## Troubleshooting

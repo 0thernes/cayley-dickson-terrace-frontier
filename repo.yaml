@@ -6,7 +6,7 @@ description: "Zero-Mathlib Lean 4.35.0 six-kernel formalization of the Dyadic-Pa
 owner: "0thernes"
 year: "2026"
 version: "1.0.0"
-archive_id: "0TH-2026-017"
+archive_id: "0TH-2026-019"
 project_type: research
 stack: [lean4, rust, c11, python, latex, web]
 author:

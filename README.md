@@ -1,4 +1,4 @@
-# Cayley–Dickson Terrace Frontier (`0TH-2026-017`)
+# Cayley–Dickson Terrace Frontier (`0TH-2026-019`)
 
 [![CI](https://github.com/0thernes/cayley-dickson-terrace-frontier/actions/workflows/ci.yml/badge.svg)](https://github.com/0thernes/cayley-dickson-terrace-frontier/actions/workflows/ci.yml)
 [![Lean 4.35.0](https://img.shields.io/badge/Lean-4.35.0%20(Zero--Mathlib%20%C2%B7%206%20Kernels)-0072B2)](lean/formalization.yaml)

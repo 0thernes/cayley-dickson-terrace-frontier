@@ -1,6 +1,6 @@
 # Adversarial Red-Team Review (`docs/reviews/adversarial-red-team-review.md`)
 
-An adversarial skeptic audit was performed against every theorem, computational claim, script, and epistemic boundary in `cayley-dickson-terrace-frontier` (`0TH-2026-017`).
+An adversarial skeptic audit was performed against every theorem, computational claim, script, and epistemic boundary in `cayley-dickson-terrace-frontier` (`0TH-2026-019`).
 
 ## Attack Vectors Tested & Dispositions
 

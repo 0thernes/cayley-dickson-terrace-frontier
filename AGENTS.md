@@ -1,6 +1,6 @@
 # Agent & Contributor Guide (`AGENTS.md`)
 
-This repository (`cayley-dickson-terrace-frontier`, Archive ID `0TH-2026-017`) is a formally verified mathematical research project following the **Build Standard for LLMs v1.2.0** (`docs/build-standard.md`).
+This repository (`cayley-dickson-terrace-frontier`, Archive ID `0TH-2026-019`) is a formally verified mathematical research project following the **Build Standard for LLMs v1.2.0** (`docs/build-standard.md`).
 
 ## Non-Negotiable Rules
 1. **Lean 4.35.0 Strictness (`lean/`):**
