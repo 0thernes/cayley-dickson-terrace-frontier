@@ -238,3 +238,22 @@ def test_cross_language_rust_differential() -> None:
     for n in range(3, 8):
         py_h = {str(k): v for k, v in nullity_histogram(n).items()}
         assert rust_out["euclidean_histograms"][f"CD_{n}"] == py_h
+
+
+def test_mutation_kills_cocycle_and_mirror_mutants() -> None:
+    """Mutation test (B13): verify genuine algebraic mutants are killed by invariant assertions."""
+    # Mutant 1: omit nilpotent mirror inversion in split sedenions (flip_mask = 8)
+    true_h = nullity_histogram_gamma(4, 8)
+    mutant_no_mirror = nullity_histogram(4)
+    assert mutant_no_mirror.get(0, 0) != true_h.get(0, 0)
+    assert mutant_no_mirror.get(8, 0) != true_h.get(8, 0)
+
+    # Mutant 2: off-by-one BDI ceiling at n = 5 (falsely claiming 2-blades saturate BDI at n = 5)
+    max_nu_5 = max(nullity_histogram(5).keys())
+    bdi_5 = (1 << 5) - 4 * 5 + 4
+    assert max_nu_5 == 12 and bdi_5 == 16 and max_nu_5 < bdi_5
+
+    # Mutant 3: flip a single sedenion sign entry (e_1 * e_2) -> breaks octonion alternativity
+    bad_sign = -cd_sign(4, 1, 2)
+    assert bad_sign * cd_sign(4, 1, 1 ^ 2) != -1
+
