@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Proof Blueprint — Cayley-Dickson Terrace Frontier (Lean 4.35.0, 6 Kernels)</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #141c33;
+      --border: #2a3960;
+      --text: #eef2ff;
+      --muted: #b8c4e0;
+      --accent: #38bdf8;
+      --ok: #34d399;
+      --focus: #fbbf24;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    header {
+      padding: 2rem 1.5rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, #10172c 0%, var(--bg) 100%);
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; }
+    h1 { margin: 0 0 0.4rem; font-size: 1.85rem; }
+    .sub { color: var(--muted); margin: 0 0 1rem; }
+    nav a {
+      color: var(--accent);
+      text-decoration: none;
+      margin-right: 1.25rem;
+      font-weight: 600;
+    }
+    nav a:hover, nav a:focus { text-decoration: underline; outline: 2px solid var(--focus); outline-offset: 2px; }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 0.9rem;
+      margin: 1.5rem 0;
+    }
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+    }
+    .stat strong { display: block; font-size: 1.35rem; color: var(--ok); }
+    .stat span { color: var(--muted); font-size: 0.9rem; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+      padding: 0.5rem 0 3rem;
+    }
+    .node {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      transition: border-color 0.15s ease;
+    }
+    .node:hover, .node:focus { border-color: var(--accent); outline: none; }
+    .node-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; }
+    .nid { font-weight: 800; color: var(--accent); font-size: 0.95rem; }
+    .badge {
+      background: #064e3b;
+      color: #a7f3d0;
+      border: 1px solid #10b981;
+      border-radius: 999px;
+      padding: 0.12rem 0.6rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    h3 { margin: 0.25rem 0 0.35rem; font-size: 1.05rem; }
+    .mod { margin: 0 0 0.45rem; color: #93c5fd; font-size: 0.86rem; }
+    .desc { margin: 0 0 0.6rem; color: var(--text); font-size: 0.93rem; }
+    .deps { margin: 0; color: var(--muted); font-size: 0.84rem; }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.25rem 1.5rem;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Lean 4.35.0 Six-Kernel Proof Blueprint</h1>
+      <p class="sub">Cayley-Dickson Terrace Frontier (0TH-2026-017) — Zero-Mathlib Constructive Dependency Graph</p>
+      <nav aria-label="Primary navigation">
+        <a href="index.html">← Interactive 3D Observatory</a>
+        <a href="https://github.com/0thernes/cayley-dickson-terrace-frontier">GitHub Repository</a>
+        <a href="https://github.com/0thernes/cayley-dickson-terrace-frontier/blob/main/docs/statement-fidelity.md">Statement Fidelity Audit</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="summary" aria-label="Verification metrics">
+      <div class="stat"><strong>6 Kernels</strong><span>Lean C++, leanchecker-paranoid, lean4lean, nanoda, con-leche, con-ron</span></div>
+      <div class="stat"><strong>Zero Mathlib</strong><span>Pure Lean 4.35.0 module system, 0 sorry, 0 native_decide</span></div>
+      <div class="stat"><strong>22 DAG Nodes</strong><span>4 infinite all-n pillars + finite kernel certificates + 6 adversarial refutations</span></div>
+      <div class="stat"><strong>Standard Axioms</strong><span>Strictly within {propext, Classical.choice, Quot.sound}</span></div>
+    </section>
+    <section class="grid" aria-label="Theorem dependency graph">
+      <article class="node" data-id="B0" tabindex="0">
+        <div class="node-head">
+          <span class="nid">B0</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>Foundational Sign Cocycle &amp; Left Alternativity</h3>
+        <p class="mod"><code>CDTerrace.Basic</code></p>
+        <p class="desc">Defines cdSign, cdSignGamma, blockDelta, twobladeNullity, nullityHistGamma, rightCompat, hurwitzRadon; proves all-n ±1 valuation, anti-commutativity, and left alternativity e_i(e_i e_k) = -e_k.</p>
+        <p class="deps"><strong>Depends on:</strong> None (Foundational)</p>
+      </article>
+      <article class="node" data-id="T1a" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T1a</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T1a: Sign-Cocycle Factorization</h3>
+        <p class="mod"><code>CDTerrace.MirrorConservation</code></p>
+        <p class="desc">∀ n flip i j &lt; 2^n, σ_n^γ(i, j) = σ_n^std(i, j) · (-1)^popcount(i &amp; j &amp; flip).</p>
+        <p class="deps"><strong>Depends on:</strong> B0</p>
+      </article>
+      <article class="node" data-id="T1b" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T1b</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T1b: k-Independent Block-Sign Flip</h3>
+        <p class="mod"><code>CDTerrace.MirrorConservation</code></p>
+        <p class="desc">∀ n flip i j k, δ_n^γ(i, j, k) = (-1)^popcount((i⊕j) &amp; flip) · δ_n^std(i, j, k).</p>
+        <p class="deps"><strong>Depends on:</strong> T1a</p>
+      </article>
+      <article class="node" data-id="T1c" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T1c</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T1c: Exact Nilpotency Equivalence</h3>
+        <p class="mod"><code>CDTerrace.MirrorConservation</code></p>
+        <p class="desc">(e_i + e_j)^2 = 0 ⇔ parityBits n ((i⊕j) &amp; flip) = true for all n ≥ 1.</p>
+        <p class="deps"><strong>Depends on:</strong> T1a</p>
+      </article>
+      <article class="node" data-id="T1d" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T1d</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T1d: Nilpotent Mirror-Inversion Law</h3>
+        <p class="mod"><code>CDTerrace.MirrorConservation</code></p>
+        <p class="desc">Non-nilpotent ⇒ ν_n^γ = ν_n^std; nilpotent ⇒ ν_n^γ + ν_n^std = 2^(n-1).</p>
+        <p class="deps"><strong>Depends on:</strong> T1b, T1c</p>
+      </article>
+      <article class="node" data-id="T1e" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T1e</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T1e: Mirror-Pair Conservation &amp; Midpoint Invariance</h3>
+        <p class="mod"><code>CDTerrace.MirrorConservation</code></p>
+        <p class="desc">∀ n ≥ 1, flip, v ≤ 2^(n-1): H_n^γ(v) + H_n^γ(2^(n-1)-v) = H_n^std(v) + H_n^std(2^(n-1)-v), and H_n^γ(2^(n-2)) = H_n^std(2^(n-2)).</p>
+        <p class="deps"><strong>Depends on:</strong> T1d</p>
+      </article>
+      <article class="node" data-id="T2a" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T2a</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T2a: Six Pointwise Block-Sign Doubling Identities</h3>
+        <p class="mod"><code>CDTerrace.TerraceLaw</code></p>
+        <p class="desc">Exact doubling identities across lower-lo/hi, upper-lo/hi, three axis families, and cross-half complement.</p>
+        <p class="deps"><strong>Depends on:</strong> B0</p>
+      </article>
+      <article class="node" data-id="T2b" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T2b</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T2b: 4-Case 2-Blade Nullity Doubling Recurrence</h3>
+        <p class="mod"><code>CDTerrace.TerraceLaw</code></p>
+        <p class="desc">ν_{n+1}(i,j)=2ν_n(i,j); ν_{n+1}(i+h,j+h)=2ν_n(i,j); axis=0; cross ν_{n+1}(i,b+h)=2^n-4-2ν_n(i,b).</p>
+        <p class="deps"><strong>Depends on:</strong> T2a</p>
+      </article>
+      <article class="node" data-id="T2c" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T2c</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T2c: Mod-4 Quantization &amp; BDI Separation (n ≥ 6)</h3>
+        <p class="mod"><code>CDTerrace.TerraceLaw</code></p>
+        <p class="desc">4 | ν_n(i,j), ν_n(i,j) ≤ 2^(n-1)-4, and strict 2-blade vs. Biss-Dugger-Isaksen gap 2^(n-1)-4 &lt; 2^n-4n+4 for all n ≥ 6.</p>
+        <p class="deps"><strong>Depends on:</strong> T2b</p>
+      </article>
+      <article class="node" data-id="T2d" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T2d</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T2d: Exact All-n Total Nullity Mass (+4M_n - 4M_n)</h3>
+        <p class="mod"><code>CDTerrace.TerraceLaw</code></p>
+        <p class="desc">∀ n ≥ 3, M_n = 8(2^(n-1)-1)(2^(n-2)-1)(2^(n-3)-1) = 4 · #(bad affine 2-planes).</p>
+        <p class="deps"><strong>Depends on:</strong> T2b, T2c</p>
+      </article>
+      <article class="node" data-id="T2e" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T2e</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T2e: Exact All-n Zero-Divisor-Free 2-Blade Count</h3>
+        <p class="mod"><code>CDTerrace.TerraceLaw</code></p>
+        <p class="desc">∀ n ≥ 3, H_n^std(0) = (6n - 9) · 2^(n-2) + 3.</p>
+        <p class="deps"><strong>Depends on:</strong> T2b, T2c</p>
+      </article>
+      <article class="node" data-id="T2f" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T2f</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T2f: Interleaved Palindromic Terrace &amp; Universal Split Midpoint 42</h3>
+        <p class="mod"><code>CDTerrace.TerraceLaw</code></p>
+        <p class="desc">H_{n+1}(8m)=2H_n(4m), H_{n+1}(2^n-4-8m)=2H_n(4m), exact interior palindrome, top jump 3(2^n-2), and ∀ n ≥ 4, ∀ γ: H_n^γ(2^(n-2)) = 42 · 2^(n-4).</p>
+        <p class="deps"><strong>Depends on:</strong> T1e, T2e</p>
+      </article>
+      <article class="node" data-id="T3a" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T3a</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T3a: Exact Graph-Nullity Unification</h3>
+        <p class="mod"><code>CDTerrace.HurwitzRupture</code></p>
+        <p class="desc">For all n ≥ 1 and 1 ≤ j ≠ x &lt; 2^n, rightCompat n j x = true ⇔ twobladeNullity n j x = 0.</p>
+        <p class="deps"><strong>Depends on:</strong> T2a</p>
+      </article>
+      <article class="node" data-id="T3b" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T3b</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T3b: Universal Right-Multipliers = {e_0, e_{2^(n-1)}}</h3>
+        <p class="mod"><code>CDTerrace.HurwitzRupture</code></p>
+        <p class="desc">For all n ≥ 4, a basis index is universally right-compatible iff j = 0 or j = 2^(n-1).</p>
+        <p class="deps"><strong>Depends on:</strong> T3a, T2b</p>
+      </article>
+      <article class="node" data-id="T3c" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T3c</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T3c: Exact Clique Number ω(G_n^comp) = n + 5</h3>
+        <p class="mod"><code>CDTerrace.HurwitzRupture</code></p>
+        <p class="desc">For all n ≥ 3, every compatibility clique has size ≤ n + 5, attained by {0..7} ∪ {2^3, ..., 2^(n-1)}.</p>
+        <p class="deps"><strong>Depends on:</strong> T3b</p>
+      </article>
+      <article class="node" data-id="T3d" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T3d</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T3d: Dimension-64 Hurwitz-Radon Bott Rupture</h3>
+        <p class="mod"><code>CDTerrace.HurwitzRupture</code></p>
+        <p class="desc">Saturates ρ(2^n) at n ∈ {3,4,5} (8,9,10); strictly ruptures n + 5 &lt; ρ(2^n) with gap ≥ n - 5 for ALL n ≥ 6.</p>
+        <p class="deps"><strong>Depends on:</strong> T3c</p>
+      </article>
+      <article class="node" data-id="T3e" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T3e</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T3e: Universal Asymmetric Doubling Tower [2^(n-1), 2(n+4), 2^n]</h3>
+        <p class="mod"><code>CDTerrace.HurwitzRupture</code></p>
+        <p class="desc">Constructs exact norm-multiplicative integer composition pairs [2^(n-1), 2(n+4), 2^n] inside CD_n for all n ≥ 4.</p>
+        <p class="deps"><strong>Depends on:</strong> T3c</p>
+      </article>
+      <article class="node" data-id="T4a" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T4a</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T4a: Sedenion Triple-42 &amp; Fano 7+28+7 Duality</h3>
+        <p class="mod"><code>CDTerrace.FiniteCertificates</code></p>
+        <p class="desc">Over all 2^16 = 65,536 subspaces of S_16: 42/140 bad planes, 42 maximal 10D subspaces (7+28+7), 0 of dim ≥ 11.</p>
+        <p class="deps"><strong>Depends on:</strong> B0</p>
+      </article>
+      <article class="node" data-id="T4b" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T4b</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T4b: 42 Box-Kites = 7 × K_{2,2,2} &amp; 9D Subspace O ⊕ R e_8</h3>
+        <p class="mod"><code>CDTerrace.FiniteCertificates</code></p>
+        <p class="desc">42 assessors, 4-regular, 7 disjoint octahedra by XOR signature 9..15, plus 9D norm-multiplicative O ⊕ R e_8.</p>
+        <p class="deps"><strong>Depends on:</strong> B0</p>
+      </article>
+      <article class="node" data-id="T4c" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T4c</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T4c: Exhaustive Split-Phase Classifications CD_4(γ) &amp; CD_5(γ)</h3>
+        <p class="mod"><code>CDTerrace.FiniteCertificates</code></p>
+        <p class="desc">16 signatures of CD_4(γ) → 4 classes (1:1:7:7); 32 signatures of CD_5(γ) → 8 classes (4×1 + 4×7).</p>
+        <p class="deps"><strong>Depends on:</strong> T1e, T2b, T2f</p>
+      </article>
+      <article class="node" data-id="T4d" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T4d</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T4d: [14,14,32] &amp; [16,16,64] Witnesses + Pillar 4 Field Rigidity</h3>
+        <p class="mod"><code>CDTerrace.FiniteCertificates</code></p>
+        <p class="desc">Certified Pathion 14D &amp; Chingon 16D witnesses + pure-intercalate base-field rigidity over Z, Z[i], and any integral domain.</p>
+        <p class="deps"><strong>Depends on:</strong> B0</p>
+      </article>
+      <article class="node" data-id="ALL" tabindex="0">
+        <div class="node-head">
+          <span class="nid">ALL</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>Master Palomar Conjunction (All 4 Pillars + 6 Adversarial Refutations)</h3>
+        <p class="mod"><code>PalomarSolution</code></p>
+        <p class="desc">Checked across Lean 4.35.0 C++, leanchecker-paranoid, lean4lean, nanoda, con-leche, and con-ron.</p>
+        <p class="deps"><strong>Depends on:</strong> T1e, T2f, T3d, T3e, T4a, T4b, T4c, T4d</p>
+      </article>
+    </section>
+  </main>
+  <footer>
+    <div class="wrap">
+      Author: Alexander Stephen Donahue (ORCID 0009-0006-8168-9648) · Code: Apache-2.0 · Docs: CC-BY-4.0
+    </div>
+  </footer>
+</body>
+</html>

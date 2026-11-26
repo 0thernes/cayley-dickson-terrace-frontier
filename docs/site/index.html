@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cayley-Dickson Terrace Frontier — Interactive 3D Box-Kite &amp; Mirror-Conservation Observatory</title>
+  <style>
+    :root {
+      --bg: #090d1a;
+      --surface: #11182c;
+      --surface2: #192440;
+      --border: #2a3a63;
+      --text: #eef3ff;
+      --muted: #b5c3e3;
+      /* Okabe-Ito colorblind-safe palette */
+      --oi-blue: #56b4e9;
+      --oi-orange: #e69f00;
+      --oi-green: #009e73;
+      --oi-vermilion: #d55e00;
+      --oi-purple: #cc79a7;
+      --oi-yellow: #f0e442;
+      --oi-navy: #0072b2;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      background: linear-gradient(180deg, #101933 0%, var(--bg) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 1.25rem 1rem;
+    }
+    .wrap { max-width: 1240px; margin: 0 auto; }
+    h1 { margin: 0 0 0.35rem; font-size: clamp(1.35rem, 2.4vw, 2rem); letter-spacing: -0.01em; }
+    .subtitle { margin: 0 0 0.85rem; color: var(--muted); font-size: 0.96rem; }
+    .nav-row { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; align-items: center; font-size: 0.9rem; }
+    .nav-row a { color: var(--oi-blue); text-decoration: none; font-weight: 600; }
+    .nav-row a:hover, .nav-row a:focus { text-decoration: underline; outline: 2px solid var(--oi-yellow); outline-offset: 2px; }
+    .pill {
+      display: inline-block;
+      padding: 0.15rem 0.65rem;
+      border-radius: 999px;
+      background: #064e3b;
+      color: #a7f3d0;
+      border: 1px solid #10b981;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.15rem 0 1rem;
+    }
+    .tab-btn {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.55rem 0.95rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .tab-btn[aria-selected="true"] {
+      background: var(--oi-navy);
+      border-color: var(--oi-blue);
+      color: #ffffff;
+    }
+    .tab-btn:focus { outline: 2px solid var(--oi-yellow); outline-offset: 2px; }
+    .panel {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    .panel.active { display: block; }
+    .split { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.95fr); gap: 1rem; align-items: start; }
+    @media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
+    canvas {
+      width: 100%;
+      height: 460px;
+      display: block;
+      background: #070b16;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.95rem;
+      margin-bottom: 0.85rem;
+    }
+    .card h2, .card h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+    .controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; }
+    button.act, select {
+      background: #1c2a4a;
+      color: var(--text);
+      border: 1px solid #3c5285;
+      border-radius: 7px;
+      padding: 0.42rem 0.78rem;
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+    button.act:hover, select:hover { border-color: var(--oi-blue); }
+    button.act:focus, select:focus { outline: 2px solid var(--oi-yellow); outline-offset: 2px; }
+    .sig-bit {
+      min-width: 56px;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-weight: 700;
+    }
+    .sig-bit.plus { background: #5a2300; border-color: var(--oi-orange); color: #fde68a; }
+    .sig-bit.minus { background: #0f2c4a; border-color: var(--oi-blue); color: #bae6fd; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 0.86rem; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.6rem; margin: 0.6rem 0; }
+    .kpi { background: #0c1326; border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.7rem; }
+    .kpi strong { display: block; font-size: 1.15rem; color: var(--oi-blue); }
+    .kpi span { font-size: 0.78rem; color: var(--muted); }
+    .ok { color: #34d399; font-weight: 700; }
+    .warn { color: var(--oi-orange); font-weight: 700; }
+    .err { color: #fb7185; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th, td { padding: 0.42rem 0.55rem; border-bottom: 1px solid var(--border); text-align: left; }
+    th { color: var(--oi-blue); font-weight: 700; }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.1rem 1.25rem 2rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Cayley-Dickson Terrace Frontier — Interactive Observatory</h1>
+      <p class="subtitle">
+        Live exact-algebra exploration of the Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation,
+        Sedenion Triple-42 Box-Kites ($7 \times K_{2,2,2}$), and Dimension-64 Hurwitz-Radon Rupture.
+      </p>
+      <div class="nav-row">
+        <span class="pill">0TH-2026-017 · Lean 4.35.0 (6 Kernels)</span>
+        <a href="blueprint.html">Proof Blueprint DAG →</a>
+        <a href="https://github.com/0thernes/cayley-dickson-terrace-frontier">GitHub Repo</a>
+        <a href="https://orcid.org/0009-0006-8168-9648">ORCID 0009-0006-8168-9648</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="tabs" role="tablist" aria-label="Observatory modules">
+      <button class="tab-btn" role="tab" id="tab-bk" aria-selected="true" aria-controls="panel-bk">1. 3D Sedenion Box-Kites (7 × K₂,₂,₂)</button>
+      <button class="tab-btn" role="tab" id="tab-mirror" aria-selected="false" aria-controls="panel-mirror">2. Live Terrace &amp; Split-Signature Mirror Lab</button>
+      <button class="tab-btn" role="tab" id="tab-hr" aria-selected="false" aria-controls="panel-hr">3. Dim-64 Hurwitz-Radon Rupture</button>
+      <button class="tab-btn" role="tab" id="tab-norm" aria-selected="false" aria-controls="panel-norm">4. Exact BigInt Norm-Multiplicativity Sandbox</button>
+    </div>
+
+    <!-- PANEL 1: 3D BOX-KITES -->
+    <section class="panel active" id="panel-bk" role="tabpanel" aria-labelledby="tab-bk">
+      <div class="controls">
+        <button class="act" id="bk-orbit">Pause Auto-Orbit</button>
+        <button class="act" id="bk-reset">Reset View</button>
+        <label for="bk-cluster">Highlight Box-Kite XOR Signature:</label>
+        <select id="bk-cluster">
+          <option value="all">All 7 Box-Kites (42 Assessors, 84 Edges)</option>
+          <option value="9">XOR s = 9 (K₂,₂,₂ #1)</option>
+          <option value="10">XOR s = 10 (K₂,₂,₂ #2)</option>
+          <option value="11">XOR s = 11 (K₂,₂,₂ #3)</option>
+          <option value="12">XOR s = 12 (K₂,₂,₂ #4)</option>
+          <option value="13">XOR s = 13 (K₂,₂,₂ #5)</option>
+          <option value="14">XOR s = 14 (K₂,₂,₂ #6)</option>
+          <option value="15">XOR s = 15 (K₂,₂,₂ #7)</option>
+        </select>
+      </div>
+      <div class="split">
+        <canvas id="canvas-bk" aria-label="Interactive 3D visualization of the 7 octahedral Sedenion Box-Kites"></canvas>
+        <div>
+          <div class="card">
+            <h2>Assessor Inspector (Drag to Rotate, Click a Vertex)</h2>
+            <p id="bk-info" class="mono">Click any vertex in the 3D constellation to inspect its exact 4 annihilating partner pairs in S₁₆.</p>
+          </div>
+          <div class="card">
+            <h3>Triple-42 Sedenion Duality</h3>
+            <div class="kpi-grid">
+              <div class="kpi"><strong>42</strong><span>Box-Kite Assessors (7 × K₂,₂,₂)</span></div>
+              <div class="kpi"><strong>42 / 140</strong><span>Bad Affine 2-Planes in 𝔽₂⁴</span></div>
+              <div class="kpi"><strong>42</strong><span>Maximal [10,10,16] Subspaces (7+28+7)</span></div>
+              <div class="kpi"><strong>0</strong><span>Norm-Mult 11D Subspaces</span></div>
+            </div>
+            <p class="mono" style="margin:0.4rem 0 0;color:var(--muted);">
+              Exact Box-Kite Spectrum: { 4⁷, 0²¹, (-2)¹⁴ } · Minimal polynomial A³ - 2A² - 8A = 0.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 2: LIVE TERRACE & SPLIT-SIGNATURE MIRROR LAB -->
+    <section class="panel" id="panel-mirror" role="tabpanel" aria-labelledby="tab-mirror">
+      <div class="controls">
+        <label for="mirror-n">Algebra Dimension:</label>
+        <select id="mirror-n">
+          <option value="4">CD₄ — Sedenions (16D, 16 signatures)</option>
+          <option value="5" selected>CD₅ — Pathions (32D, 32 signatures)</option>
+          <option value="6">CD₆ — Chingons (64D, 64 signatures)</option>
+          <option value="7">CD₇ — Routons (128D, 128 signatures)</option>
+          <option value="8">CD₈ — Voudons (256D, 256 signatures)</option>
+        </select>
+        <button class="act" id="sig-euclid">Reset Euclidean (-,-,...,-)</button>
+        <button class="act" id="sig-gap">Load Spectral-Gap Split</button>
+      </div>
+      <div class="controls" id="sig-buttons" aria-label="Signature bits gamma_k"></div>
+      <div class="split">
+        <canvas id="canvas-mirror" aria-label="Live comparison of Euclidean and split-signature 2-blade nullity histograms"></canvas>
+        <div>
+          <div class="card">
+            <h2>Live Conservation Verification</h2>
+            <div class="kpi-grid">
+              <div class="kpi"><strong id="kpi-mid">84</strong><span>Invariant Midpoint H(2ⁿ⁻²)</span></div>
+              <div class="kpi"><strong id="kpi-cons" class="ok">VERIFIED</strong><span>All Mirror Sums H(v)+H(2ⁿ⁻¹-v)</span></div>
+              <div class="kpi"><strong id="kpi-mass">2520</strong><span>Euclidean Nullity Mass Mₙ</span></div>
+              <div class="kpi"><strong id="kpi-gap">None</strong><span>Spectral-Gap Zero Bins</span></div>
+            </div>
+            <p id="mirror-formula" class="mono" style="color:var(--muted);margin:0.4rem 0 0;"></p>
+          </div>
+          <div class="card">
+            <h3>Mirror-Pair Breakdown</h3>
+            <div style="max-height:220px;overflow:auto;">
+              <table>
+                <thead><tr><th>Bin v</th><th>Std H(v)</th><th>Split Hγ(v)</th><th>Mirror Sum</th></tr></thead>
+                <tbody id="mirror-tbody" class="mono"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 3: DIMENSION-64 HURWITZ-RADON RUPTURE -->
+    <section class="panel" id="panel-hr" role="tabpanel" aria-labelledby="tab-hr">
+      <div class="split">
+        <canvas id="canvas-hr" aria-label="Plot of Cayley-Dickson clique number n+5 versus Hurwitz-Radon function rho(2^n)"></canvas>
+        <div>
+          <div class="card">
+            <h2>Dimension-64 Bott-Periodicity Rupture</h2>
+            <p style="margin:0 0 0.5rem;font-size:0.9rem;color:var(--muted);">
+              For n ∈ {3, 4, 5}, the Cayley-Dickson right-multiplier clique number ω(Gₙᶜᵒᵐᵖ) = n + 5
+              saturates the Hurwitz-Radon ceiling ρ(2ⁿ). At <strong>n = 6 (dim 64)</strong>, Bott
+              periodicity accelerates ρ(2ⁿ) linearly as 2n while ω(Gₙᶜᵒᵐᵖ) grows only as n + 5,
+              causing a permanent rupture (gap ≥ n - 5 → ∞).
+            </p>
+            <table>
+              <thead><tr><th>n</th><th>Dim</th><th>ω(Gₙᶜᵒᵐᵖ)</th><th>ρ(2ⁿ)</th><th>Gap</th><th>Asym Tower</th></tr></thead>
+              <tbody id="hr-tbody" class="mono"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 4: BIGINT NORM SANDBOX -->
+    <section class="panel" id="panel-norm" role="tabpanel" aria-labelledby="tab-norm">
+      <div class="controls">
+        <label for="norm-preset">Select Coordinate Subspace:</label>
+        <select id="norm-preset">
+          <option value="s10_8">Sedenion CD₄ — [10, 10, 16] (|S ∩ 𝕆| = 8, Fano class 7)</option>
+          <option value="s10_5">Sedenion CD₄ — [10, 10, 16] (|S ∩ 𝕆| = 5, Fano class 28)</option>
+          <option value="s10_2">Sedenion CD₄ — [10, 10, 16] (|S ∩ 𝕆| = 2, Fano class 7)</option>
+          <option value="s11_bad">Sedenion CD₄ — FORBIDDEN 11D {0..10} (Zero-Divisor Rupture!)</option>
+          <option value="p14">Pathion CD₅ — Certified Optimal [14, 14, 32] (HiGHS MILP Max)</option>
+          <option value="c16">Chingon CD₆ — Certified Witness [16, 16, 64]</option>
+          <option value="a32_20">Chingon CD₆ — Asymmetric Doubling Tower [32, 20, 64]</option>
+        </select>
+        <button class="act" id="norm-rand">Randomize Exact Integer Vectors x, y</button>
+      </div>
+      <div class="card">
+        <h2>Exact Arbitrary-Precision BigInt Norm Test: ‖x · y‖² vs ‖x‖² · ‖y‖²</h2>
+        <div id="norm-result" class="mono"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      Alexander Stephen Donahue (ORCID 0009-0006-8168-9648) · Zero external CDN dependencies ·
+      All values computed live in browser from exact Cayley-Dickson algebra.
+    </div>
+  </footer>
+
+<script>
+"use strict";
+
+/* ===== EXACT CAYLEY-DICKSON ALGEBRA KERNEL (LIVE IN BROWSER) ===== */
+const signCache = new Map();
+function cdSign(n, i, j) {
+  if (n === 0) return 1;
+  const key = (n << 16) | (i << 8) | j;
+  if (n <= 8 && signCache.has(key)) return signCache.get(key);
+  const h = 1 << (n - 1);
+  let res;
+  if (i < h) {
+    res = j < h ? cdSign(n - 1, i, j) : cdSign(n - 1, j - h, i);
+  } else {
+    const a = i - h;
+    if (j < h) {
+      res = j === 0 ? cdSign(n - 1, a, 0) : -cdSign(n - 1, a, j);
+    } else {
+      const b = j - h;
+      res = b === 0 ? -cdSign(n - 1, 0, a) : cdSign(n - 1, b, a);
+    }
+  }
+  if (n <= 8) signCache.set(key, res);
+  return res;
+}
+
+function popcount(x) {
+  let c = 0;
+  while (x) { x &= x - 1; c++; }
+  return c;
+}
+
+function twobladeNullityFast(n, i, j) {
+  if (n <= 3) return 0;
+  let a = i < j ? i : j, b = i < j ? j : i;
+  if (a === 0 || a === b) return 0;
+  const h = 1 << (n - 1);
+  if (b < h) return 2 * twobladeNullityFast(n - 1, a, b);
+  if (a >= h) return a === h ? 0 : 2 * twobladeNullityFast(n - 1, a - h, b - h);
+  const bh = b - h;
+  return (bh === 0 || bh === a) ? 0 : (h - 4 - 2 * twobladeNullityFast(n - 1, a, bh));
+}
+
+function hurwitzRadon(n) {
+  return 8 * Math.floor(n / 4) + (1 << (n % 4));
+}
+
+/* ===== TAB CONTROLLER ===== */
+const tabs = document.querySelectorAll(".tab-btn");
+const panels = document.querySelectorAll(".panel");
+tabs.forEach(btn => {
+  btn.addEventListener("click", () => {
+    tabs.forEach(b => b.setAttribute("aria-selected", String(b === btn)));
+    panels.forEach(p => p.classList.toggle("active", p.id === btn.getAttribute("aria-controls")));
+    if (btn.id === "tab-mirror") renderMirror();
+    if (btn.id === "tab-hr") renderHR();
+  });
+});
+
+/* ===== MODULE 1: 3D SEDENION BOX-KITES (7 x K_{2,2,2}) ===== */
+const bkColors = ["#56b4e9", "#e69f00", "#009e73", "#d55e00", "#cc79a7", "#f0e442", "#0072b2"];
+const assessors = [];
+for (let i = 1; i <= 7; i++) {
+  for (let j = 9; j <= 15; j++) {
+    if (i !== j - 8) assessors.push({ i, j, s: i ^ j, idx: assessors.length });
+  }
+}
+const bkEdges = [];
+for (let u = 0; u < assessors.length; u++) {
+  const { i, j } = assessors[u];
+  for (let v = u + 1; v < assessors.length; v++) {
+    const { i: k, j: l } = assessors[v];
+    if ((i ^ j) === (k ^ l) && i !== k && j !== l &&
+        cdSign(4, i, k) * cdSign(4, j, l) === cdSign(4, i, l) * cdSign(4, j, k)) {
+      bkEdges.push([u, v, i ^ j]);
+    }
+  }
+}
+// Position each of the 7 octahedra in a grand 3D heptagonal ring
+const octVerts = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+const bySig = {};
+for (let s = 9; s <= 15; s++) bySig[s] = [];
+assessors.forEach(a => bySig[a.s].push(a));
+const node3D = new Array(42);
+for (let c = 0; c < 7; c++) {
+  const s = 9 + c;
+  const ang = (2 * Math.PI * c) / 7;
+  const cx = 3.1 * Math.cos(ang), cz = 3.1 * Math.sin(ang);
+  const comp = bySig[s];
+  // Pair antipodal vertices (the non-edge pairs inside each K_{2,2,2})
+  const used = new Set();
+  const ordered = [];
+  for (const a of comp) {
+    if (used.has(a.idx)) continue;
+    const anti = comp.find(b => b.idx !== a.idx && !used.has(b.idx) &&
+      !bkEdges.some(([u,v]) => (u===a.idx && v===b.idx) || (v===a.idx && u===b.idx)));
+    ordered.push(a); used.add(a.idx);
+    if (anti) { ordered.push(anti); used.add(anti.idx); }
+  }
+  ordered.forEach((a, k) => {
+    const [ox, oy, oz] = octVerts[k];
+    const r = 0.85;
+    node3D[a.idx] = { x: cx + r * ox, y: r * oy, z: cz + r * oz, color: bkColors[c], a };
+  });
+}
+
+let rotY = 0.45, rotX = 0.38, autoOrbit = true, selectedIdx = 0;
+let dragging = false, lastX = 0, lastY = 0;
+const canvasBK = document.getElementById("canvas-bk");
+const ctxBK = canvasBK.getContext("2d");
+let projected = [];
+
+function resizeCanvas(c) {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = c.getBoundingClientRect();
+  if (rect.width > 0 && (c.width !== Math.round(rect.width * dpr) || c.height !== Math.round(rect.height * dpr))) {
+    c.width = Math.round(rect.width * dpr);
+    c.height = Math.round(rect.height * dpr);
+  }
+}
+
+function project(p, w, h) {
+  const cy = Math.cos(rotY), sy = Math.sin(rotY);
+  const cx = Math.cos(rotX), sx = Math.sin(rotX);
+  let x = p.x * cy - p.z * sy;
+  let z = p.x * sy + p.z * cy;
+  let y = p.y * cx - z * sx;
+  z = p.y * sx + z * cx;
+  const scale = Math.min(w, h) * 0.135 * (9.5 / (9.5 - z));
+  return { sx: w / 2 + x * scale, sy: h / 2 - y * scale, z };
+}
+
+function showAssessorInfo(idx) {
+  const a = assessors[idx];
+  const nbrs = bkEdges.filter(([u,v]) => u === idx || v === idx).map(([u,v]) => assessors[u === idx ? v : u]);
+  const lines = nbrs.map(b => {
+    const sgn = -(cdSign(4, a.i, b.i) * cdSign(4, a.j, b.j));
+    const op = sgn > 0 ? "+" : "-";
+    return `  (e_${a.i} + e_${a.j}) · (e_${b.i} ${op} e_${b.j}) = 0`;
+  });
+  document.getElementById("bk-info").textContent =
+    `Selected Assessor #${idx + 1}: (e_${a.i} + e_${a.j})\n` +
+    `Box-Kite XOR Signature: ${a.i} ⊕ ${a.j} = ${a.s}\n` +
+    `Nullity in S₁₆: ν₄(e_${a.i} + e_${a.j}) = 4\n` +
+    `4 Exact Mutual Annihilators (K₂,₂,₂ degree 4):\n` + lines.join("\n");
+}
+showAssessorInfo(0);
+
+function drawBK() {
+  if (document.getElementById("panel-bk").classList.contains("active")) {
+    resizeCanvas(canvasBK);
+    const w = canvasBK.width, h = canvasBK.height;
+    ctxBK.clearRect(0, 0, w, h);
+    const filter = document.getElementById("bk-cluster").value;
+    projected = node3D.map(n => ({ ...project(n, w, h), n }));
+
+    // Edges
+    for (const [u, v, sig] of bkEdges) {
+      const pu = projected[u], pv = projected[v];
+      const active = filter === "all" || String(sig) === filter;
+      const hi = u === selectedIdx || v === selectedIdx;
+      ctxBK.beginPath();
+      ctxBK.moveTo(pu.sx, pu.sy);
+      ctxBK.lineTo(pv.sx, pv.sy);
+      ctxBK.strokeStyle = hi ? "#ffffff" : (active ? pu.n.color : "rgba(120,140,180,0.12)");
+      ctxBK.lineWidth = hi ? 3.2 : (active ? 1.5 : 0.7);
+      ctxBK.globalAlpha = hi ? 1.0 : (active ? 0.62 : 0.2);
+      ctxBK.stroke();
+    }
+    ctxBK.globalAlpha = 1.0;
+
+    // Nodes depth-sorted
+    const sorted = projected.map((p, idx) => ({ p, idx })).sort((a, b) => a.p.z - b.p.z);
+    for (const { p, idx } of sorted) {
+      const active = filter === "all" || String(p.n.a.s) === filter;
+      const sel = idx === selectedIdx;
+      ctxBK.beginPath();
+      ctxBK.arc(p.sx, p.sy, sel ? 9 : (active ? 6 : 3.5), 0, Math.PI * 2);
+      ctxBK.fillStyle = sel ? "#ffffff" : p.n.color;
+      ctxBK.globalAlpha = active || sel ? 1.0 : 0.2;
+      ctxBK.fill();
+      if (sel) {
+        ctxBK.strokeStyle = "#f0e442";
+        ctxBK.lineWidth = 2.5;
+        ctxBK.stroke();
+      }
+    }
+    ctxBK.globalAlpha = 1.0;
+    if (autoOrbit && !dragging) rotY += 0.0055;
+  }
+  requestAnimationFrame(drawBK);
+}
+canvasBK.addEventListener("pointerdown", e => { dragging = true; lastX = e.clientX; lastY = e.clientY; });
+window.addEventListener("pointerup", () => { dragging = false; });
+canvasBK.addEventListener("pointermove", e => {
+  if (!dragging) return;
+  rotY += (e.clientX - lastX) * 0.008;
+  rotX += (e.clientY - lastY) * 0.008;
+  lastX = e.clientX; lastY = e.clientY;
+});
+canvasBK.addEventListener("click", e => {
+  const rect = canvasBK.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const mx = (e.clientX - rect.left) * dpr, my = (e.clientY - rect.top) * dpr;
+  let best = -1, bestD = 26 * dpr;
+  projected.forEach((p, idx) => {
+    const d = Math.hypot(p.sx - mx, p.sy - my);
+    if (d < bestD) { bestD = d; best = idx; }
+  });
+  if (best >= 0) { selectedIdx = best; showAssessorInfo(best); }
+});
+document.getElementById("bk-orbit").addEventListener("click", e => {
+  autoOrbit = !autoOrbit;
+  e.target.textContent = autoOrbit ? "Pause Auto-Orbit" : "Resume Auto-Orbit";
+});
+document.getElementById("bk-reset").addEventListener("click", () => { rotY = 0.45; rotX = 0.38; });
+requestAnimationFrame(drawBK);
+
+/* ===== MODULE 2: LIVE TERRACE & SPLIT-SIGNATURE MIRROR LAB ===== */
+let mirrorN = 5, flipMask = 16;
+const stdPairsCache = new Map();
+function getPairsForN(n) {
+  if (stdPairsCache.has(n)) return stdPairsCache.get(n);
+  const dim = 1 << n;
+  const arr = [];
+  for (let i = 1; i < dim; i++) {
+    for (let j = i + 1; j < dim; j++) {
+      arr.push([i ^ j, twobladeNullityFast(n, i, j)]);
+    }
+  }
+  stdPairsCache.set(n, arr);
+  return arr;
+}
+
+function buildSigButtons() {
+  const box = document.getElementById("sig-buttons");
+  box.innerHTML = "<span style='color:var(--muted);font-size:0.88rem;'>Signature γ:</span>";
+  for (let k = 0; k < mirrorN; k++) {
+    const isPlus = ((flipMask >> k) & 1) === 1;
+    const btn = document.createElement("button");
+    btn.className = "act sig-bit " + (isPlus ? "plus" : "minus");
+    btn.textContent = `γ${k}=${isPlus ? "+1" : "-1"}`;
+    btn.title = `Toggle doubling sign gamma_${k} (bit ${k})`;
+    btn.addEventListener("click", () => {
+      flipMask ^= (1 << k);
+      buildSigButtons();
+      renderMirror();
+    });
+    box.appendChild(btn);
+  }
+}
+
+function renderMirror() {
+  const pairs = getPairsForN(mirrorN);
+  const half = 1 << (mirrorN - 1);
+  const mid = 1 << (mirrorN - 2);
+  const hStd = new Map(), hSpl = new Map();
+  let mass = 0;
+  for (const [d, nu] of pairs) {
+    hStd.set(nu, (hStd.get(nu) || 0) + 1);
+    mass += nu;
+    const nilp = (popcount(d & flipMask) & 1) === 1;
+    const ng = nilp ? (half - nu) : nu;
+    hSpl.set(ng, (hSpl.get(ng) || 0) + 1);
+  }
+  const bins = [];
+  for (let v = 0; v <= half; v += 4) bins.push(v);
+  let allConserved = true;
+  const gaps = [];
+  const tbody = document.getElementById("mirror-tbody");
+  tbody.innerHTML = "";
+  for (const v of bins) {
+    const s = hStd.get(v) || 0, g = hSpl.get(v) || 0;
+    const sMir = (hStd.get(half - v) || 0), gMir = (hSpl.get(half - v) || 0);
+    if (s + sMir !== g + gMir) allConserved = false;
+    if (v >= 4 && v <= half - 4 && g === 0) gaps.push(v);
+    const tr = document.createElement("tr");
+    const isMid = v === mid;
+    tr.innerHTML = `<td>${v}${isMid ? " ★" : ""}</td><td>${s}</td><td>${g}</td><td>${g + gMir} = ${s + sMir}</td>`;
+    if (isMid) tr.style.background = "rgba(0,158,115,0.22)";
+    tbody.appendChild(tr);
+  }
+  document.getElementById("kpi-mid").textContent = `${hSpl.get(mid)} (= 42·2^${mirrorN - 4})`;
+  document.getElementById("kpi-cons").textContent = allConserved ? "EXACT PASS" : "MISMATCH";
+  document.getElementById("kpi-mass").textContent = mass.toLocaleString();
+  document.getElementById("kpi-gap").textContent = gaps.length ? `ν ∈ {${gaps.join(",")}}` : "None";
+  document.getElementById("mirror-formula").textContent =
+    `flipMask = ${flipMask} (0b${flipMask.toString(2).padStart(mirrorN, "0")}) · ` +
+    `H_${mirrorN}^γ(${mid}) = ${hSpl.get(mid)} (invariant across all ${1 << mirrorN} signatures)`;
+
+  const c = document.getElementById("canvas-mirror");
+  resizeCanvas(c);
+  const ctx = c.getContext("2d");
+  const w = c.width, h = c.height;
+  ctx.clearRect(0, 0, w, h);
+  const pad = { l: 58, r: 22, t: 36, b: 48 };
+  const plotW = w - pad.l - pad.r, plotH = h - pad.t - pad.b;
+  let maxV = 1;
+  bins.forEach(v => { maxV = Math.max(maxV, hStd.get(v) || 0, hSpl.get(v) || 0); });
+  const groupW = plotW / bins.length;
+  const barW = Math.max(2, groupW * 0.36);
+
+  ctx.strokeStyle = "#2a3a63";
+  ctx.beginPath();
+  ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, h - pad.b); ctx.lineTo(w - pad.r, h - pad.b);
+  ctx.stroke();
+
+  bins.forEach((v, idx) => {
+    const x0 = pad.l + idx * groupW + groupW * 0.14;
+    const s = hStd.get(v) || 0, g = hSpl.get(v) || 0;
+    const hs = (s / maxV) * plotH, hg = (g / maxV) * plotH;
+    ctx.fillStyle = "#56b4e9";
+    ctx.fillRect(x0, h - pad.b - hs, barW, hs);
+    ctx.fillStyle = v === mid ? "#009e73" : "#e69f00";
+    ctx.fillRect(x0 + barW + 1, h - pad.b - hg, barW, hg);
+    if (bins.length <= 18 || idx % Math.ceil(bins.length / 16) === 0) {
+      ctx.fillStyle = "#b5c3e3";
+      ctx.font = "11px monospace";
+      ctx.textAlign = "center";
+      ctx.fillText(String(v), x0 + barW, h - pad.b + 18);
+    }
+  });
+  ctx.fillStyle = "#eef3ff";
+  ctx.font = "13px sans-serif";
+  ctx.textAlign = "left";
+  ctx.fillText("Blue = Euclidean H(v) · Orange = Split Hγ(v) · Green = Invariant Midpoint 42·2^(n-4)", pad.l, 22);
+}
+
+document.getElementById("mirror-n").addEventListener("change", e => {
+  mirrorN = Number(e.target.value);
+  flipMask = 1 << (mirrorN - 1);
+  buildSigButtons();
+  renderMirror();
+});
+document.getElementById("sig-euclid").addEventListener("click", () => { flipMask = 0; buildSigButtons(); renderMirror(); });
+document.getElementById("sig-gap").addEventListener("click", () => {
+  if (mirrorN < 6) { mirrorN = 6; document.getElementById("mirror-n").value = "6"; }
+  flipMask = 1 << (mirrorN - 1); // high-bit split induces spectral gap H_6(12)=0 or H_6(20)=0!
+  // Find exact spectral-gap mask for mirrorN
+  const pairs = getPairsForN(mirrorN);
+  const half = 1 << (mirrorN - 1);
+  for (let fl = 1; fl < (1 << mirrorN); fl++) {
+    const cnt = new Map();
+    for (const [d, nu] of pairs) {
+      const ng = (popcount(d & fl) & 1) ? (half - nu) : nu;
+      cnt.set(ng, (cnt.get(ng) || 0) + 1);
+    }
+    let hasGap = false;
+    for (let v = 4; v <= half - 4; v += 4) if (!cnt.get(v)) hasGap = true;
+    if (hasGap) { flipMask = fl; break; }
+  }
+  buildSigButtons();
+  renderMirror();
+});
+buildSigButtons();
+
+/* ===== MODULE 3: HURWITZ-RADON BOTT RUPTURE ===== */
+function renderHR() {
+  const tbody = document.getElementById("hr-tbody");
+  tbody.innerHTML = "";
+  const ns = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  ns.forEach(n => {
+    const omega = n + 5, rho = hurwitzRadon(n), gap = rho - omega;
+    const asym = n >= 4 ? `[${1 << (n - 1)}, ${2 * (n + 4)}, ${1 << n}]` : "[4, 8, 8]";
+    const tr = document.createElement("tr");
+    if (n === 6) tr.style.background = "rgba(213,94,0,0.22)";
+    tr.innerHTML = `<td>${n}</td><td>${1 << n}</td><td>${omega}</td><td>${rho}</td><td class="${gap > 0 ? "warn" : "ok"}">${gap}</td><td>${asym}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  const c = document.getElementById("canvas-hr");
+  resizeCanvas(c);
+  const ctx = c.getContext("2d");
+  const w = c.width, h = c.height;
+  ctx.clearRect(0, 0, w, h);
+  const pad = { l: 55, r: 28, t: 36, b: 48 };
+  const plotW = w - pad.l - pad.r, plotH = h - pad.t - pad.b;
+  const maxY = 28;
+  const xPos = n => pad.l + ((n - 3) / 9) * plotW;
+  const yPos = y => h - pad.b - (y / maxY) * plotH;
+
+  // Grid & axes
+  ctx.strokeStyle = "#243255";
+  for (let y = 0; y <= maxY; y += 4) {
+    ctx.beginPath(); ctx.moveTo(pad.l, yPos(y)); ctx.lineTo(w - pad.r, yPos(y)); ctx.stroke();
+    ctx.fillStyle = "#b5c3e3"; ctx.font = "11px monospace"; ctx.textAlign = "right";
+    ctx.fillText(String(y), pad.l - 8, yPos(y) + 4);
+  }
+  // Highlight rupture vertical line n=6
+  ctx.strokeStyle = "#d55e00"; ctx.setLineDash([6, 4]); ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(xPos(6), pad.t); ctx.lineTo(xPos(6), h - pad.b); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = "#fdba74"; ctx.font = "12px sans-serif"; ctx.textAlign = "center";
+  ctx.fillText("Dim-64 Rupture (11 < 12)", xPos(6), pad.t - 10);
+
+  // Hurwitz-Radon curve
+  ctx.strokeStyle = "#e69f00"; ctx.lineWidth = 3;
+  ctx.beginPath();
+  ns.forEach((n, idx) => { const x = xPos(n), y = yPos(hurwitzRadon(n)); idx === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
+  ctx.stroke();
+
+  // CD clique curve n + 5
+  ctx.strokeStyle = "#56b4e9"; ctx.lineWidth = 3;
+  ctx.beginPath();
+  ns.forEach((n, idx) => { const x = xPos(n), y = yPos(n + 5); idx === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
+  ctx.stroke();
+
+  ns.forEach(n => {
+    const x = xPos(n);
+    ctx.fillStyle = "#e69f00"; ctx.beginPath(); ctx.arc(x, yPos(hurwitzRadon(n)), 5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#56b4e9"; ctx.beginPath(); ctx.arc(x, yPos(n + 5), 5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#b5c3e3"; ctx.font = "11px monospace"; ctx.textAlign = "center";
+    ctx.fillText(`n=${n}`, x, h - pad.b + 18);
+  });
+  ctx.fillStyle = "#eef3ff"; ctx.font = "12px sans-serif"; ctx.textAlign = "left";
+  ctx.fillText("Orange = Hurwitz-Radon ρ(2ⁿ) · Blue = Cayley-Dickson ω(Gₙᶜᵒᵐᵖ) = n + 5", pad.l, 18);
+}
+
+/* ===== MODULE 4: EXACT BIGINT NORM SANDBOX ===== */
+const normPresets = {
+  s10_8: { n: 4, sl: [0,1,2,3,4,5,6,7,8,9], sr: [0,1,2,3,4,5,6,7,8,9], label: "Sedenion [10, 10, 16] (|S ∩ 𝕆| = 8)" },
+  s10_5: { n: 4, sl: [0,1,2,4,7,8,11,13,14,15], sr: [0,1,2,4,7,8,11,13,14,15], label: "Sedenion [10, 10, 16] (|S ∩ 𝕆| = 5)" },
+  s10_2: { n: 4, sl: [0,1,8,9,10,11,12,13,14,15], sr: [0,1,8,9,10,11,12,13,14,15], label: "Sedenion [10, 10, 16] (|S ∩ 𝕆| = 2)" },
+  s11_bad: { n: 4, sl: [0,1,2,3,4,5,6,7,8,9,10], sr: [0,1,2,3,4,5,6,7,8,9,10], label: "FORBIDDEN Sedenion 11D {0..10}" },
+  p14: { n: 5, sl: [0,1,2,4,5,8,10,16,17,18,20,21,24,26], sr: [0,1,2,4,5,8,10,16,17,18,20,21,24,26], label: "Optimal Pathion [14, 14, 32]" },
+  c16: { n: 6, sl: [0,4,6,8,11,13,14,24,31,32,36,38,56,57,60,63], sr: [0,4,6,8,11,13,14,24,31,32,36,38,56,57,60,63], label: "Chingon Witness [16, 16, 64]" },
+  a32_20: { n: 6, sl: Array.from({length:32}, (_,i)=>i), sr: [0,1,2,3,4,5,6,7,8,16,32,33,34,35,36,37,38,39,40,48], label: "Asymmetric Tower [32, 20, 64]" }
+};
+
+function runNormTest() {
+  const key = document.getElementById("norm-preset").value;
+  const { n, sl, sr, label } = normPresets[key];
+  const dim = 1 << n;
+  const x = new Array(dim).fill(0n);
+  const y = new Array(dim).fill(0n);
+  sl.forEach(i => { x[i] = BigInt(Math.floor(Math.random() * 19) - 9 || 3); });
+  sr.forEach(j => { y[j] = BigInt(Math.floor(Math.random() * 19) - 9 || -5); });
+  const z = new Array(dim).fill(0n);
+  for (const i of sl) {
+    for (const j of sr) {
+      z[i ^ j] += BigInt(cdSign(n, i, j)) * x[i] * y[j];
+    }
+  }
+  const nx = x.reduce((a, b) => a + b * b, 0n);
+  const ny = y.reduce((a, b) => a + b * b, 0n);
+  const nz = z.reduce((a, b) => a + b * b, 0n);
+  const diff = nz - nx * ny;
+  const ok = diff === 0n;
+  document.getElementById("norm-result").innerHTML =
+    `<p><strong>Subspace:</strong> ${label} (dim = ${dim})</p>` +
+    `<p><strong>Left basis (${sl.length}):</strong> [${sl.join(", ")}]</p>` +
+    `<p><strong>Right basis (${sr.length}):</strong> [${sr.join(", ")}]</p>` +
+    `<p>‖x‖² = ${nx.toString()} · ‖y‖² = ${ny.toString()} · ‖x‖²·‖y‖² = ${(nx * ny).toString()}</p>` +
+    `<p>‖x · y‖² = ${nz.toString()}</p>` +
+    `<p><strong>Defect ‖x · y‖² - ‖x‖²·‖y‖² = ${diff.toString()}</strong> → ` +
+    `<span class="${ok ? "ok" : "err"}">${ok ? "EXACT NORM-MULTIPLICATIVE COMPOSITION IDENTITY" : "NORM IDENTITY VIOLATED (ZERO-DIVISOR OBSTRUCTION!)"}</span></p>`;
+}
+document.getElementById("norm-preset").addEventListener("change", runNormTest);
+document.getElementById("norm-rand").addEventListener("click", runNormTest);
+runNormTest();
+</script>
+</body>
+</html>

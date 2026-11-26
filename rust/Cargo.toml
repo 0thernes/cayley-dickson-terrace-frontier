@@ -1,0 +1,16 @@
+[package]
+name = "cd-terrace"
+version = "1.0.0"
+edition = "2021"
+rust-version = "1.75"
+authors = ["Alexander Stephen Donahue <0_0@0thernes.art>"]
+license = "Apache-2.0"
+description = "Exact zero-dependency verifier for the Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and Dimension-64 Hurwitz-Radon Rupture across Generalized Cayley-Dickson Algebras"
+repository = "https://github.com/0thernes/cayley-dickson-terrace-frontier"
+
+[dependencies]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1

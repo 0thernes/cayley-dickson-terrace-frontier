@@ -1,0 +1,19 @@
+# Hardening & Audit Log (`HARDENING_LOG.md`)
+
+Three comprehensive hardening cycles were executed across every folder, file, theorem, engine, figure, citation, and check prior to v1.0.0 freeze.
+
+## Cycle 1 — Mathematical Soundness, Sharpness & Kernel Performance
+- **Sharp BDI Ceiling Separation Upgraded ($n \ge 6 \to n \ge 5$):** During Cycle 1 boundary auditing, direct evaluation showed `twobladeMaxNullity 5 = 12 < 16 = bdiMaxAnnihilator 5` (equality holds uniquely at $n = 4$: `4 = 4`). Upgraded `twoblade_strictly_below_bdi` in `lean/CDTerrace/TerraceLaw.lean`, `refute_twoblade_reaches_bdi_at_64` in `AdversarialTests.lean`, `tests/test_all.py`, Fig. 5, and `paper/main.tex` to state and prove the sharp $n \ge 5$ threshold.
+- **Zero-`maxRecDepth` Pure-Kernel C-Primitive Evaluator:** Replaced `Nat.land`/`Nat.lor` recursion inside `decide` in `FiniteCertificates.lean` with provably equivalent C-primitive (`Nat.div`/`Nat.mod`/`Nat.add`) evaluators (`popcount8`, `disjointBelow`, `forbMask4Direct`, `sumTree`), discharging all $2^{16}$ sedenion subspace counts (`42, 0, 7, 28, 7`) by pure kernel `rfl` with zero `maxRecDepth`/`maxHeartbeats` overrides.
+- **Eliminated `NonVacuity` Definitional-Equality Blowup:** Rewrote numeric indices (`5 = 4 + 1`, `28 = 2^5 - 4`, `2047 = 255 + 256 * 7`) explicitly via `rw` before applying universal theorems, eliminating kernel WHNF unfolding of `nullityHist 6` and `isNormMultMask 4` (dropping `NonVacuity.lean` from timeout to 10s, and passing both `leanchecker --fresh` and `leanchecker-paranoid --fresh` with exit code 0).
+- **Explicit 11D Sedenion Counterexample Corrected:** Replaced a non-violating basis pair in `tests/test_all.py` with the genuine zero-divisor witness $(e_4 + e_9)(e_7 + e_{10}) = 0$ inside $\{0,\dots,10\}$.
+
+## Cycle 2 — Live Citation Verification, Visual Pixel QA & Typography
+- **Caught Wrong DOI via Crossref Title Check:** Live verification of `paper/references.bib` caught that DOI `10.7151/dmgaa.1087` resolved to an unrelated article rather than Cawagas (2004). Corrected to `10.7151/dmgaa.1088` and re-verified all 24 BibTeX entries live (HTTP 200 OK with exact title match across Crossref and arXiv).
+- **Updated `carneiro2024lean4lean` Exact Title & arXiv Notes:** Aligned Mario Carneiro's 2024 Lean4Lean title to the exact arXiv title and added `note = {arXiv:...}` fields so `amsalpha` prints arXiv identifiers in the rendered PDF bibliography.
+- **Visual Audit of All 5 Figures & Rendered PDF Pages:** Inspected all 5 PNG figures and rendered PDF pages with PyMuPDF (`pymupdf`); resolved label/legend collisions in Figs. 1, 2, 3, 4, and 5; replaced `xurl`/`\nolinkurl` on spaced CLI commands with `\cmd{...}` and `-{}-` so double hyphens and spaces render crisply; wrapped `[LEAN-6K]`/`[EXACT-COMP]`/`[OPEN]` badges in `\mbox{...}`; fixed off-by-one indexing in Open Problem 8.4 (`0, 2, 6, 14 = 2^{n-4}-2` for $n = 5, 6, 7, 8$); achieved **0 Overfull/Underfull/Undefined/Error lines** in `paper/build/main.log` and exit 0 on clean-room `dist/arxiv_submission.tar.gz` compilation.
+
+## Cycle 3 — Cross-Language Linters, Build Standard v1.2.0 & Cryptographic Provenance
+- **Rust & Python Static Analysis:** Resolved `clippy::needless_range_loop` in `rust/src/lib.rs` (`cargo clippy --all-targets -- -D warnings` = 0 warnings), 17 `ruff` style lints across Python modules (`ruff check` = 0 errors), and strict `mypy` checks (`0` issues across all source files).
+- **Axiom Anti-Drift & LF Normalization:** Embedded verbatim `results/lean_axioms.txt` output in `README.md`, verified by `scripts/check_readme_axioms.py`; normalized all LF text files prior to generating `data/MANIFEST.sha256` and `MANIFEST.sha256`.
+- **Build Standard v1.2.0 Audit:** Ran `scripts/Audit-Repo.ps1` across all 90 checks (`A01..A45`, `B01..B45`), achieving **100.0% PASS (0 FAIL, 0 PART, 0 placeholders)**.

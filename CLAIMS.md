@@ -1,0 +1,33 @@
+# Claims & Verification Ledger (`CLAIMS.md`)
+
+Every mathematical and computational claim in `cayley-dickson-terrace-frontier` (`0TH-2026-017`) is explicitly indexed below with its exact epistemic tag, machine-checked declaration or computational witness, and falsification test.
+
+- **`[LEAN-6K]`**: Formally proved from scratch in zero-Mathlib Lean 4.35.0, audited via `VerifyAxioms.lean` strictly within `{propext, Classical.choice, Quot.sound}`, and replayed across 6 independent kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`) via `lake check --paranoid` and `lake comparator --config comparator.json --paranoid`.
+- **`[EXACT-COMP]`**: Verified bit-for-bit using exact integer/rational arithmetic or certified zero-gap HiGHS MILP across independent implementations (Rust, ISO C11, Python), with frozen SHA-256 JSON artifacts in `data/`.
+- **`[OPEN]`**: Explicitly NOT claimed solved (see [`LIMITATIONS.md`](LIMITATIONS.md)).
+
+## Claim Matrix
+
+| ID | Claim Summary | Status | Primary Proof / Artifact | Independent Check |
+| --- | --- | --- | --- | --- |
+| `T1a` | Universal all-$n$ sign cocycle factorization $\sigma_n^\gamma(i,j) = \sigma_n^{\mathrm{std}}(i,j)\chi_n(i\&j\&\mathrm{flip})$ | `[LEAN-6K]` | `CDTerrace.cdSignGamma_factorization` (`Palomar.prove_t1a`) | `tests/test_all.py`, Rust, C11 |
+| `T1b` | Universal $k$-independent $2\times 2$ block-sign flip $\delta_n^\gamma(i,j,k) = \chi_n((i\oplus j)\&\mathrm{flip})\delta_n^{\mathrm{std}}(i,j,k)$ | `[LEAN-6K]` | `CDTerrace.blockDeltaGamma_eq` (`Palomar.prove_t1b`) | `tests/test_all.py`, Rust, C11 |
+| `T1c` | Exact 2-blade nilpotency $(e_i+e_j)^2 = 0 \iff \mathrm{parity}_n((i\oplus j)\&\mathrm{flip}) = 1$ | `[LEAN-6K]` | `CDTerrace.twoblade_nilpotent_iff` (`Palomar.prove_t1c`) | `reference/oracle.py` |
+| `T1d` | Universal all-$n$ Nilpotent Mirror-Inversion Law ($\nu^\gamma = \nu^{\mathrm{std}}$ or $2^{n-1}-\nu^{\mathrm{std}}$) | `[LEAN-6K]` | `CDTerrace.nilpotent_mirror_law` (`Palomar.prove_t1d`) | Hypothesis + $\mathbb{Q}$ Gauss elim |
+| `T1e` | Universal all-$n$ Mirror-Pair Conservation & Midpoint Stratum Invariance | `[LEAN-6K]` | `CDTerrace.mirror_sum_conservation`, `midpoint_stratum_invariance` (`Palomar.prove_t1e`) | Rust/C11/Python all 496 algebras |
+| `T2a` | Exact four-branch 2-blade nullity doubling recurrence ($\forall n \ge 2$) | `[LEAN-6K]` | `CDTerrace.nullity_doubling_{lower,upper,axis,cross}` (`Palomar.prove_t2a`) | `tests/test_all.py`, Rust, C11 |
+| `T2b` | Universal $4 \mid \nu_n^{\mathrm{std}}$, ceiling $2^{n-1}-4$, and strict separation from BDI $2^n-4n+4$ for ALL $n \ge 5$ (equality uniquely at $n=4$) | `[LEAN-6K]` | `CDTerrace.nullity_mod4_and_bound`, `twoblade_strictly_below_bdi` (`Palomar.prove_t2b`) | `AdversarialTests.lean`, `test_all.py` |
+| `T2c` | Closed-form all-$n$ mass $M_n = 8(2^{n-1}-1)(2^{n-2}-1)(2^{n-3}-1)$ and non-ZD count $H_n^{\mathrm{std}}(0) = (6n-9)2^{n-2}+3$ | `[LEAN-6K]` | `CDTerrace.totalNullityMass_all_n`, `nonZDCount_all_n` (`Palomar.prove_t2c`) | `data/cd4_to_cd8_terraces.json` |
+| `T2d` | Dyadic-Palindromic Terrace Law: exact even/odd bin interleaving & interior palindrome ($\forall n \ge 3$) | `[LEAN-6K]` | `CDTerrace.terrace_interleave_{even,odd}`, `terrace_palindrome_all_n` (`Palomar.prove_t2d`) | `data/cd4_to_cd8_terraces.json` |
+| `T2e` | Exact top terrace bin $H_{n+1}(2^n-4) = 2H_n(0)$ and exact top-bin jump $+3(2^n-2)$ | `[LEAN-6K]` | `CDTerrace.terrace_top_bin_all_n`, `terrace_top_jump_all_n` (`Palomar.prove_t2e`) | `data/cd4_to_cd8_terraces.json` |
+| `T2f` | Universal All-Signature Midpoint 42 Law: $H_n^\gamma(2^{n-2}) = 42 \cdot 2^{n-4}$ ($\forall n \ge 4$, $\forall \gamma$) | `[LEAN-6K]` | `CDTerrace.terrace_midpoint_std_all_n`, `universal_split_midpoint_42` (`Palomar.prove_t2f`) | Rust/C11/Python all 496 algebras |
+| `T3a` | Exact doubling law of $G_n^{\mathrm{comp}}$ and unique universal right-multipliers $\{e_0, e_{2^{n-1}}\}$ ($\forall n \ge 4$) | `[LEAN-6K]` | `CDTerrace.rightCompat_doubling_*`, `universal_right_multipliers_all_n` (`Palomar.prove_t3a`) | `data/hurwitz_rupture_table.json` |
+| `T3b` | Exact right-compatibility clique number $\omega(G_n^{\mathrm{comp}}) = n + 5$ ($\forall n \ge 3$) | `[LEAN-6K]` | `CDTerrace.compat_clique_le_all_n`, `cdMaxClique_valid` (`Palomar.prove_t3b`) | `data/hurwitz_rupture_table.json` |
+| `T3c` | Hurwitz–Radon saturation at $n \in \{3,4,5\}$ and Dimension-64 Bott Rupture $n+5 < \rho(2^n)$ with deficit $\ge n-5$ ($\forall n \ge 6$) | `[LEAN-6K]` | `CDTerrace.hurwitz_radon_saturation_345`, `hurwitz_radon_rupture_all_ge6` (`Palomar.prove_t3c`) | `data/hurwitz_rupture_table.json` |
+| `T3d` | Constructive $[2^n, n+5, 2^n]$ and asymmetric doubling tower $[2^{n-1}, 2(n+4), 2^n]$ pairs ($\forall n \ge 4$) | `[LEAN-6K]` | `CDTerrace.compatClique_implies_full_normMult`, `asymmetric_doubling_tower_all_n` (`Palomar.prove_t3d`) | `tests/test_all.py`, Rust |
+| `T4a` | Sedenion Triple-42 & Fano $7+28+7=42$ Duality across all $2^{16}$ coordinate subspaces, 0 of dim $\ge 11$ | `[LEAN-6K]` | `CDTerrace.sedenion_42_fano_duality`, `sedenion_no_11d_coord_subspace` (`Palomar.prove_t4a`) | `data/sedenion_box_kites_and_42_subspaces.json` |
+| `T4b` | Sedenion 42 Box-Kites = $7 \times K_{2,2,2}$ (4-regular, 84 edges) & 9D norm-multiplicative $\mathbb{O} \oplus \mathbb{R} e_8$ | `[LEAN-6K]` | `CDTerrace.sedenion_box_kites_7x6` (`Palomar.prove_t4b`) | `data/sedenion_box_kites_and_42_subspaces.json` |
+| `T4c` | Complete split-phase classifications of $\mathrm{CD}_4(\gamma)$ ($1{:}1{:}7{:}7$) & $\mathrm{CD}_5(\gamma)$ ($4{\times}1 + 4{\times}7$) | `[LEAN-6K]` | `CDTerrace.split_sedenion_4_phases`, `split_pathion_8_phases` (`Palomar.prove_t4c`) | `data/split_phases_cd4_to_cd8.json` |
+| `T4d` | Certified $[14,14,32]$ Pathion & $[16,16,64]$ Chingon witnesses + integral-domain & $\mathbb{Z}[i]$ pure-intercalate rigidity | `[LEAN-6K]` | `CDTerrace.pathion_14_and_chingon_16_witnesses`, `pure_intercalate_field_rigidity`, `gaussInt_sq_eq_one_iff` (`Palomar.prove_t4d`) | `tests/test_all.py`, `reference/oracle.py` |
+| `C1` | Exhaustive split-phase tables for all 448 algebras $\mathrm{CD}_6(\gamma)$–$\mathrm{CD}_8(\gamma)$ (16, 32, 64 phases; interior spectral gaps for $n \ge 6$) | `[EXACT-COMP]` | `data/split_phases_cd4_to_cd8.json` | Independent Rust, ISO C11, Python bit-for-bit match |
+| `C2` | Exact Pathion symmetric coordinate ceiling $r_{\max}(\mathrm{CD}_5) = 14 < 16$ (strictly below Yiu 1990 $[16,16,32]$) | `[EXACT-COMP]` | `data/sedenion_box_kites_and_42_subspaces.json` | Certified HiGHS MILP over all 630 bad affine 2-planes (0 gap) |

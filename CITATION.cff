@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+title: "The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and the Dimension-64 Hurwitz-Radon Rupture Across Generalized Cayley-Dickson Algebras"
+message: "If you use this software, Lean 4 formalization, datasets, or white paper, please cite it as below."
+type: software
+authors:
+  - family-names: "Donahue"
+    given-names: "Alexander Stephen"
+    orcid: "https://orcid.org/0009-0006-8168-9648"
+    email: "0_0@0thernes.art"
+    affiliation: "Independent Researcher, Spokane, WA, USA"
+version: "1.0.0"
+date-released: "2026-11-26"
+license: "Apache-2.0"
+repository-code: "https://github.com/0thernes/cayley-dickson-terrace-frontier"
+url: "https://0thernes.github.io/cayley-dickson-terrace-frontier/"
+keywords:
+  - cayley-dickson-algebras
+  - sedenions
+  - zero-divisors
+  - hurwitz-radon
+  - sums-of-squares
+  - box-kites
+  - lean4
+  - formal-verification

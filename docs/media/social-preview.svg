@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B1220"/>
+      <stop offset="55%" stop-color="#111C33"/>
+      <stop offset="100%" stop-color="#0F2638"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#56B4E9"/>
+      <stop offset="50%" stop-color="#E69F00"/>
+      <stop offset="100%" stop-color="#D55E00"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1280" height="8" fill="url(#accent)"/>
+  <g opacity="0.16" stroke="#56B4E9" stroke-width="1.2" fill="none">
+    <circle cx="1040" cy="310" r="185"/>
+    <circle cx="1040" cy="310" r="120"/>
+    <polygon points="1040,125 1200,217 1200,402 1040,495 880,402 880,217"/>
+    <line x1="1040" y1="125" x2="1040" y2="495"/>
+    <line x1="880" y1="217" x2="1200" y2="402"/>
+    <line x1="1200" y1="217" x2="880" y2="402"/>
+  </g>
+  <text x="72" y="96" fill="#56B4E9" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" font-weight="700" letter-spacing="2">0TH-2026-017 · LEAN 4.35.0 (6 KERNELS) · RUST · ISO C11 · PYTHON</text>
+  <text x="72" y="182" fill="#F8FAFC" font-family="Georgia, serif" font-size="50" font-weight="700">Cayley–Dickson Terrace Frontier</text>
+  <text x="72" y="242" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation,</text>
+  <text x="72" y="278" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">and the Dimension-64 Hurwitz–Radon Rupture Across All 2ⁿ Signatures</text>
+
+  <g transform="translate(72, 336)">
+    <rect x="0" y="0" width="256" height="122" rx="12" fill="#16233D" stroke="#56B4E9" stroke-width="1.5"/>
+    <text x="20" y="38" fill="#56B4E9" font-family="ui-monospace, monospace" font-size="16" font-weight="700">MIDPOINT 42 LAW</text>
+    <text x="20" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="30" font-weight="700">42 · 2ⁿ⁻⁴</text>
+    <text x="20" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">Invariant across all 2ⁿ signatures</text>
+
+    <rect x="278" y="0" width="256" height="122" rx="12" fill="#16233D" stroke="#D55E00" stroke-width="1.5"/>
+    <text x="298" y="38" fill="#E69F00" font-family="ui-monospace, monospace" font-size="16" font-weight="700">DIM-64 RUPTURE</text>
+    <text x="298" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="30" font-weight="700">ω = n+5 &lt; ρ(2ⁿ)</text>
+    <text x="298" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">11 &lt; 12 at dim 64; ∀ n ≥ 6</text>
+
+    <rect x="556" y="0" width="256" height="122" rx="12" fill="#16233D" stroke="#009E73" stroke-width="1.5"/>
+    <text x="576" y="38" fill="#009E73" font-family="ui-monospace, monospace" font-size="16" font-weight="700">ZERO-MATHLIB LEAN</text>
+    <text x="576" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="30" font-weight="700">20 / 20 Targets</text>
+    <text x="576" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">0 sorry · 6 independent kernels</text>
+  </g>
+
+  <text x="72" y="556" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="20">Alexander Stephen Donahue · ORCID 0009-0006-8168-9648 · github.com/0thernes/cayley-dickson-terrace-frontier</text>
+</svg>

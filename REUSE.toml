@@ -1,0 +1,16 @@
+version = 1
+SPDX-PackageName = "cayley-dickson-terrace-frontier"
+SPDX-PackageSupplier = "Alexander Stephen Donahue <0_0@0thernes.art>"
+SPDX-PackageDownloadLocation = "https://github.com/0thernes/cayley-dickson-terrace-frontier"
+
+[[annotations]]
+path = ["lean/**", "rust/**", "c/**", "src/**", "reference/**", "tests/**", "scripts/**", "examples/**", ".github/**", ".cursor/**", "justfile", "pyproject.toml", "repo.yaml", "requirements.lock.txt", "repo-standard.schema.json", ".editorconfig", ".gitattributes", ".gitignore", ".env.example"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Alexander Stephen Donahue"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = ["paper/**", "dist/**", "docs/**", "data/**", "results/**", "*.md", "llms*.txt", "CITATION.cff", "VERSION", "MANIFEST.sha256"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Alexander Stephen Donahue"
+SPDX-License-Identifier = "CC-BY-4.0"

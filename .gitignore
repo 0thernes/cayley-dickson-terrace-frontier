@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: Apache-2.0
+# Build artifacts & caches
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.hypothesis/
+*.egg-info/
+
+# Lean 4 caches
+lean/.lake/
+
+# Rust & C11 build outputs
+rust/target/
+c/build/
+
+# LaTeX build intermediates
+paper/build/
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+
+# Local scratch & OS files
+results/lean_axioms_local.txt
+results/ci_lean_axioms.txt
+SHA256SUMS
+.DS_Store
+Thumbs.db
+.env

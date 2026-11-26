@@ -1,0 +1,482 @@
+{
+  "schema_version": "1.0",
+  "description": "Dimension-64 Hurwitz-Radon Bott Rupture & Asymmetric Doubling Tower table (CD_3..CD_12).",
+  "rows": [
+    {
+      "n": 3,
+      "dim": 8,
+      "cd_max_clique_omega": 8,
+      "hurwitz_radon_rho": 8,
+      "rupture_gap": 0,
+      "saturated": true,
+      "universal_right_multipliers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "shell_degrees": [
+        7
+      ],
+      "asymmetric_doubling_triple": [
+        4,
+        8,
+        8
+      ],
+      "canonical_clique_witness": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "asymmetric_right_witness": null
+    },
+    {
+      "n": 4,
+      "dim": 16,
+      "cd_max_clique_omega": 9,
+      "hurwitz_radon_rho": 9,
+      "rupture_gap": 0,
+      "saturated": true,
+      "universal_right_multipliers": [
+        0,
+        8
+      ],
+      "shell_degrees": [
+        9,
+        15
+      ],
+      "asymmetric_doubling_triple": [
+        8,
+        16,
+        16
+      ],
+      "canonical_clique_witness": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "asymmetric_right_witness": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "n": 5,
+      "dim": 32,
+      "cd_max_clique_omega": 10,
+      "hurwitz_radon_rho": 10,
+      "rupture_gap": 0,
+      "saturated": true,
+      "universal_right_multipliers": [
+        0,
+        16
+      ],
+      "shell_degrees": [
+        11,
+        17,
+        31
+      ],
+      "asymmetric_doubling_triple": [
+        16,
+        18,
+        32
+      ],
+      "canonical_clique_witness": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        16
+      ],
+      "asymmetric_right_witness": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ]
+    },
+    {
+      "n": 6,
+      "dim": 64,
+      "cd_max_clique_omega": 11,
+      "hurwitz_radon_rho": 12,
+      "rupture_gap": 1,
+      "saturated": false,
+      "universal_right_multipliers": [
+        0,
+        32
+      ],
+      "shell_degrees": [
+        13,
+        19,
+        33,
+        63
+      ],
+      "asymmetric_doubling_triple": [
+        32,
+        20,
+        64
+      ],
+      "canonical_clique_witness": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        16,
+        32
+      ],
+      "asymmetric_right_witness": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        16,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        48
+      ]
+    },
+    {
+      "n": 7,
+      "dim": 128,
+      "cd_max_clique_omega": 12,
+      "hurwitz_radon_rho": 16,
+      "rupture_gap": 4,
+      "saturated": false,
+      "universal_right_multipliers": [
+        0,
+        64
+      ],
+      "shell_degrees": [
+        15,
+        21,
+        35,
+        65,
+        127
+      ],
+      "asymmetric_doubling_triple": [
+        64,
+        22,
+        128
+      ],
+      "canonical_clique_witness": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        16,
+        32,
+        64
+      ],
+      "asymmetric_right_witness": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        16,
+        32,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        80,
+        96
+      ]
+    },
+    {
+      "n": 8,
+      "dim": 256,
+      "cd_max_clique_omega": 13,
+      "hurwitz_radon_rho": 17,
+      "rupture_gap": 4,
+      "saturated": false,
+      "universal_right_multipliers": [
+        0,
+        128
+      ],
+      "shell_degrees": [
+        17,
+        23,
+        37,
+        67,
+        129,
+        255
+      ],
+      "asymmetric_doubling_triple": [
+        128,
+        24,
+        256
+      ],
+      "canonical_clique_witness": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "asymmetric_right_witness": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        16,
+        32,
+        64,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        144,
+        160,
+        192
+      ]
+    },
+    {
+      "n": 9,
+      "dim": 512,
+      "cd_max_clique_omega": 14,
+      "hurwitz_radon_rho": 18,
+      "rupture_gap": 4,
+      "saturated": false,
+      "universal_right_multipliers": [
+        0,
+        256
+      ],
+      "shell_degrees": [
+        19,
+        25,
+        39,
+        69,
+        131,
+        257,
+        511
+      ],
+      "asymmetric_doubling_triple": [
+        256,
+        26,
+        512
+      ],
+      "canonical_clique_witness": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256
+      ],
+      "asymmetric_right_witness": null
+    },
+    {
+      "n": 10,
+      "dim": 1024,
+      "cd_max_clique_omega": 15,
+      "hurwitz_radon_rho": 20,
+      "rupture_gap": 5,
+      "saturated": false,
+      "universal_right_multipliers": [
+        0,
+        512
+      ],
+      "shell_degrees": [
+        21,
+        27,
+        41,
+        71,
+        133,
+        259,
+        513,
+        1023
+      ],
+      "asymmetric_doubling_triple": [
+        512,
+        28,
+        1024
+      ],
+      "canonical_clique_witness": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256,
+        512
+      ],
+      "asymmetric_right_witness": null
+    },
+    {
+      "n": 11,
+      "dim": 2048,
+      "cd_max_clique_omega": 16,
+      "hurwitz_radon_rho": 24,
+      "rupture_gap": 8,
+      "saturated": false,
+      "universal_right_multipliers": [
+        0,
+        1024
+      ],
+      "shell_degrees": [
+        23,
+        29,
+        43,
+        73,
+        135,
+        261,
+        515,
+        1025,
+        2047
+      ],
+      "asymmetric_doubling_triple": [
+        1024,
+        30,
+        2048
+      ],
+      "canonical_clique_witness": null,
+      "asymmetric_right_witness": null
+    },
+    {
+      "n": 12,
+      "dim": 4096,
+      "cd_max_clique_omega": 17,
+      "hurwitz_radon_rho": 25,
+      "rupture_gap": 8,
+      "saturated": false,
+      "universal_right_multipliers": [
+        0,
+        2048
+      ],
+      "shell_degrees": [
+        25,
+        31,
+        45,
+        75,
+        137,
+        263,
+        517,
+        1027,
+        2049,
+        4095
+      ],
+      "asymmetric_doubling_triple": [
+        2048,
+        32,
+        4096
+      ],
+      "canonical_clique_witness": null,
+      "asymmetric_right_witness": null
+    }
+  ]
+}
