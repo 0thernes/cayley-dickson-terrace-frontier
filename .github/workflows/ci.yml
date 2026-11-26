@@ -17,6 +17,9 @@ jobs:
   lean-6kernel:
     name: Lean 4.35.0 (6 Independent Proof Kernels)
     runs-on: ubuntu-latest
+    # The normal replay is documented at ~20 minutes; bound hung sandbox/kernel
+    # processes so a run always reaches a terminal result for the archive mirror.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
