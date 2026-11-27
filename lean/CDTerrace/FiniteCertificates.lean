@@ -5,30 +5,36 @@ public import CDTerrace.MirrorConservation
 public import CDTerrace.TerraceLaw
 
 /-!
-# CDTerrace.FiniteCertificates — Pure-Kernel Finite Certificates & Pillar 4 Rigidity
+# CDTerrace.FiniteCertificates — Pure-Kernel Finite Certificates & Pillar 4 Lemmas
 
 Proves in zero-Mathlib, strictly constructive Lean 4.35.0 (`0` `sorry`, `0` `native_decide`,
-`0` custom axioms, zero `maxRecDepth`/`maxHeartbeats` overrides — instant on all 6 kernels):
-- **T4a (`sedenion_42_fano_duality`, `sedenion_no_11d_coord_subspace`):**
+`0` custom axioms, zero `maxRecDepth`/`maxHeartbeats` overrides; verified across all 6 independent
+Lean 4.35.0 kernels in CI):
+- **T4a (`sedenion_42_fano_duality`, `sedenion_no_11d_coord_subspace`, `sedenion_bad_planes_split_2_2`):**
   Complete exact enumeration over all $2^{16} = 65536$ coordinate subspaces of $\mathbb{S}_{16}$:
-  - Exactly **42** bad affine 2-planes out of 140 affine 2-planes in $\mathbb{F}_2^4$.
+  - Exactly **42** bad affine 2-planes out of 140 affine 2-planes in $\mathbb{F}_2^4$, every one of
+    which splits strictly $2 + 2$ across $\{1..7\} \times \{9..15\}$.
   - Exactly **42** maximal 10-dimensional norm-multiplicative coordinate subspaces `[10, 10, 16]`,
     decomposing by $|S \cap \mathbb{O}|$ into the exact Fano triple **`7 + 28 + 7 = 42`**.
   - Exactly **0** norm-multiplicative coordinate subspaces of dimension $\ge 11$.
-- **T4b (`sedenion_box_kites_7x6`):**
-  The 42 Sedenion Box-Kite assessors form a 4-regular graph (`84` undirected edges) partitioning
-  by XOR signature $i \oplus j \in \{9,\dots,15\}$ into **7 disjoint octahedra $K_{2,2,2}$**
-  of size 6, while $\mathbb{O} \oplus \mathbb{R} e_8$ (mask `511`, dim 9) is norm-multiplicative.
+- **T4b (`sedenion_box_kites_7x6`, `bladeProdCoord4_eq_cdMul`):**
+  Formal six-kernel re-verification of de Marrais's (2000) 42 Sedenion Box-Kite assessors under
+  the pure algebraic mutual zero-divisor product $(e_i + e_j)(e_k \pm e_l) = 0$ (zero XOR
+  pre-filtering): 4-regular (`84` undirected edges) partitioning by XOR signature
+  $i \oplus j \in \{9,\dots,15\}$ into **7 disjoint octahedra $K_{2,2,2}$** of size 6 with
+  genuinely proved zero cross-XOR-class edges, while $\mathbb{O} \oplus \mathbb{R} e_8$
+  (mask `511`, dim 9) is norm-multiplicative.
 - **T4c (`split_sedenion_4_phases`, `split_pathion_8_phases`):**
   Exhaustive pure-kernel classification of all 16 split Sedenion algebras $\mathrm{CD}_4(\gamma)$
   (`4` distinct histograms with multiplicities `1:1:7:7`, invariant $H_4^\gamma(4) = 42$) and
   all 32 split Pathion algebras $\mathrm{CD}_5(\gamma)$ (`8` distinct histograms with
   multiplicities `4×1 + 4×7`, invariant $H_5^\gamma(8) = 84$, $H_5^\gamma(4) + H_5^\gamma(12) = 210$).
-- **T4d (`pathion_14_and_chingon_16_witnesses`, `pure_intercalate_field_rigidity`,
+- **T4d (`pathion_14_and_chingon_16_witnesses`, `domain_sq_eq_one_imp`, `int_sq_eq_one_iff`,
   `gaussInt_sq_eq_one_iff`):**
   Verified explicit symmetric norm-multiplicative witnesses `[14, 14, 32]` in $\mathrm{CD}_5$ and
-  `[16, 16, 64]` in $\mathrm{CD}_6$, plus Pillar 4 **Pure-Intercalate Base-Field Rigidity**
-  over every integral domain (and explicitly over $\mathbb{Z}$ and $\mathbb{Z}[i]$).
+  `[16, 16, 64]` in $\mathrm{CD}_6$, plus the elementary unit lemma $c^2 = 1 \implies c = \pm 1$
+  derived directly from standard commutative integral-domain axioms (and explicitly over
+  $\mathbb{Z}$ and $\mathbb{Z}[i]$).
 -/
 
 namespace CDTerrace
@@ -99,21 +105,44 @@ theorem countPred_disj (P Q : Nat → Bool) (m : Nat)
     have hm := hdisj m (by omega)
     cases hP : P m <;> cases hQ : Q m <;> simp_all <;> omega
 
-/-! ### Pillar 4: Pure-Intercalate Base-Field Rigidity (Bridge to Zhang–Zhu 2026) -/
+/-! ### Elementary Commutative-Domain Unit Lemma & Gaussian-Integer Rigidity -/
 
-/-- **Theorem T4d-1 (Abstract Pure-Intercalate Base-Field Rigidity):**
-    Over ANY integral domain $R$, every single-slot (monomial / intercalate) coefficient
-    satisfying $c^2 = 1$ must satisfy $c = 1$ or $c = -1$. -/
-theorem pure_intercalate_field_rigidity {R : Type}
-    (zero one negOne : R) (mul sub : R → R → R)
-    (h_fac : ∀ c, mul c c = one → mul (sub c one) (sub c negOne) = zero)
-    (h_dom : ∀ x y, mul x y = zero → x = zero ∨ y = zero)
-    (h_sub : ∀ x y, sub x y = zero → x = y) :
-    ∀ c, mul c c = one → c = one ∨ c = negOne := by
+/-- **Theorem T4d-1 (Commutative Integral-Domain Unit Lemma):**
+    In ANY commutative integral domain $(R, 0, 1, +, \cdot, -)$, every $c \in R$ with
+    $c^2 = 1$ satisfies $c = 1 \lor c = -1$. Derived directly from standard ring axioms
+    by proving $(c - 1)(c + 1) = c^2 - 1 = 0$ (zero pre-factored hypothesis). -/
+theorem domain_sq_eq_one_imp {R : Type}
+    (zero one : R) (add mul : R → R → R) (neg : R → R)
+    (h_add_assoc : ∀ x y z, add (add x y) z = add x (add y z))
+    (h_zero_add : ∀ x, add zero x = x)
+    (h_add_zero : ∀ x, add x zero = x)
+    (h_add_neg : ∀ x, add x (neg x) = zero)
+    (h_neg_add : ∀ x, add (neg x) x = zero)
+    (h_mul_comm : ∀ x y, mul x y = mul y x)
+    (h_mul_one : ∀ x, mul x one = x)
+    (h_left_distrib : ∀ x y z, mul x (add y z) = add (mul x y) (mul x z))
+    (h_right_distrib : ∀ x y z, mul (add x y) z = add (mul x z) (mul y z))
+    (h_neg_mul : ∀ x y, mul (neg x) y = neg (mul x y))
+    (h_dom : ∀ x y, mul x y = zero → x = zero ∨ y = zero) :
+    ∀ c, mul c c = one → c = one ∨ c = neg one := by
   intro c hsq
-  rcases h_dom _ _ (h_fac c hsq) with h1 | h2
-  · exact Or.inl (h_sub c one h1)
-  · exact Or.inr (h_sub c negOne h2)
+  have hprod : mul (add c (neg one)) (add c one) = zero := by
+    rw [h_left_distrib, h_right_distrib, h_mul_one, hsq,
+        h_neg_mul, h_mul_comm one c, h_mul_one,
+        h_add_assoc, ← h_add_assoc (neg c) c (neg one), h_neg_add, h_zero_add, h_add_neg]
+  rcases h_dom _ _ hprod with h1 | h2
+  · left
+    calc c = add c zero := (h_add_zero c).symm
+      _ = add c (add (neg one) one) := by rw [h_neg_add]
+      _ = add (add c (neg one)) one := (h_add_assoc c (neg one) one).symm
+      _ = add zero one := by rw [h1]
+      _ = one := h_zero_add one
+  · right
+    calc c = add c zero := (h_add_zero c).symm
+      _ = add c (add one (neg one)) := by rw [h_add_neg]
+      _ = add (add c one) (neg one) := (h_add_assoc c one (neg one)).symm
+      _ = add zero (neg one) := by rw [h2]
+      _ = neg one := h_zero_add (neg one)
 
 theorem int_sq_eq_one_iff (c : Int) : c * c = 1 ↔ c = 1 ∨ c = -1 := by
   constructor
@@ -270,6 +299,34 @@ theorem pathion_14_and_chingon_16_witnesses :
 theorem cd4_bad_planes_count :
     countAffinePlanes4 = 140 ∧ countBadAffinePlanes4 = 42 ∧ cd4BadPlaneMasks.length = 42 := by
   decide
+
+/-- Every bad affine 2-plane $\{a < b < c < d\}$ of $\mathbb{S}_{16}$ splits strictly $2 + 2$
+    across the imaginary octonion half $\{1..7\}$ and the upper imaginary half $\{9..15\}$. -/
+theorem sedenion_bad_planes_split_2_2 :
+    ∀ a b c d, a < b → b < c → c < d → d < 16 →
+      (a ^^^ b ^^^ c = d) → isBadAffinePlane 4 a b c d = true →
+      1 ≤ a ∧ b ≤ 7 ∧ 9 ≤ c ∧ d ≤ 15 := by
+  have hall :
+      allNat (fun a =>
+        allNat (fun b =>
+          if !(a < b) then true
+          else allNat (fun c =>
+            let d := a ^^^ b ^^^ c
+            if !(b < c && c < d && d < 16 && isBadAffinePlane 4 a b c d) then true
+            else decide (1 ≤ a && b ≤ 7 && 9 ≤ c && d ≤ 15)) 16) 16) 16 = true := by
+    decide
+  intro a b c d hab hbc hcd hd hxor hbad
+  have ha := (allNat_eq_true _ 16).mp hall a (by omega)
+  have hb := (allNat_eq_true _ 16).mp ha b (by omega)
+  simp only [hab, decide_true, Bool.not_true, Bool.false_eq_true, ↓reduceIte] at hb
+  have hc := (allNat_eq_true _ 16).mp hb c (by omega)
+  change (if !(b < c && c < (a ^^^ b ^^^ c) && (a ^^^ b ^^^ c) < 16 &&
+              isBadAffinePlane 4 a b c (a ^^^ b ^^^ c)) then true
+          else decide (1 ≤ a && b ≤ 7 && 9 ≤ c && (a ^^^ b ^^^ c) ≤ 15)) = true at hc
+  rw [hxor] at hc
+  simp only [hbc, hcd, hd, hbad, decide_true, Bool.and_true, Bool.not_true, Bool.false_eq_true,
+             ↓reduceIte, decide_eq_true_eq, Bool.and_eq_true] at hc
+  omega
 
 /-- Popcount of an 8-bit integer (`0 ≤ x < 256`), using pure C-primitive `div`/`mod`
     for instantaneous kernel `rfl` evaluation! -/
@@ -1606,7 +1663,7 @@ theorem sedenion_no_11d_coord_subspace (m : Nat) (hm : m < 65536) (hdim : 11 ≤
     rw [sedenion_42_fano_duality.2.2.2.1] at hpos; omega
   · exact Bool.eq_false_iff.mpr h
 
-/-! ### Theorem T4b: Sedenion 42 Box-Kites ($7 \times K_{2,2,2}$) & 9D Subspace $\mathbb{O} \oplus \mathbb{R} e_8$ -/
+/-! ### Theorem T4b: Sedenion 42 Box-Kite Assessors ($7 \times K_{2,2,2}$) & 9D Subspace $\mathbb{O} \oplus \mathbb{R} e_8$ -/
 
 /-- The 42 Sedenion Box-Kite assessors $(i, j)$ with $1 \le i \le 7$, $9 \le j \le 15$, $i \neq j - 8$. -/
 @[expose] def sedenionAssessors : List (Nat × Nat) :=
@@ -1615,16 +1672,105 @@ theorem sedenion_no_11d_coord_subspace (m : Nat) (hm : m < 65536) (hdim : 11 ≤
     else (List.range 16).flatMap fun j =>
       if 9 ≤ j && i != j - 8 then [(i, j)] else []
 
-/-- Box-Kite mutual zero-divisor adjacency: assessors $(i, j)$ and $(k, l)$ share a
-    2-blade annihilation pair $(e_i + e_j)(e_k \pm e_l) = 0$. -/
-@[expose] def boxKiteAdj (p q : Nat × Nat) : Bool :=
-  (p.1 ^^^ p.2 == q.1 ^^^ q.2) && (p.1 != q.1) && (p.2 != q.2) &&
-  (cdSign 4 p.1 q.1 * cdSign 4 p.2 q.2 == cdSign 4 p.1 q.2 * cdSign 4 p.2 q.1)
+/-- Exact coordinate $t$ of the full sedenion product $(e_i + e_j)(e_k + s\,e_l)$ in $\mathbb{S}_{16}$
+    (sum of the 4 basis products landing in slot $t$; zero XOR pre-filtering). -/
+@[expose] def bladeProdCoord4 (i j k l : Nat) (s : Int) (t : Nat) : Int :=
+  (if i ^^^ k == t then cdSign 4 i k else 0) +
+  (if i ^^^ l == t then s * cdSign 4 i l else 0) +
+  (if j ^^^ k == t then cdSign 4 j k else 0) +
+  (if j ^^^ l == t then s * cdSign 4 j l else 0)
 
-/-- **Theorem T4b (Sedenion 42 Box-Kites = $7 \times K_{2,2,2}$ & 9D Norm-Mult Subspace):**
+/-- Bridge theorem: `bladeProdCoord4 i j k l s t` equals the full bilinear Cayley-Dickson
+    product `cdMulCoordGamma 4 0 (twobladeVec i j) (signedBladeVec k l s) t`. -/
+theorem bladeProdCoord4_eq_cdMul (i j k l : Nat) (s : Int) (t : Nat)
+    (hi : i < 16) (hj : j < 16) (hne_ij : i ≠ j) (hne_kl : k ≠ l) :
+    bladeProdCoord4 i j k l s t =
+      cdMulCoordGamma 4 0 (twobladeVec i j) (signedBladeVec k l s) t := by
+  rw [cdMulCoordGamma_twoblade 4 0 i j hi hj hne_ij (signedBladeVec k l s) t,
+      cdSignGamma_zero_eq_cdSign, cdSignGamma_zero_eq_cdSign]
+  unfold bladeProdCoord4 signedBladeVec basisVec
+  have hEq : ∀ a b : Nat, ((a ^^^ b) == t) = ((a ^^^ t) == b) := by
+    intro a b
+    by_cases h : a ^^^ b = t
+    · have h2 : a ^^^ t = b := by rw [← h, ← Nat.xor_assoc, Nat.xor_self, Nat.zero_xor]
+      simp [h, h2]
+    · have h2 : a ^^^ t ≠ b := by
+        intro heq; apply h; rw [← heq, ← Nat.xor_assoc, Nat.xor_self, Nat.zero_xor]
+      simp [beq_false_of_ne h, beq_false_of_ne h2]
+  rw [hEq i k, hEq i l, hEq j k, hEq j l]
+  have hhalf : ∀ a : Nat,
+      (if a ^^^ t == k then cdSign 4 a k else 0) + (if a ^^^ t == l then s * cdSign 4 a l else 0) =
+      cdSign 4 a (a ^^^ t) * ((if a ^^^ t == k then 1 else 0) + s * (if a ^^^ t == l then 1 else 0)) := by
+    intro a
+    by_cases h1 : a ^^^ t = k
+    · simp [h1, hne_kl]
+    · by_cases h2 : a ^^^ t = l
+      · simp [h2, Ne.symm hne_kl, Int.mul_comm]
+      · simp [beq_false_of_ne h1, beq_false_of_ne h2]
+  rw [Int.add_assoc ((if i ^^^ t == k then cdSign 4 i k else 0) + (if i ^^^ t == l then s * cdSign 4 i l else 0)),
+      hhalf i, hhalf j]
+
+/-- Pure algebraic Box-Kite mutual zero-divisor adjacency (ZERO XOR pre-filtering):
+    assessors `(i, j)` and `(k, l)` are adjacent iff there exists $s \in \{+1, -1\}$ such that
+    $(e_i + e_j)(e_k + s\,e_l) = 0$ identically across all 16 basis slots of $\mathbb{S}_{16}$. -/
+@[expose] def boxKiteAdj (p q : Nat × Nat) : Bool :=
+  allNat (fun t => bladeProdCoord4 p.1 p.2 q.1 q.2 1 t == 0) 16 ||
+  allNat (fun t => bladeProdCoord4 p.1 p.2 q.1 q.2 (-1) t == 0) 16
+
+/-- Fast equivalent 4-slot checker for `boxKiteAdj` (only the 4 support slots can be nonzero). -/
+@[expose] def bladeProdZero4Slots (i j k l : Nat) (s : Int) : Bool :=
+  (bladeProdCoord4 i j k l s (i ^^^ k) == 0) &&
+  (bladeProdCoord4 i j k l s (i ^^^ l) == 0) &&
+  (bladeProdCoord4 i j k l s (j ^^^ k) == 0) &&
+  (bladeProdCoord4 i j k l s (j ^^^ l) == 0)
+
+@[expose] def boxKiteAdjFast (p q : Nat × Nat) : Bool :=
+  bladeProdZero4Slots p.1 p.2 q.1 q.2 1 || bladeProdZero4Slots p.1 p.2 q.1 q.2 (-1)
+
+theorem bladeProdZero4Slots_eq (i j k l : Nat) (s : Int)
+    (hi : i < 16) (hj : j < 16) (hk : k < 16) (hl : l < 16) :
+    allNat (fun t => bladeProdCoord4 i j k l s t == 0) 16 = bladeProdZero4Slots i j k l s := by
+  apply Bool.eq_iff_iff.mpr
+  rw [allNat_eq_true]
+  unfold bladeProdZero4Slots
+  simp only [Bool.and_eq_true, beq_iff_eq]
+  constructor
+  · intro hall
+    exact ⟨⟨⟨hall _ (Nat.xor_lt_two_pow (n := 4) hi hk),
+             hall _ (Nat.xor_lt_two_pow (n := 4) hi hl)⟩,
+             hall _ (Nat.xor_lt_two_pow (n := 4) hj hk)⟩,
+           hall _ (Nat.xor_lt_two_pow (n := 4) hj hl)⟩
+  · rintro ⟨⟨⟨h1, h2⟩, h3⟩, h4⟩ t _
+    by_cases ht1 : i ^^^ k = t
+    · rw [← ht1]; exact h1
+    · by_cases ht2 : i ^^^ l = t
+      · rw [← ht2]; exact h2
+      · by_cases ht3 : j ^^^ k = t
+        · rw [← ht3]; exact h3
+        · by_cases ht4 : j ^^^ l = t
+          · rw [← ht4]; exact h4
+          · unfold bladeProdCoord4
+            simp [beq_false_of_ne ht1, beq_false_of_ne ht2,
+                  beq_false_of_ne ht3, beq_false_of_ne ht4]
+
+theorem boxKiteAdj_eq_fast (p q : Nat × Nat)
+    (hp1 : p.1 < 16) (hp2 : p.2 < 16) (hq1 : q.1 < 16) (hq2 : q.2 < 16) :
+    boxKiteAdj p q = boxKiteAdjFast p q := by
+  unfold boxKiteAdj boxKiteAdjFast
+  rw [bladeProdZero4Slots_eq p.1 p.2 q.1 q.2 1 hp1 hp2 hq1 hq2,
+      bladeProdZero4Slots_eq p.1 p.2 q.1 q.2 (-1) hp1 hp2 hq1 hq2]
+
+theorem sedenionAssessors_lt16 : ∀ p ∈ sedenionAssessors, p.1 < 16 ∧ p.2 < 16 := by
+  have h : sedenionAssessors.all (fun p => decide (p.1 < 16 && p.2 < 16)) = true := by decide
+  intro p hp
+  have hp' := decide_eq_true_eq.mp (List.all_eq_true.mp h p hp)
+  exact ⟨by simp_all, by simp_all⟩
+
+/-- **Theorem T4b (Formal Six-Kernel Re-Verification of de Marrais's 7 Box-Kites = $7 \times K_{2,2,2}$):**
+    Under the pure algebraic vanishing-product adjacency `boxKiteAdj` (zero XOR pre-filtering):
     1. Exactly 42 assessors, every assessor has exact degree 4 (`84` undirected edges).
     2. Partitioned by XOR signature $s = i \oplus j \in \{9,\dots,15\}$ into **7 disjoint
-       components of exact size 6**, with 0 cross-component edges (hence $7 \times K_{2,2,2}$).
+       components of exact size 6**, with **genuinely proved** 0 cross-component edges ($7 \times K_{2,2,2}$).
     3. The 9-dimensional coordinate subspace $\mathbb{O} \oplus \mathbb{R} e_8$ (mask `511`)
        is norm-multiplicative in $\mathbb{S}_{16}$. -/
 theorem sedenion_box_kites_7x6 :
@@ -1638,7 +1784,49 @@ theorem sedenion_box_kites_7x6 :
       sedenionAssessors.all (fun q => !boxKiteAdj p q || (p.1 ^^^ p.2 == q.1 ^^^ q.2))) = true ∧
     popcount16 511 = 9 ∧
     isNormMultMask 4 511 = true := by
-  decide
+  have hfast :
+      sedenionAssessors.length = 42 ∧
+      sedenionAssessors.all (fun p => (sedenionAssessors.filter (boxKiteAdjFast p)).length == 4) = true ∧
+      ([9, 10, 11, 12, 13, 14, 15].all fun s =>
+        let comp := sedenionAssessors.filter (fun p => p.1 ^^^ p.2 == s)
+        comp.length == 6 &&
+        comp.all (fun p => (comp.filter (boxKiteAdjFast p)).length == 4)) = true ∧
+      sedenionAssessors.all (fun p =>
+        sedenionAssessors.all (fun q => !boxKiteAdjFast p q || (p.1 ^^^ p.2 == q.1 ^^^ q.2))) = true ∧
+      popcount16 511 = 9 ∧
+      isNormMultMask 4 511 = true := by decide
+  have hfilt : ∀ (L : List (Nat × Nat)) (p : Nat × Nat),
+      p ∈ sedenionAssessors → (∀ q ∈ L, q ∈ sedenionAssessors) →
+      L.filter (boxKiteAdj p) = L.filter (boxKiteAdjFast p) := by
+    intro L p hp hsub
+    induction L with
+    | nil => rfl
+    | cons q tl ih =>
+      have hplt := sedenionAssessors_lt16 p hp
+      have hqlt := sedenionAssessors_lt16 q (hsub q (List.mem_cons_self ..))
+      simp only [List.filter, boxKiteAdj_eq_fast p q hplt.1 hplt.2 hqlt.1 hqlt.2]
+      rw [ih (fun r hr => hsub r (List.mem_cons_of_mem q hr))]
+  refine ⟨hfast.1, ?_, ?_, ?_, hfast.2.2.2.2.1, hfast.2.2.2.2.2⟩
+  · rw [List.all_eq_true]
+    intro p hp
+    rw [hfilt sedenionAssessors p hp (fun _ h => h)]
+    exact List.all_eq_true.mp hfast.2.1 p hp
+  · rw [List.all_eq_true]
+    intro s hs
+    have hsF := List.all_eq_true.mp hfast.2.2.1 s hs
+    simp only [Bool.and_eq_true, List.all_eq_true] at hsF ⊢
+    refine ⟨hsF.1, fun p hp => ?_⟩
+    have hpm : p ∈ sedenionAssessors := (List.mem_filter.mp hp).1
+    rw [hfilt _ p hpm (fun q hq => (List.mem_filter.mp hq).1)]
+    exact hsF.2 p hp
+  · rw [List.all_eq_true]
+    intro p hp
+    rw [List.all_eq_true]
+    intro q hq
+    have hplt := sedenionAssessors_lt16 p hp
+    have hqlt := sedenionAssessors_lt16 q hq
+    rw [boxKiteAdj_eq_fast p q hplt.1 hplt.2 hqlt.1 hqlt.2]
+    exact List.all_eq_true.mp (List.all_eq_true.mp hfast.2.2.2.1 p hp) q hq
 
 /-! ### Theorem T4c: Exhaustive Split-Phase Classifications of $\mathrm{CD}_4(\gamma)$ & $\mathrm{CD}_5(\gamma)$ -/
 

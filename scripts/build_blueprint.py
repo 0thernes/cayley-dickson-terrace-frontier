@@ -1,91 +1,107 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Alexander Stephen Donahue
-"""Generate the WCAG 2.2 AA Lean 4.35.0 Six-Kernel Proof Blueprint DAG at docs/site/blueprint.html."""
+"""Generate the WCAG 2.2 AA Lean 4.35.0 Six-Kernel Proof Blueprint DAG at docs/site/blueprint.html,
+100% synchronized with Challenge.lean (22 headline theorems + ALL) and VerifyAxioms.lean (35 declarations)."""
 
 from __future__ import annotations
 
 import html
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT_PATH = ROOT / "docs" / "site" / "blueprint.html"
 
-NODES = [
-    ("B0", "CDTerrace.Basic", "Foundational Sign Cocycle & Left Alternativity",
-     "Defines cdSign, cdSignGamma, blockDelta, twobladeNullity, nullityHistGamma, rightCompat, hurwitzRadon; proves all-n ±1 valuation, anti-commutativity, and left alternativity e_i(e_i e_k) = -e_k.",
+# (id, pillar, module, title, description, depends_on, badge)
+NODES: list[tuple[str, str, str, str, str, list[str], str]] = [
+    ("B0", "foundation", "CDTerrace.Basic", "Foundational Sign Cocycle, Bilinear Product & Basis Core",
+     "Defines cdSign, cdSignGamma, blockDelta, twobladeNullityGamma, cdMulCoordGamma, singularOrbitRepsGamma, twobladeKernelBasisVec, nullityHistGamma, rightCompat, hurwitzRadon; proves all-n ±1 valuation, anticommutativity, and left alternativity.",
      [], "LEAN-6K"),
-    ("T1a", "CDTerrace.MirrorConservation", "T1a: Sign-Cocycle Factorization",
+    ("T1a", "pillar1", "CDTerrace.MirrorConservation", "T1a: Sign-Cocycle Factorization",
      "∀ n flip i j < 2^n, σ_n^γ(i, j) = σ_n^std(i, j) · (-1)^popcount(i & j & flip).",
      ["B0"], "LEAN-6K"),
-    ("T1b", "CDTerrace.MirrorConservation", "T1b: k-Independent Block-Sign Flip",
-     "∀ n flip i j k, δ_n^γ(i, j, k) = (-1)^popcount((i⊕j) & flip) · δ_n^std(i, j, k).",
+    ("T1b", "pillar1", "CDTerrace.MirrorConservation", "T1b: k-Independent Block-Sign Flip Law",
+     "∀ n flip i j k < 2^n, δ_n^γ(i, j, k) = (-1)^popcount((i⊕j) & flip) · δ_n^std(i, j, k).",
      ["T1a"], "LEAN-6K"),
-    ("T1c", "CDTerrace.MirrorConservation", "T1c: Exact Nilpotency Equivalence",
-     "(e_i + e_j)^2 = 0 ⇔ parityBits n ((i⊕j) & flip) = true for all n ≥ 1.",
+    ("T1c", "pillar1", "CDTerrace.MirrorConservation", "T1c: Anticommutativity & Full 2-Blade Nilpotency",
+     "For distinct 1 ≤ i, j < 2^n: σ_n^γ(i,j) + σ_n^γ(j,i) = 0, and (e_i + e_j)^2 = 0 across all 2^n coordinates iff parityBits n ((i⊕j) & flip) = true.",
      ["T1a"], "LEAN-6K"),
-    ("T1d", "CDTerrace.MirrorConservation", "T1d: Nilpotent Mirror-Inversion Law",
-     "Non-nilpotent ⇒ ν_n^γ = ν_n^std; nilpotent ⇒ ν_n^γ + ν_n^std = 2^(n-1).",
+    ("T1d", "pillar1", "CDTerrace.MirrorConservation", "T1d: Universal Nilpotent Mirror-Inversion Law",
+     "Non-nilpotent 2-blades keep ν_n^γ = ν_n^std; nilpotent 2-blades invert to ν_n^γ + ν_n^std = 2^(n-1).",
      ["T1b", "T1c"], "LEAN-6K"),
-    ("T1e", "CDTerrace.MirrorConservation", "T1e: Mirror-Pair Conservation & Midpoint Invariance",
+    ("T1e", "pillar1", "CDTerrace.MirrorConservation", "T1e: Mirror-Pair Conservation & Midpoint Invariance",
      "∀ n ≥ 1, flip, v ≤ 2^(n-1): H_n^γ(v) + H_n^γ(2^(n-1)-v) = H_n^std(v) + H_n^std(2^(n-1)-v), and H_n^γ(2^(n-2)) = H_n^std(2^(n-2)).",
      ["T1d"], "LEAN-6K"),
-    ("T2a", "CDTerrace.TerraceLaw", "T2a: Six Pointwise Block-Sign Doubling Identities",
-     "Exact doubling identities across lower-lo/hi, upper-lo/hi, three axis families, and cross-half complement.",
+    ("T1f", "pillar1", "CDTerrace.MirrorConservation", "T1f: Exact 2×2 Block Left-Annihilator Kernel-Basis Isomorphism",
+     "Proves twobladeNullityGamma equals the exact cardinality of an explicit 2-sparse linearly independent spanning Z-basis of ker L_{e_i + e_j} under cdMulCoordGamma.",
      ["B0"], "LEAN-6K"),
-    ("T2b", "CDTerrace.TerraceLaw", "T2b: 4-Case 2-Blade Nullity Doubling Recurrence",
-     "ν_{n+1}(i,j)=2ν_n(i,j); ν_{n+1}(i+h,j+h)=2ν_n(i,j); axis=0; cross ν_{n+1}(i,b+h)=2^n-4-2ν_n(i,b).",
+    ("T2a", "pillar2", "CDTerrace.TerraceLaw", "T2a: Four-Branch 2-Blade Nullity Doubling Recurrence",
+     "ν_{n+1}(i,j)=2ν_n(i,j); ν_{n+1}(i+h,j+h)=2ν_n(i,j); axis=0; cross ν_{n+1}(i,b+h)=2^n-4-2ν_n(i,b) for all n ≥ 2.",
+     ["B0"], "LEAN-6K"),
+    ("T2b", "pillar2", "CDTerrace.TerraceLaw", "T2b: Mod-4 Quantization, Sharp Ceiling & BDI Separation (n ≥ 5)",
+     "Independent 2-blade proof of 4 | ν_n^std (specializing Moreno's theorem), attainable ceiling 2^(n-1)-4, strict gap 2^(n-1)-4 < 2^n-4n+4 for ALL n ≥ 5, and equality uniquely at n = 4 among n ≥ 4.",
      ["T2a"], "LEAN-6K"),
-    ("T2c", "CDTerrace.TerraceLaw", "T2c: Mod-4 Quantization & BDI Separation (n ≥ 6)",
-     "4 | ν_n(i,j), ν_n(i,j) ≤ 2^(n-1)-4, and strict 2-blade vs. Biss-Dugger-Isaksen gap 2^(n-1)-4 < 2^n-4n+4 for all n ≥ 6.",
-     ["T2b"], "LEAN-6K"),
-    ("T2d", "CDTerrace.TerraceLaw", "T2d: Exact All-n Total Nullity Mass (+4M_n - 4M_n)",
-     "∀ n ≥ 3, M_n = 8(2^(n-1)-1)(2^(n-2)-1)(2^(n-3)-1) = 4 · #(bad affine 2-planes).",
-     ["T2b", "T2c"], "LEAN-6K"),
-    ("T2e", "CDTerrace.TerraceLaw", "T2e: Exact All-n Zero-Divisor-Free 2-Blade Count",
-     "∀ n ≥ 3, H_n^std(0) = (6n - 9) · 2^(n-2) + 3.",
-     ["T2b", "T2c"], "LEAN-6K"),
-    ("T2f", "CDTerrace.TerraceLaw", "T2f: Interleaved Palindromic Terrace & Universal Split Midpoint 42",
-     "H_{n+1}(8m)=2H_n(4m), H_{n+1}(2^n-4-8m)=2H_n(4m), exact interior palindrome, top jump 3(2^n-2), and ∀ n ≥ 4, ∀ γ: H_n^γ(2^(n-2)) = 42 · 2^(n-4).",
-     ["T1e", "T2e"], "LEAN-6K"),
-    ("T3a", "CDTerrace.HurwitzRupture", "T3a: Exact Graph-Nullity Unification",
-     "For all n ≥ 1 and 1 ≤ j ≠ x < 2^n, rightCompat n j x = true ⇔ twobladeNullity n j x = 0.",
-     ["T2a"], "LEAN-6K"),
-    ("T3b", "CDTerrace.HurwitzRupture", "T3b: Universal Right-Multipliers = {e_0, e_{2^(n-1)}}",
-     "For all n ≥ 4, a basis index is universally right-compatible iff j = 0 or j = 2^(n-1).",
-     ["T3a", "T2b"], "LEAN-6K"),
-    ("T3c", "CDTerrace.HurwitzRupture", "T3c: Exact Clique Number ω(G_n^comp) = n + 5",
-     "For all n ≥ 3, every compatibility clique has size ≤ n + 5, attained by {0..7} ∪ {2^3, ..., 2^(n-1)}.",
+    ("T2c", "pillar2", "CDTerrace.TerraceLaw", "T2c: Exact All-n Total Nullity Mass & Non-ZD Count",
+     "∀ n ≥ 3: M_n = 8(2^(n-1)-1)(2^(n-2)-1)(2^(n-3)-1) and H_n^std(0) = (6n - 9)·2^(n-2) + 3.",
+     ["T2a", "T2b"], "LEAN-6K"),
+    ("T2d", "pillar2", "CDTerrace.TerraceLaw", "T2d: Dyadic-Palindromic Terrace Law (Interleave + Palindrome)",
+     "∀ n ≥ 3: H_{n+1}(8m) = 2H_n(4m), H_{n+1}(2^n-4-8m) = 2H_n(4m), and interior palindrome H_{n+1}(4k) = H_{n+1}(2^n-4-4k).",
+     ["T2a", "T2b"], "LEAN-6K"),
+    ("T2e", "pillar2", "CDTerrace.TerraceLaw", "T2e: Exact Top Terrace Bin & Top-Bin Jump",
+     "H_{n+1}(2^n - 4) = 2 H_n(0) for all n ≥ 3, and H_{n+1}(2^n - 4) = H_{n+1}(4) + 3(2^n - 2) for all n ≥ 4.",
+     ["T2c", "T2d"], "LEAN-6K"),
+    ("T2f", "pillar2", "CDTerrace.TerraceLaw", "T2f: Universal All-Signature Midpoint 42 Law",
+     "∀ n ≥ 4, ∀ γ ∈ {±1}^n: H_n^γ(2^(n-2)) = 42 · 2^(n-4).",
+     ["T1e", "T2d"], "LEAN-6K"),
+    ("T3a", "pillar3", "CDTerrace.HurwitzRupture", "T3a: G_n^comp Doubling Law & Unique Universal Right-Multipliers",
+     "Exact Euclidean coordinate right-compatibility graph doubling law and uniqueness of universal right-multipliers {e_0, e_{2^(n-1)}} for all n ≥ 4.",
+     ["T2a", "T2b"], "LEAN-6K"),
+    ("T3b", "pillar3", "CDTerrace.HurwitzRupture", "T3b: Exact Euclidean Coordinate Clique Number ω(G_n^comp) = n + 5",
+     "∀ n ≥ 3, every Euclidean right-multiplier compatibility clique has size ≤ n + 5, attained by {0..7} ∪ {2^3, ..., 2^(n-1)}.",
+     ["T3a"], "LEAN-6K"),
+    ("T3c", "pillar3", "CDTerrace.HurwitzRupture", "T3c: Arithmetic Saturation (n=3,4,5) & Dim-64 Rupture (∀ n ≥ 6)",
+     "Arithmetic on the classical formula ρ(2^n) = 8⌊n/4⌋ + 2^(n mod 4): Euclidean coordinate ceiling n + 5 saturates at n ∈ {3,4,5} (8,9,10) and falls short with deficit ≥ n - 5 for ALL n ≥ 6 (nothing is claimed about non-coordinate subspaces).",
      ["T3b"], "LEAN-6K"),
-    ("T3d", "CDTerrace.HurwitzRupture", "T3d: Dimension-64 Hurwitz-Radon Bott Rupture",
-     "Saturates ρ(2^n) at n ∈ {3,4,5} (8,9,10); strictly ruptures n + 5 < ρ(2^n) with gap ≥ n - 5 for ALL n ≥ 6.",
-     ["T3c"], "LEAN-6K"),
-    ("T3e", "CDTerrace.HurwitzRupture", "T3e: Universal Asymmetric Doubling Tower [2^(n-1), 2(n+4), 2^n]",
-     "Constructs exact norm-multiplicative integer composition pairs [2^(n-1), 2(n+4), 2^n] inside CD_n for all n ≥ 4.",
-     ["T3c"], "LEAN-6K"),
-    ("T4a", "CDTerrace.FiniteCertificates", "T4a: Sedenion Triple-42 & Fano 7+28+7 Duality",
-     "Over all 2^16 = 65,536 subspaces of S_16: 42/140 bad planes, 42 maximal 10D subspaces (7+28+7), 0 of dim ≥ 11.",
+    ("T3d", "pillar3", "CDTerrace.HurwitzRupture", "T3d: Full-Left [2^n, n+5, 2^n] & Asymmetric Doubling Tower",
+     "Constructs exact Euclidean norm-multiplicative coordinate pairs [2^n, n+5, 2^n] and [2^(n-1), 2(n+4), 2^n] inside CD_n for all n ≥ 4.",
+     ["T3b"], "LEAN-6K"),
+    ("T4a", "pillar4", "CDTerrace.FiniteCertificates", "T4a: Sedenion Triple-42, Fano 7+28+7 & Universal 2+2 Split",
+     "Over all 2^16 = 65,536 subspaces of S_16: 42/140 bad planes (all splitting 2+2 across {1..7}×{9..15}), 42 maximal 10D subspaces (7+28+7), 0 of dim ≥ 11.",
      ["B0"], "LEAN-6K"),
-    ("T4b", "CDTerrace.FiniteCertificates", "T4b: 42 Box-Kites = 7 × K_{2,2,2} & 9D Subspace O ⊕ R e_8",
-     "42 assessors, 4-regular, 7 disjoint octahedra by XOR signature 9..15, plus 9D norm-multiplicative O ⊕ R e_8.",
-     ["B0"], "LEAN-6K"),
-    ("T4c", "CDTerrace.FiniteCertificates", "T4c: Exhaustive Split-Phase Classifications CD_4(γ) & CD_5(γ)",
+    ("T4b", "pillar4", "CDTerrace.FiniteCertificates", "T4b: Non-Vacuous Box-Kites (7 × K_{2,2,2}) & 9D O ⊕ R e_8",
+     "Formal six-kernel re-verification of de Marrais's 42 assessors under pure algebraic vanishing product (e_i+e_j)(e_k±e_l)=0 (zero XOR pre-filtering), linked to cdMulCoordGamma, plus 9D norm-mult O ⊕ R e_8.",
+     ["B0", "T1c"], "LEAN-6K"),
+    ("T4c", "pillar4", "CDTerrace.FiniteCertificates", "T4c: Exhaustive Split-Phase Classifications CD_4(γ) & CD_5(γ)",
      "16 signatures of CD_4(γ) → 4 classes (1:1:7:7); 32 signatures of CD_5(γ) → 8 classes (4×1 + 4×7).",
-     ["T1e", "T2b", "T2f"], "LEAN-6K"),
-    ("T4d", "CDTerrace.FiniteCertificates", "T4d: [14,14,32] & [16,16,64] Witnesses + Pillar 4 Field Rigidity",
-     "Certified Pathion 14D & Chingon 16D witnesses + pure-intercalate base-field rigidity over Z, Z[i], and any integral domain.",
+     ["T1e", "T2a", "T2f"], "LEAN-6K"),
+    ("T4d", "pillar4", "CDTerrace.FiniteCertificates", "T4d: [14,14,32] & [16,16,64] Witnesses + Ring-Axiom Unit Lemma",
+     "Certified Pathion 14D & Chingon 16D witnesses + elementary c^2=1 → c=±1 lemma derived directly from commutative integral-domain axioms (and over Z and Z[i]).",
      ["B0"], "LEAN-6K"),
-    ("ALL", "PalomarSolution", "Master Palomar Conjunction (All 4 Pillars + 6 Adversarial Refutations)",
-     "Checked across Lean 4.35.0 C++, leanchecker-paranoid, lean4lean, nanoda, con-leche, and con-ron.",
-     ["T1e", "T2f", "T3d", "T3e", "T4a", "T4b", "T4c", "T4d"], "LEAN-6K"),
+    ("T4e", "pillar4", "CDTerrace.PathionRupture", "T4e: Exact Pathion Ceiling r_max(CD_5) = 14 & Strict 7+7 Rigidity",
+     "Pure-kernel proof over ALL 2^32 subsets of CD_5 (retiring HiGHS MILP from the trust base!) via all-n half-swap symmetry + fixed-descending greedy clique-cover certificate (0/2995 failures): |S| ≤ 14 and |S|=14 ⇒ |S_lo|=7 ∧ |S_hi|=7.",
+     ["T4a", "T4d"], "LEAN-6K"),
+    ("T4f", "pillar4", "CDTerrace.PathionRupture", "T4f: Dimension-64 Split-Signature Interior Spectral Gap (CD_6 flip=56)",
+     "Pure-kernel complete 9-bin histogram for CD_6(flip=56): {0:257, 4:422, 8:364, 12:336, 16:168, 20:0, 24:56, 28:172, 32:178}, certifying interior gap H_6^{56}(20) = 0.",
+     ["T1e", "T2a", "T2f", "T4c"], "LEAN-6K"),
+    ("NV1-NV4", "audit", "CDTerrace.NonVacuity", "Non-Vacuity Witnesses (All 4 Pillars)",
+     "Concrete inhabited witnesses across CD_4, CD_5, CD_6 including T1f kernel basis cardinality 4, T4e 7+7 witness, and T4f gap bin 20.",
+     ["T1f", "T2f", "T3d", "T4e", "T4f"], "LEAN-6K"),
+    ("A1-A8", "audit", "CDTerrace.AdversarialTests", "8 Formal Adversarial Boundary Refutations",
+     "Machine-checked refutations of dim-64 saturation, 11D sedenion subspaces, BDI equality at n≥5, individual-bin invariance, 3rd universal multiplier, Gaussian i^2=1, 15D/unbalanced-14D Pathion subspaces (A7), and contiguous CD_6(56) bins (A8).",
+     ["T1e", "T2b", "T3b", "T4a", "T4d", "T4e", "T4f"], "LEAN-6K"),
+    ("ALL", "audit", "PalomarSolution", "Master Palomar Conjunction (23 Comparator Targets, 35 Axiom-Audited Decls)",
+     "Replayed across Lean 4.35.0 C++, leanchecker-paranoid, lean4lean, nanoda, con-leche, and con-ron strictly within {propext, Classical.choice, Quot.sound}.",
+     ["T1f", "T2f", "T3d", "T4e", "T4f", "NV1-NV4", "A1-A8"], "LEAN-6K"),
 ]
 
 
 def build_html() -> str:
     cards = []
-    for nid, mod, title, desc, deps, badge in NODES:
+    deps_map = {nid: deps for nid, _, _, _, _, deps, _ in NODES}
+    for nid, pillar, mod, title, desc, deps, badge in NODES:
         deps_str = ", ".join(deps) if deps else "None (Foundational)"
         cards.append(
-            f"""      <article class="node" data-id="{html.escape(nid)}" tabindex="0">
+            f"""      <article class="node" data-id="{html.escape(nid)}" data-pillar="{html.escape(pillar)}" tabindex="0">
         <div class="node-head">
           <span class="nid">{html.escape(nid)}</span>
           <span class="badge">{html.escape(badge)}</span>
@@ -97,12 +113,14 @@ def build_html() -> str:
       </article>"""
         )
 
+    deps_json = json.dumps(deps_map)
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Proof Blueprint — Cayley-Dickson Terrace Frontier (Lean 4.35.0, 6 Kernels)</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+  <title>Proof Blueprint v2.0.0 — Cayley-Dickson Terrace Frontier (Lean 4.35.0, 6 Kernels)</title>
   <style>
     :root {{
       --bg: #0b1020;
@@ -113,6 +131,7 @@ def build_html() -> str:
       --accent: #38bdf8;
       --ok: #34d399;
       --focus: #fbbf24;
+      --dep: #e69f00;
     }}
     * {{ box-sizing: border-box; }}
     body {{
@@ -122,6 +141,18 @@ def build_html() -> str:
       color: var(--text);
       line-height: 1.55;
     }}
+    .skip-link {{
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      background: var(--focus);
+      color: #0b1020;
+      font-weight: 800;
+      padding: 0.6rem 1rem;
+      z-index: 1000;
+      text-decoration: none;
+    }}
+    .skip-link:focus {{ left: 0.75rem; top: 0.75rem; outline: 3px solid #ffffff; border-radius: 6px; }}
     header {{
       padding: 2rem 1.5rem 1.25rem;
       border-bottom: 1px solid var(--border);
@@ -141,7 +172,7 @@ def build_html() -> str:
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
       gap: 0.9rem;
-      margin: 1.5rem 0;
+      margin: 1.5rem 0 1rem;
     }}
     .stat {{
       background: var(--panel);
@@ -151,6 +182,29 @@ def build_html() -> str:
     }}
     .stat strong {{ display: block; font-size: 1.35rem; color: var(--ok); }}
     .stat span {{ color: var(--muted); font-size: 0.9rem; }}
+    .filters {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.5rem 0 1rem;
+      align-items: center;
+    }}
+    .flt-btn {{
+      background: var(--panel);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.35rem 0.85rem;
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+    }}
+    .flt-btn[aria-pressed="true"] {{
+      background: #0072b2;
+      border-color: var(--accent);
+      color: #ffffff;
+    }}
+    .flt-btn:focus {{ outline: 2px solid var(--focus); outline-offset: 2px; }}
     .grid {{
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -162,9 +216,14 @@ def build_html() -> str:
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 1rem 1.1rem;
-      transition: border-color 0.15s ease;
+      transition: border-color 0.15s ease, opacity 0.15s ease;
+      cursor: pointer;
     }}
-    .node:hover, .node:focus {{ border-color: var(--accent); outline: none; }}
+    .node.hidden {{ display: none; }}
+    .node.selected {{ border-color: var(--accent); box-shadow: 0 0 0 2px rgba(56,189,248,0.35); }}
+    .node.upstream {{ border-color: var(--dep); }}
+    .node.dimmed {{ opacity: 0.42; }}
+    .node:hover, .node:focus {{ border-color: var(--accent); outline: 2px solid var(--focus); outline-offset: 2px; }}
     .node-head {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; }}
     .nid {{ font-weight: 800; color: var(--accent); font-size: 0.95rem; }}
     .badge {{
@@ -189,33 +248,100 @@ def build_html() -> str:
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#blueprint-main">Skip to proof blueprint graph</a>
   <header>
     <div class="wrap">
-      <h1>Lean 4.35.0 Six-Kernel Proof Blueprint</h1>
-      <p class="sub">Cayley-Dickson Terrace Frontier (0TH-2026-019) — Zero-Mathlib Constructive Dependency Graph</p>
+      <h1>Lean 4.35.0 Six-Kernel Proof Blueprint (v2.0.0)</h1>
+      <p class="sub">Cayley-Dickson Terrace Frontier (0TH-2026-019) &mdash; Zero-Mathlib, Zero-MILP Constructive Dependency Graph</p>
       <nav aria-label="Primary navigation">
-        <a href="index.html">← Interactive 3D Observatory</a>
+        <a href="index.html">&larr; Interactive 3D Canvas Observatory</a>
         <a href="https://github.com/0thernes/cayley-dickson-terrace-frontier">GitHub Repository</a>
         <a href="https://github.com/0thernes/cayley-dickson-terrace-frontier/blob/main/docs/statement-fidelity.md">Statement Fidelity Audit</a>
       </nav>
     </div>
   </header>
-  <main class="wrap">
+  <main id="blueprint-main" class="wrap" tabindex="-1">
     <section class="summary" aria-label="Verification metrics">
       <div class="stat"><strong>6 Kernels</strong><span>Lean C++, leanchecker-paranoid, lean4lean, nanoda, con-leche, con-ron</span></div>
-      <div class="stat"><strong>Zero Mathlib</strong><span>Pure Lean 4.35.0 module system, 0 sorry, 0 native_decide</span></div>
-      <div class="stat"><strong>22 DAG Nodes</strong><span>4 infinite all-n pillars + finite kernel certificates + 6 adversarial refutations</span></div>
+      <div class="stat"><strong>Zero Mathlib &middot; Zero MILP</strong><span>Pure Lean 4.35.0 module system, 0 sorry, 0 native_decide</span></div>
+      <div class="stat"><strong>23 Palomar Targets</strong><span>22 headline theorems (T1a&ndash;T4f) + ALL + 4 non-vacuity + 8 refutations (35 audited)</span></div>
       <div class="stat"><strong>Standard Axioms</strong><span>Strictly within {{propext, Classical.choice, Quot.sound}}</span></div>
     </section>
+    <div class="filters" role="group" aria-label="Filter blueprint nodes by pillar">
+      <button class="flt-btn" type="button" data-filter="all" aria-pressed="true">All ({len(NODES)} Nodes)</button>
+      <button class="flt-btn" type="button" data-filter="pillar1" aria-pressed="false">Pillar 1 (T1a&ndash;T1f)</button>
+      <button class="flt-btn" type="button" data-filter="pillar2" aria-pressed="false">Pillar 2 (T2a&ndash;T2f)</button>
+      <button class="flt-btn" type="button" data-filter="pillar3" aria-pressed="false">Pillar 3 (T3a&ndash;T3d)</button>
+      <button class="flt-btn" type="button" data-filter="pillar4" aria-pressed="false">Pillar 4 (T4a&ndash;T4f)</button>
+      <button class="flt-btn" type="button" data-filter="audit" aria-pressed="false">Audit &amp; Refutations</button>
+      <span id="dep-status" style="color:var(--muted);font-size:0.86rem;margin-left:auto;" aria-live="polite">Click any node to highlight its transitive dependency cone.</span>
+    </div>
     <section class="grid" aria-label="Theorem dependency graph">
 {chr(10).join(cards)}
     </section>
   </main>
   <footer>
     <div class="wrap">
-      Author: Alexander Stephen Donahue (ORCID 0009-0006-8168-9648) · Code: Apache-2.0 · Docs: CC-BY-4.0
+      Author: Alexander Stephen Donahue (ORCID 0009-0006-8168-9648) &middot; Code: Apache-2.0 &middot; Docs: CC-BY-4.0
     </div>
   </footer>
+<script>
+"use strict";
+const DEPS = {deps_json};
+const cards = Array.from(document.querySelectorAll(".node"));
+const fltBtns = Array.from(document.querySelectorAll(".flt-btn"));
+const statusEl = document.getElementById("dep-status");
+let activeId = null;
+
+function ancestors(id) {{
+  const seen = new Set();
+  const stack = [...(DEPS[id] || [])];
+  while (stack.length) {{
+    const cur = stack.pop();
+    if (!seen.has(cur)) {{
+      seen.add(cur);
+      for (const p of (DEPS[cur] || [])) stack.push(p);
+    }}
+  }}
+  return seen;
+}}
+
+function clearHighlight() {{
+  activeId = null;
+  cards.forEach(c => c.classList.remove("selected", "upstream", "dimmed"));
+  statusEl.textContent = "Click any node to highlight its transitive dependency cone.";
+}}
+
+cards.forEach(card => {{
+  const toggle = () => {{
+    const id = card.dataset.id;
+    if (activeId === id) {{ clearHighlight(); return; }}
+    activeId = id;
+    const anc = ancestors(id);
+    cards.forEach(c => {{
+      const cid = c.dataset.id;
+      c.classList.toggle("selected", cid === id);
+      c.classList.toggle("upstream", anc.has(cid));
+      c.classList.toggle("dimmed", cid !== id && !anc.has(cid));
+    }});
+    statusEl.textContent = `${{id}} selected — ${{anc.size}} transitive dependency node(s) highlighted.`;
+  }};
+  card.addEventListener("click", toggle);
+  card.addEventListener("keydown", e => {{ if (e.key === "Enter" || e.key === " ") {{ e.preventDefault(); toggle(); }} }});
+}});
+
+fltBtns.forEach(btn => {{
+  btn.addEventListener("click", () => {{
+    clearHighlight();
+    const f = btn.dataset.filter;
+    fltBtns.forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+    cards.forEach(c => {{
+      const show = f === "all" || c.dataset.pillar === f || (f !== "audit" && c.dataset.pillar === "foundation");
+      c.classList.toggle("hidden", !show);
+    }});
+  }});
+}});
+</script>
 </body>
 </html>
 """

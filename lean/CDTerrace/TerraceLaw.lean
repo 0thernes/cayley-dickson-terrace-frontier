@@ -7,20 +7,26 @@ public import CDTerrace.MirrorConservation
 # CDTerrace.TerraceLaw — Universal All-$n$ Dyadic-Palindromic Terrace Law
 
 Proves universally for every $n \ge 3$ in zero-Mathlib, strictly constructive Lean 4.35.0:
-- **T2a (`blockDelta_doubling_*`):** All 6 exact pointwise block-sign doubling identities.
-- **T2b (`nullity_doubling_*`):** Exact 4-case 2-blade nullity doubling recurrence:
+- **T2a (`nullity_doubling_*`):** Exact 4-case 2-blade nullity doubling recurrence (via the 6
+  pointwise block-sign doubling identities `blockDelta_doubling_*`):
   $\nu_{n+1}(i, j) = 2\nu_n(i, j)$, $\nu_{n+1}(i+h, j+h) = 2\nu_n(i, j)$, axis-pinned $= 0$,
   and cross-half $\nu_{n+1}(i, b+h) = 2^n - 4 - 2\nu_n(i, b)$.
-- **T2c (`nullity_mod4_and_bound`, `twoblade_strictly_below_bdi`):**
-  $4 \mid \nu_n(i, j)$, $\nu_n(i, j) \le 2^{n-1} - 4$, and strict separation
-  $2^{n-1} - 4 < 2^n - 4n + 4$ for all $n \ge 6$.
-- **T2d (`totalNullityMass_all_n`):** Exact $+4M_n - 4M_n$ cancellation proving
-  $M_n = 8(2^{n-1}-1)(2^{n-2}-1)(2^{n-3}-1)$ for all $n \ge 3$.
-- **T2e (`nonZDCount_all_n`):** $H_n^{\mathrm{std}}(0) = (6n - 9)2^{n-2} + 3$ for all $n \ge 3$.
-- **T2f (`terrace_interleave_even`, `terrace_interleave_odd`, `terrace_palindrome_all_n`,
-  `terrace_top_bin_all_n`, `terrace_top_jump_all_n`, `universal_split_midpoint_42`):**
-  Complete fractal interleaved dyadic-palindromic terrace law and universal split-signature
-  midpoint law $H_n^\gamma(2^{n-2}) = 42 \cdot 2^{n-4}$ for ALL $n \ge 4$ and ALL $\gamma \in \{\pm 1\}^n$.
+- **T2b (`nullity_mod4_and_bound`, `twoblade_ceiling_attained`, `twoblade_strictly_below_bdi`,
+  `twoblade_bdi_eq_iff_four`):**
+  Independent elementary 2-blade proof of $4 \mid \nu_n(i, j)$ (specializing Moreno's multiple-of-four
+  theorem), sharp attainable ceiling $\max \nu_n^{\mathrm{std}} = 2^{n-1} - 4$, strict arithmetic
+  separation $2^{n-1} - 4 < 2^n - 4n + 4$ for all $n \ge 5$, and equality with the cited
+  Biss–Dugger–Isaksen ceiling $2^n - 4n + 4$ uniquely at $n = 4$ among $n \ge 4$.
+- **T2c (`totalNullityMass_all_n`, `nonZDCount_all_n`):** Exact $+4M_n - 4M_n$ cancellation proving
+  $M_n = 8(2^{n-1}-1)(2^{n-2}-1)(2^{n-3}-1)$ and $H_n^{\mathrm{std}}(0) = (6n - 9)2^{n-2} + 3$
+  for all $n \ge 3$.
+- **T2d (`terrace_interleave_even`, `terrace_interleave_odd`, `terrace_palindrome_all_n`):**
+  Fractal interleaved dyadic-palindromic terrace law for all $n \ge 3$.
+- **T2e (`terrace_top_bin_all_n`, `terrace_top_jump_all_n`):**
+  Exact top bin $H_{n+1}(2^n - 4) = 2 H_n(0)$ and exact top jump $3(2^n - 2)$.
+- **T2f (`terrace_midpoint_std_all_n`, `universal_split_midpoint_42`):**
+  Universal split-signature midpoint law $H_n^\gamma(2^{n-2}) = 42 \cdot 2^{n-4}$ for ALL $n \ge 4$
+  and ALL $\gamma \in \{\pm 1\}^n$.
 -/
 
 namespace CDTerrace
@@ -775,8 +781,10 @@ theorem nullity_mod4_and_bound :
               have hsub : n + 1 - 1 = n := by omega
               rw [hsub]; omega
 
-/-- **Theorem T2c (Strict Separation from Biss-Dugger-Isaksen Max Annihilator):**
-    For EVERY $n \ge 5$ ($\dim \ge 32$), $2^{n-1} - 4 < 2^n - 4n + 4$ (with equality uniquely at $n = 4$: $4 = 4$). -/
+/-- **Theorem T2b-2 (Strict Separation from Biss-Dugger-Isaksen Max Annihilator):**
+    For EVERY $n \ge 5$ ($\dim \ge 32$), $2^{n-1} - 4 < 2^n - 4n + 4$ (with equality uniquely at
+    $n = 4$ among $n \ge 4$: $4 = 4$). The Biss–Dugger–Isaksen general annihilator ceiling
+    $2^n - 4n + 4$ is cited from Biss–Dugger–Isaksen (2008), not formalized here. -/
 theorem twoblade_strictly_below_bdi (n : Nat) (hn : 5 ≤ n) :
     twobladeMaxNullity n < bdiMaxAnnihilator n := by
   unfold twobladeMaxNullity bdiMaxAnnihilator
@@ -793,6 +801,55 @@ theorem twoblade_strictly_below_bdi (n : Nat) (hn : 5 ≤ n) :
   have hsub : n - 1 + 1 = n := by omega
   rw [hsub] at h5
   omega
+
+/-- Auxiliary: the lower octonion 2-blade $e_1 + e_2$ has zero nullity across all $n \ge 3$. -/
+theorem twoblade_nullity_1_2_zero : ∀ n, 3 ≤ n → twobladeNullity n 1 2 = 0 := by
+  intro n hn
+  induction n with
+  | zero => omega
+  | succ n ih =>
+    by_cases hn2 : n = 2
+    · subst hn2
+      exact octonion_nullity_all_zero 1 2 (by omega) (by omega) (by omega) (by omega) (by omega)
+    · have hn3 : 3 ≤ n := by omega
+      have hpow8 : 8 ≤ 2 ^ n := by
+        calc 8 = 2 ^ 3 := rfl
+          _ ≤ 2 ^ n := Nat.pow_le_pow_right (by omega) hn3
+      rw [nullity_doubling_lower n 1 2 (by omega) (by omega) (by omega) (by omega) (by omega),
+          ih hn3]
+
+/-- **Theorem T2b-3 (Exact Attainment of the 2-Blade Ceiling $2^{n-1} - 4$):**
+    For EVERY $n \ge 4$, the constructive 2-blade $e_1 + e_{2 + 2^{n-1}}$ achieves
+    $\nu_n^{\mathrm{std}}(1, 2 + 2^{n-1}) = 2^{n-1} - 4 = \mathrm{twobladeMaxNullity}(n)$. -/
+theorem twoblade_ceiling_attained (n : Nat) (hn : 4 ≤ n) :
+    ∃ i j, 0 < i ∧ i < j ∧ j < 2 ^ n ∧ twobladeNullity n i j = twobladeMaxNullity n := by
+  let m := n - 1
+  have hnm : n = m + 1 := by omega
+  have hm3 : 3 ≤ m := by omega
+  have hpow8 : 8 ≤ 2 ^ m := by
+    calc 8 = 2 ^ 3 := rfl
+      _ ≤ 2 ^ m := Nat.pow_le_pow_right (by omega) hm3
+  have h2m : 2 ^ (m + 1) = 2 * 2 ^ m := by rw [Nat.pow_succ, Nat.mul_comm]
+  refine ⟨1, 2 + 2 ^ m, by omega, by omega, by rw [hnm]; omega, ?_⟩
+  rw [hnm]
+  unfold twobladeMaxNullity
+  have hsub : m + 1 - 1 = m := by omega
+  rw [hsub,
+      nullity_doubling_cross m 1 2 (by omega) (by omega) (by omega) (by omega) (by omega) (by omega),
+      twoblade_nullity_1_2_zero m hm3]
+  omega
+
+/-- **Theorem T2b-4 (Unique $n = 4$ Coincidence with Cited BDI Formula among $n \ge 4$):**
+    Among all $n \ge 4$, `twobladeMaxNullity n = bdiMaxAnnihilator n` holds iff $n = 4$. -/
+theorem twoblade_bdi_eq_iff_four (n : Nat) (hn : 4 ≤ n) :
+    twobladeMaxNullity n = bdiMaxAnnihilator n ↔ n = 4 := by
+  constructor
+  · intro heq
+    by_cases h4 : n = 4
+    · exact h4
+    · have hlt := twoblade_strictly_below_bdi n (by omega)
+      omega
+  · intro h4; subst h4; rfl
 
 /-! ### Clean Reusable 1D & 2D Summation Helpers -/
 

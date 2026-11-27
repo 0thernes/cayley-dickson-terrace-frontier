@@ -393,10 +393,10 @@ def make_fig5_bdi_and_symmetric_rupture() -> None:
     ax1.fill_between(ns[1:], twoblade[1:], bdi[1:], color=OI_ORANGE, alpha=0.18, label=r"Strict higher-blade gap ($\forall\,n \geq 5$)")
     ax1.scatter([4], [4], s=85, color=OI_GREEN, zorder=6, edgecolor="white", linewidth=1.0)
     ax1.annotate(
-        r"Unique equality at $n=4$" "\n" r"($4 = 4$ in $\mathbb{S}_{16}$)",
+        r"Equality at $n=4$" "\n" r"($4 = 4$ in $\mathbb{S}_{16}$)",
         xy=(4, 4),
-        xytext=(4.4, 95),
-        fontsize=8.3,
+        xytext=(4.04, 175),
+        fontsize=8.1,
         color=OI_GREEN,
         fontweight="bold",
         arrowprops={"arrowstyle": "->", "color": OI_GREEN, "lw": 1.0},
@@ -404,7 +404,7 @@ def make_fig5_bdi_and_symmetric_rupture() -> None:
     ax1.annotate(
         r"Separation starts at $n=5$" "\n" r"($12 < 16$ in $\mathrm{CD}_5$)",
         xy=(5, 16),
-        xytext=(4.45, 225),
+        xytext=(5.30, 300),
         fontsize=8.2,
         color=OI_VERM,
         fontweight="bold",
@@ -423,12 +423,12 @@ def make_fig5_bdi_and_symmetric_rupture() -> None:
     levels = [(r"$\mathrm{CD}_3$" "\n($8$D)"), (r"$\mathrm{CD}_4$" "\n($16$D)"), (r"$\mathrm{CD}_5$" "\n($32$D)"), (r"$\mathrm{CD}_6$" "\n($64$D)")]
     x = np.arange(len(levels))
     w = 0.28
-    cd_sym_exact = [8, 10, 14, 16]  # Exact for n=3,4,5 (Lean/MILP); witness lower bound 16 for n=6
-    yiu_int_sym = [8, 10, 16, 20]   # Known real/integral [r,r,2^n]: [8,8,8], [10,10,16], [16,16,32] (Yiu 1990), >=20 at 64
+    cd_sym_exact = [8, 10, 14, 16]  # Exact for n=3,4,5 (Lean T4a/T4e); witness lower bound 16 for n=6
+    yiu_int_sym = [8, 10, 16, 20]   # Non-coordinate integral bilinear [r,r,2^n]: [16,16,32] (Yiu 1990), >=20 at 64
     hr_asym = [8, 9, 10, 11]        # Full-left CD clique omega(G_n^comp) = n+5
 
-    b1 = ax2.bar(x - w, cd_sym_exact, width=w, color=OI_BLUE, label=r"$\mathrm{CD}_n$ symmetric coord $r_{\max}$ (exact $n\leq 5$; lb $n=6$)", zorder=3)
-    b2 = ax2.bar(x, yiu_int_sym, width=w, color=OI_VERM, label=r"Integral bilinear $[r,r,2^n]$ (Yiu 1990: $[16,16,32]$)", zorder=3)
+    b1 = ax2.bar(x - w, cd_sym_exact, width=w, color=OI_BLUE, label=r"$\mathrm{CD}_n$ symmetric coord $r_{\max}$ (Lean exact $n\leq 5$; lb $n=6$)", zorder=3)
+    b2 = ax2.bar(x, yiu_int_sym, width=w, color=OI_VERM, label=r"Non-coord integral bilinear $[r,r,2^n]$ (Yiu 1990: $[16,16,32]$)", zorder=3)
     b3 = ax2.bar(x + w, hr_asym, width=w, color=OI_GREEN, label=r"Full-left $\mathrm{CD}_n$ clique $\omega(G_n^{\mathrm{comp}})=n+5$", zorder=3)
 
     for bars, col in [(b1, OI_BLUE), (b2, OI_VERM), (b3, OI_GREEN)]:
@@ -437,10 +437,10 @@ def make_fig5_bdi_and_symmetric_rupture() -> None:
             ax2.text(bar.get_x() + bar.get_width() / 2, h + 0.35, f"{int(h)}", ha="center", va="bottom", fontsize=8.2, fontweight="bold", color=col)
 
     ax2.annotate(
-        r"Pathion symmetric rupture:" "\n" r"MILP exact $14 < 16$",
-        xy=(2 - w, 14.3),
-        xytext=(-0.38, 16.8),
-        fontsize=8.1,
+        r"Lean T4e exact $r_{\max}(\mathrm{CD}_5)=14$" "\n" r"(strict $7{+}7$ balance; $280$ subspaces)",
+        xy=(2 - w, 15.1),
+        xytext=(-0.45, 18.2),
+        fontsize=7.8,
         color=OI_DARK,
         fontweight="bold",
         bbox={"boxstyle": "round,pad=0.22", "facecolor": "white", "edgecolor": OI_DARK, "alpha": 0.96},
@@ -482,10 +482,10 @@ def make_social_preview_svg() -> None:
     <line x1="880" y1="217" x2="1200" y2="402"/>
     <line x1="1200" y1="217" x2="880" y2="402"/>
   </g>
-  <text x="72" y="96" fill="#56B4E9" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" font-weight="700" letter-spacing="2">0TH-2026-019 · LEAN 4.35.0 (6 KERNELS) · RUST · ISO C11 · PYTHON</text>
+  <text x="72" y="96" fill="#56B4E9" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" font-weight="700" letter-spacing="2">0TH-2026-019 · v2.0.0 · LEAN 4.35.0 (6 KERNELS) · RUST · ISO C11 · PYTHON</text>
   <text x="72" y="182" fill="#F8FAFC" font-family="Georgia, serif" font-size="50" font-weight="700">Cayley–Dickson Terrace Frontier</text>
   <text x="72" y="242" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation,</text>
-  <text x="72" y="278" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">and the Dimension-64 Hurwitz–Radon Rupture Across All 2ⁿ Signatures</text>
+  <text x="72" y="278" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">Pathion r_max = 14 (7+7 Rigidity) &amp; Dim-64 Coordinate Rupture</text>
 
   <g transform="translate(72, 336)">
     <rect x="0" y="0" width="256" height="122" rx="12" fill="#16233D" stroke="#56B4E9" stroke-width="1.5"/>
@@ -494,13 +494,13 @@ def make_social_preview_svg() -> None:
     <text x="20" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">Invariant across all 2ⁿ signatures</text>
 
     <rect x="278" y="0" width="256" height="122" rx="12" fill="#16233D" stroke="#D55E00" stroke-width="1.5"/>
-    <text x="298" y="38" fill="#E69F00" font-family="ui-monospace, monospace" font-size="16" font-weight="700">DIM-64 RUPTURE</text>
-    <text x="298" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="30" font-weight="700">ω = n+5 &lt; ρ(2ⁿ)</text>
-    <text x="298" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">11 &lt; 12 at dim 64; ∀ n ≥ 6</text>
+    <text x="298" y="38" fill="#E69F00" font-family="ui-monospace, monospace" font-size="16" font-weight="700">PATHION EXACT T4e</text>
+    <text x="298" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="30" font-weight="700">r_max = 14 (7+7)</text>
+    <text x="298" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">Zero-MILP pure-kernel over 2³²</text>
 
     <rect x="556" y="0" width="256" height="122" rx="12" fill="#16233D" stroke="#009E73" stroke-width="1.5"/>
     <text x="576" y="38" fill="#009E73" font-family="ui-monospace, monospace" font-size="16" font-weight="700">ZERO-MATHLIB LEAN</text>
-    <text x="576" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="30" font-weight="700">20 / 20 Targets</text>
+    <text x="576" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="30" font-weight="700">23 / 23 Targets</text>
     <text x="576" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">0 sorry · 6 independent kernels</text>
   </g>
 

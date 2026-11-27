@@ -1,6 +1,7 @@
+# SPDX-License-Identifier: Apache-2.0
 [package]
 name = "cd-terrace"
-version = "1.0.0"
+version = "2.0.0"
 edition = "2021"
 rust-version = "1.75"
 authors = ["Alexander Stephen Donahue <0_0@0thernes.art>"]

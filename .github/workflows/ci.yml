@@ -17,9 +17,10 @@ jobs:
   lean-6kernel:
     name: Lean 4.35.0 (6 Independent Proof Kernels)
     runs-on: ubuntu-latest
-    # The normal replay is documented at ~20 minutes; bound hung sandbox/kernel
-    # processes so a run always reaches a terminal result for the archive mirror.
-    timeout-minutes: 45
+    # Bound hung sandbox/kernel processes while leaving generous headroom for
+    # all 6 independent kernels on T1a-T4f (including Pathion 2^32 exhaustion)
+    # plus the tamper-injecting negative comparator gate.
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
 
@@ -39,7 +40,7 @@ jobs:
           lake build
           lake build PalomarChallenge
 
-      - name: Audit axioms (30/30 strictly within propext, Classical.choice, Quot.sound)
+      - name: Audit axioms (35/35 strictly within propext, Classical.choice, Quot.sound)
         working-directory: lean
         run: |
           lake env lean VerifyAxioms.lean > ../results/ci_lean_axioms.txt
@@ -53,18 +54,40 @@ jobs:
           lake env leanchecker --fresh PalomarSolution
           lake env leanchecker-paranoid --fresh PalomarSolution
 
-      - name: Replay all 20 Palomar targets across all 6 independent kernels
+      - name: Replay all 23 Palomar targets across all 6 independent kernels
         working-directory: lean
         run: |
           lake check --paranoid
           lake comparator --config comparator.json --paranoid
 
-      - name: Live negative Lean audit (verify injected sorry/axiom fails rejection check)
-        working-directory: lean
+      - name: Tamper-injecting negative comparator & axiom-gate test
         run: |
-          printf "module\naxiom bogus : False\ntheorem fake : False := bogus\n#print axioms fake\n" > /tmp/neg_test.lean
-          lake env lean /tmp/neg_test.lean | grep -q "bogus"
-          ! (lake env lean /tmp/neg_test.lean | grep -vq "bogus")
+          rm -rf /tmp/neg_lean_test
+          cp -r lean /tmp/neg_lean_test
+          # Test 1: Inject sorry into PalomarSolution.lean and assert comparator rejects it
+          python3 -c '
+          p = "/tmp/neg_lean_test/PalomarSolution.lean"
+          s = open(p).read()
+          old = "public theorem prove_t1a : T1aStmt := Solution.prove_t1a"
+          assert old in s, "target line not found"
+          open(p, "w").write(s.replace(old, "public theorem prove_t1a : T1aStmt := by sorry", 1))
+          '
+          (cd /tmp/neg_lean_test && lake build PalomarSolution && ! lake comparator --config comparator.json --paranoid)
+          # Test 2: Inject custom axiom into PalomarSolution.lean and assert comparator + axiom gate reject it
+          cp lean/PalomarSolution.lean /tmp/neg_lean_test/PalomarSolution.lean
+          python3 -c '
+          p = "/tmp/neg_lean_test/PalomarSolution.lean"
+          s = open(p).read()
+          old = "public theorem prove_t1a : T1aStmt := Solution.prove_t1a"
+          assert old in s, "target line not found"
+          rep = "public axiom bogus_ci_axiom : T1aStmt\npublic theorem prove_t1a : T1aStmt := bogus_ci_axiom"
+          open(p, "w").write(s.replace(old, rep, 1))
+          '
+          (cd /tmp/neg_lean_test && lake build PalomarSolution && ! lake comparator --config comparator.json --paranoid)
+          (cd /tmp/neg_lean_test && lake env lean VerifyAxioms.lean > /tmp/neg_axioms.txt)
+          grep -q "bogus_ci_axiom" /tmp/neg_axioms.txt
+          ! diff -u results/lean_axioms.txt /tmp/neg_axioms.txt >/dev/null
+          rm -rf /tmp/neg_lean_test /tmp/neg_axioms.txt
 
   rust-matrix:
     name: Rust Verifier (${{ matrix.os }})
@@ -148,11 +171,12 @@ jobs:
           tar -xzf dist/arxiv_submission.tar.gz -C /tmp/arxiv_cleanroom
           tectonic -X compile /tmp/arxiv_cleanroom/main.tex --outdir /tmp/arxiv_cleanroom/out
           test -s /tmp/arxiv_cleanroom/out/main.pdf
-      - name: Verify SHA-256 manifests & generate release SHA256SUMS
+      - name: Verify SHA-256 manifests, RFC 3161/OTS timestamps & generate release SHA256SUMS
         run: |
           sha256sum -c data/MANIFEST.sha256
           sha256sum -c MANIFEST.sha256
-          sha256sum dist/Donahue_2026_cayley_dickson_terrace_frontier.pdf dist/arxiv_submission.tar.gz MANIFEST.sha256 > SHA256SUMS
+          python3 scripts/stamp_timestamps.py --verify --negative-test
+          sha256sum dist/Donahue_2026_cayley_dickson_terrace_frontier.pdf dist/arxiv_submission.tar.gz MANIFEST.sha256 data/MANIFEST.sha256.tsr data/MANIFEST.sha256.ots > SHA256SUMS
           cat SHA256SUMS
       - name: Generate SLSA build provenance attestation
         if: github.event_name == 'push'
@@ -162,6 +186,8 @@ jobs:
             dist/Donahue_2026_cayley_dickson_terrace_frontier.pdf
             dist/arxiv_submission.tar.gz
             MANIFEST.sha256
+            data/MANIFEST.sha256.tsr
+            data/MANIFEST.sha256.ots
 
   lint-audit-security:
     name: Lint, Typecheck & Build Standard Audit (Report-Only)

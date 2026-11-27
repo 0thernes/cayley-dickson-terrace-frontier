@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright (c) 2026 Alexander Stephen Donahue
 
+#![forbid(unsafe_code)]
+
 use cd_terrace::{nullity_histogram, run_full_audit};
 use std::env;
 
@@ -32,6 +34,12 @@ fn main() {
         );
         println!("  \"sedenion_box_kites_ok\": {},", summary.sedenion_box_kites_ok);
         println!("  \"pathion_14_ok\": {},", summary.pathion_14_ok);
+        println!("  \"pathion_exact_max_dim\": {},", summary.pathion_exact_max_dim);
+        println!("  \"pathion_14d_count\": {},", summary.pathion_14d_count);
+        println!("  \"pathion_greedy_ge8_failures\": {},", summary.pathion_greedy_ge8_failures);
+        println!("  \"pathion_all_14d_balanced_7_7\": {},", summary.pathion_all_14d_balanced_7_7);
+        println!("  \"pathion_all_14d_contain_0_16\": {},", summary.pathion_all_14d_contain_0_16);
+        println!("  \"cd6_flip56_gap_bin20\": {},", summary.cd6_flip56_gap_bin20);
         println!("  \"chingon_16_ok\": {},", summary.chingon_16_ok);
         println!("  \"split_phases\": [");
         for (idx, (n, classes, mults, mid, gap)) in summary.split_phase_counts.iter().enumerate() {
@@ -67,7 +75,7 @@ fn main() {
         println!("  }}");
         println!("}}");
     } else {
-        println!("=== Cayley-Dickson Terrace Frontier — Exact Rust Audit (CD_3..CD_8) ===");
+        println!("=== Cayley-Dickson Terrace Frontier v2.0.0 — Exact Rust Audit (CD_3..CD_8) ===");
         println!("Pillar 1: Verified {} triples of CD_5(gamma) cocycle factorization", summary.cocycle_checked_dim5);
         for (n, classes, _, mid, gap) in &summary.split_phase_counts {
             println!(
@@ -81,7 +89,7 @@ fn main() {
             );
         }
         println!("Pillar 2: Dyadic-Palindromic Terrace Law verified through CD_{} (256D)", summary.terrace_verified_up_to);
-        println!("Pillar 3: Dimension-64 Hurwitz-Radon Bott Rupture:");
+        println!("Pillar 3: Euclidean Coordinate Right-Multiplier Rupture:");
         for (n, omega, rho, asym, _) in &summary.hurwitz_table {
             println!(
                 "  n={} (dim {:>3}): omega(G_n^comp) = {:>2}, rho(2^n) = {:>2}, gap = {}, asym = [{}, {}, {}]",
@@ -96,7 +104,7 @@ fn main() {
             );
         }
         println!(
-            "Pillar 4: Sedenion Triple-42: bad_planes={}, 10D={} (Fano {}+{}+{}), 11D={}, Box-Kites 7xK_{{2,2,2}}={}, [14,14,32]={}, [16,16,64]={}",
+            "Pillar 4: Sedenion Triple-42: bad_planes={}, 10D={} (Fano {}+{}+{}), 11D={}, Box-Kites 7xK_{{2,2,2}}={}, Pathion r_max={} ({} exact 7+7 subspaces, greedy_fail={}), CD_6(56) H(20)={}, [16,16,64]={}",
             summary.sedenion_bad_planes,
             summary.sedenion_10d_count,
             summary.sedenion_fano_split.0,
@@ -104,7 +112,10 @@ fn main() {
             summary.sedenion_fano_split.2,
             summary.sedenion_11d_count,
             summary.sedenion_box_kites_ok,
-            summary.pathion_14_ok,
+            summary.pathion_exact_max_dim,
+            summary.pathion_14d_count,
+            summary.pathion_greedy_ge8_failures,
+            summary.cd6_flip56_gap_bin20,
             summary.chingon_16_ok
         );
         println!("ALL CHECKS PASSED.");

@@ -23,6 +23,7 @@ public theorem prove_t1b : T1bStmt := by sorry
 public theorem prove_t1c : T1cStmt := by sorry
 public theorem prove_t1d : T1dStmt := by sorry
 public theorem prove_t1e : T1eStmt := by sorry
+public theorem prove_t1f : T1fStmt := by sorry
 public theorem prove_t2a : T2aStmt := by sorry
 public theorem prove_t2b : T2bStmt := by sorry
 public theorem prove_t2c : T2cStmt := by sorry
@@ -37,6 +38,8 @@ public theorem prove_t4a : T4aStmt := by sorry
 public theorem prove_t4b : T4bStmt := by sorry
 public theorem prove_t4c : T4cStmt := by sorry
 public theorem prove_t4d : T4dStmt := by sorry
+public theorem prove_t4e : T4eStmt := by sorry
+public theorem prove_t4f : T4fStmt := by sorry
 public theorem prove_all_terrace_theorems : AllTerraceTheoremsStmt := by sorry
 
 end CDTerrace.Palomar

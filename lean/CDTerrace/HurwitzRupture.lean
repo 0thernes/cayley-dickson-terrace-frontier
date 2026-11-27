@@ -5,26 +5,29 @@ public import CDTerrace.MirrorConservation
 public import CDTerrace.TerraceLaw
 
 /-!
-# CDTerrace.HurwitzRupture — Dimension-64 Hurwitz-Radon Bott Rupture & Asymmetric Doubling Tower
+# CDTerrace.HurwitzRupture — Euclidean Coordinate Right-Multiplier Rupture & Asymmetric Doubling Tower
 
-Proves universally for every $n \ge 3$ in zero-Mathlib, strictly constructive Lean 4.35.0:
-- **T3a (`rightCompat_iff_nullity_zero`):** On imaginary basis indices $1 \le j < x < 2^n$,
-  the $[2^n, s, 2^n]$ right-multiplier compatibility graph $G_n^{\mathrm{comp}}$ is
-  IDENTICAL to the 2-blade non-zero-divisor graph $\{\{j, x\} : \nu_n^{\mathrm{std}}(j, x) = 0\}$.
-- **T3b (`rightCompat_doubling_*`, `universal_right_multipliers_all_n`):**
-  Exact graph doubling law for $G_{n+1}^{\mathrm{comp}}$ from $G_n^{\mathrm{comp}}$, and proof
-  that for every $n \ge 4$, the universal right-multipliers of $\mathrm{CD}_n$ are
-  EXACTLY $\{e_0, e_{2^{n-1}}\}$.
-- **T3c (`compat_clique_exact_all_n`):** Exact clique number $\omega(G_n^{\mathrm{comp}}) = n + 5$
-  for ALL $n \ge 3$ (both universal upper bound on every clique and constructive $(n+5)$-clique
-  witness $\{0, \dots, 7\} \cup \{2^3, \dots, 2^{n-1}\}$).
-- **T3d (`hurwitz_radon_saturation_345`, `hurwitz_radon_rupture_all_ge6`):**
-  Exact saturation $n + 5 = \rho(2^n)$ for $n \in \{3, 4, 5\}$ ($8, 9, 10$), followed by
-  permanent strict rupture $n + 5 < \rho(2^n)$ for ALL $n \ge 6$ (starting at dim 64: $11 < 12$,
-  dim 128: $12 < 16$, with permanent gap $\rho(2^n) - (n + 5) \ge n - 5$).
-- **T3e (`asymmetric_doubling_tower_all_n`):** Universal integer sum-of-squares composition
-  tower $[2^{n-1}, 2(n+4), 2^n]$ directly embedded in $\mathrm{CD}_n$ for ALL $n \ge 4$
-  ($[8, 16, 16]$, $[16, 18, 32]$, $[32, 20, 64]$, $[64, 22, 128]$, ...).
+Proves universally for every $n \ge 3$ in zero-Mathlib, strictly constructive Lean 4.35.0
+for standard Euclidean Cayley-Dickson coordinate subspaces $\mathrm{CD}_n$:
+- **T3a (`rightCompat_iff_nullity_zero`, `rightCompat_doubling_*`, `universal_right_multipliers_all_n`):**
+  On imaginary basis indices $1 \le j < x < 2^n$, the $[2^n, s, 2^n]$ Euclidean right-multiplier
+  compatibility graph $G_n^{\mathrm{comp}}$ is identical to the 2-blade non-zero-divisor graph
+  $\{\{j, x\} : \nu_n^{\mathrm{std}}(j, x) = 0\}$, obeys an exact doubling law, and for every
+  $n \ge 4$ its universal right-multipliers are exactly $\{e_0, e_{2^{n-1}}\}$.
+- **T3b (`compat_clique_le_all_n`, `cdMaxClique_valid`):** Exact clique number
+  $\omega(G_n^{\mathrm{comp}}) = n + 5$ for ALL $n \ge 3$ (both universal upper bound on every
+  Euclidean coordinate right-multiplier clique and constructive $(n+5)$-clique witness
+  $\{0, \dots, 7\} \cup \{2^3, \dots, 2^{n-1}\}$).
+- **T3c (`hurwitz_radon_saturation_345`, `hurwitz_radon_rupture_all_ge6`):**
+  Exact arithmetic comparison of the Euclidean coordinate ceiling $n + 5$ against the classical
+  Hurwitz-Radon function $\rho(2^n) = 8\lfloor n/4 \rfloor + 2^{n \bmod 4}$ (whose optimality over
+  general real bilinear forms is cited from Hurwitz/Radon/Adams, not formalized here):
+  saturation $n + 5 = \rho(2^n)$ for $n \in \{3, 4, 5\}$ ($8, 9, 10$), followed by permanent strict
+  rupture $n + 5 < \rho(2^n)$ for ALL $n \ge 6$ with permanent deficit $\rho(2^n) - (n + 5) \ge n - 5$.
+- **T3d (`compatClique_implies_full_normMult`, `asymmetric_doubling_tower_all_n`):**
+  Constructive full-left $[2^n, n+5, 2^n]$ pairs and the universal Euclidean coordinate
+  asymmetric composition tower $[2^{n-1}, 2(n+4), 2^n]$ directly embedded in $\mathrm{CD}_n$
+  for ALL $n \ge 4$ ($[8, 16, 16]$, $[16, 18, 32]$, $[32, 20, 64]$, $[64, 22, 128]$, ...).
 -/
 
 namespace CDTerrace

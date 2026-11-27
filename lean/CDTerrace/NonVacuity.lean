@@ -5,14 +5,15 @@ public import CDTerrace.MirrorConservation
 public import CDTerrace.TerraceLaw
 public import CDTerrace.HurwitzRupture
 public import CDTerrace.FiniteCertificates
+public import CDTerrace.PathionRupture
 
 /-!
 # CDTerrace.NonVacuity — Explicit Non-Vacuity & Witness Instantiation Checks
 
 Proves that every hypothesis and headline theorem in `CDTerrace` is non-vacuously inhabited
 with concrete instantiated witnesses across $\mathrm{CD}_3$ (octonions), $\mathrm{CD}_4$
-(sedenions), $\mathrm{CD}_5$ (pathions), $\mathrm{CD}_6$ (chingons), and $\mathrm{CD}_7$
-(routons), eliminating any possibility of vacuous quantification or inconsistent premises.
+(sedenions), $\mathrm{CD}_5$ (pathions), and $\mathrm{CD}_6$ (chingons), eliminating any
+possibility of vacuous quantification or inconsistent premises.
 -/
 
 namespace CDTerrace
@@ -20,20 +21,22 @@ namespace CDTerrace
 public section
 
 /-- Non-vacuity witness for Pillar 1 (`cdSignGamma_factorization`, `nilpotent_mirror_law`,
-    `mirror_sum_conservation`, `midpoint_stratum_invariance`):
+    `mirror_sum_conservation`, `midpoint_stratum_invariance`, `twoblade_left_annihilator_basis_exact`):
     In split sedenions $\mathrm{CD}_4$ with `flipMask = 8` (split signature $(-,-,-,+)$),
     `e_1 + e_9` has `1 ^^^ 9 = 8` so it is nilpotent, inverting $\nu_4^{\mathrm{std}}(1, 9) = 0$
-    to $\nu_4^{\gamma}(1, 9) = 8$, while $H_4^{\gamma}(0) + H_4^{\gamma}(8) = 49 + 14 = 63$
-    and $H_4^{\gamma}(4) = 42$. -/
+    to $\nu_4^{\gamma}(1, 9) = 8$, while $H_4^{\gamma}(0) + H_4^{\gamma}(8) = 49 + 14 = 63$,
+    $H_4^{\gamma}(4) = 42$, and in standard $\mathbb{S}_{16}$ the left-annihilator basis of
+    $e_1 + e_{10}$ has exact cardinality `4`. -/
 theorem nonvacuity_pillar1_split_sedenion :
     parityBits 4 ((1 ^^^ 9) &&& 8) = true ∧
     twobladeNullity 4 1 9 = 0 ∧
     twobladeNullityGamma 4 8 1 9 = 8 ∧
     nullityHistGamma 4 8 0 + nullityHistGamma 4 8 8 = 63 ∧
-    nullityHistGamma 4 8 4 = 42 := by
+    nullityHistGamma 4 8 4 = 42 ∧
+    (singularOrbitRepsGamma 4 0 1 10).length = 4 := by
   have h19 : twobladeNullity 4 1 9 = 0 := by
     rw [← nu4Closed_eq 1 9 (by omega) (by omega) (by omega)]; rfl
-  refine ⟨by decide, h19, ?_, ?_, ?_⟩
+  refine ⟨by decide, h19, ?_, ?_, ?_, ?_⟩
   · have h := (nilpotent_mirror_law 4 8 1 9 (by omega) (by omega) (by omega) (by omega)).2 (by decide)
     omega
   · have h := mirror_sum_conservation 4 8 0 (by omega) (by omega)
@@ -45,10 +48,15 @@ theorem nonvacuity_pillar1_split_sedenion :
     exact h.trans hstd
   · rw [show (4 : Nat) = 2 ^ (4 - 2) from rfl]
     exact (universal_split_midpoint_42 4 8 (by omega)).trans rfl
+  · have hlen := (twoblade_left_annihilator_basis_exact 4 0 1 10 (by omega) (by omega) (by omega)).1
+    have h10 : twobladeNullityGamma 4 0 1 10 = 4 := by
+      have hmir := (nilpotent_mirror_law 4 0 1 10 (by omega) (by omega) (by omega) (by omega)).1 (by decide)
+      rw [hmir, ← nu4Closed_eq 1 10 (by omega) (by omega) (by omega)]; rfl
+    exact hlen.trans h10
 
 /-- Non-vacuity witness for Pillar 2 (`totalNullityMass_all_n`, `nonZDCount_all_n`,
     `terrace_top_bin_all_n`, `terrace_top_jump_all_n`, `terrace_midpoint_std_all_n`,
-    `twoblade_strictly_below_bdi`):
+    `twoblade_strictly_below_bdi`, `twoblade_ceiling_attained`):
     Concrete instantiated numerical invariants for $n = 4, 5, 6$. -/
 theorem nonvacuity_pillar2_terrace_instances :
     totalNullityMass 4 = 168 ∧
@@ -99,17 +107,25 @@ theorem nonvacuity_pillar3_dim64_rupture :
   exact ⟨hcl.1, hcl.2, rfl, by omega, has.1, has.2.2⟩
 
 /-- Non-vacuity witness for Pillar 4 (`sedenion_42_fano_duality`, `sedenion_box_kites_7x6`,
-    `pathion_14_and_chingon_16_witnesses`, `gaussInt_sq_eq_one_iff`):
-    Concrete norm-multiplicative 10D sedenion witness (`{0..7, 8, 9}`, mask `1023`),
-    14D pathion witness, 16D chingon witness, and Gaussian integer rigidity on `i`. -/
+    `pathion_14_and_chingon_16_witnesses`, `pathion_exact_ceiling_14_and_7_7_rigidity`,
+    `cd6_split56_interior_spectral_gap`, `gaussInt_sq_eq_one_iff`):
+    Concrete 10D sedenion witness, 14D $7 + 7$ pathion witness, 16D chingon witness,
+    `CD_6(56)` interior spectral gap witness, and Gaussian integer rigidity on `i`. -/
 theorem nonvacuity_pillar4_witnesses :
     popcount16 1023 = 10 ∧
     isNormMultMask 4 1023 = true ∧
     isNormMultList 5 pathionWitness14 = true ∧
+    (pathionWitness14.filter (fun x => decide (x < 16))).length = 7 ∧
+    (pathionWitness14.filter (fun x => decide (16 ≤ x))).length = 7 ∧
     isNormMultList 6 chingonWitness16 = true ∧
+    nullityHistGamma 6 56 16 = 168 ∧
+    nullityHistGamma 6 56 20 = 0 ∧
+    nullityHistGamma 6 56 24 = 56 ∧
     GaussInt.mul ⟨0, 1⟩ ⟨0, 1⟩ ≠ GaussInt.one := by
-  refine ⟨rfl, ?_, pathion_14_and_chingon_16_witnesses.2.2.2.1,
-          pathion_14_and_chingon_16_witnesses.2.2.2.2.2.2.2, ?_⟩
+  have hgap := cd6_split56_interior_spectral_gap
+  refine ⟨rfl, ?_, pathion_14_and_chingon_16_witnesses.2.2.2.1, rfl, rfl,
+          pathion_14_and_chingon_16_witnesses.2.2.2.2.2.2.2,
+          hgap.2.2.2.2.1, hgap.2.2.2.2.2.1, hgap.2.2.2.2.2.2.1, ?_⟩
   · rw [show (1023 : Nat) = 255 + 256 * 3 from rfl, isNormMultMask4_eq_hiAvoidsBad 255 3 (by omega)]
     rfl
   · intro h; injection h with hre; cases hre

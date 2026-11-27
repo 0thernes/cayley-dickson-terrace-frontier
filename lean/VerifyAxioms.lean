@@ -9,11 +9,11 @@ import CDTerrace.AdversarialTests
 /-!
 # Strict Kernel Axiom Audit (`VerifyAxioms.lean`)
 
-Prints exact transitive axiom footprints for all 20 Palomar headline targets,
-all 4 pillar non-vacuity witnesses, and all 6 adversarial boundary refutations
-(30 declarations total). Every single declaration must depend ONLY on a subset
-of `{propext, Classical.choice, Quot.sound}` (zero `sorryAx`, zero `Lean.ofReduceBool`,
-zero custom axioms).
+Prints exact transitive axiom footprints for all 23 Palomar headline targets
+(`T1a`–`T4f` + `ALL`), all 4 pillar non-vacuity witnesses, and all 8 adversarial
+boundary refutations (35 declarations total). Every single declaration must depend
+ONLY on a subset of `{propext, Classical.choice, Quot.sound}` (zero `sorryAx`, zero
+`Lean.ofReduceBool`, zero custom axioms).
 -/
 
 #print axioms CDTerrace.Palomar.prove_t1a
@@ -21,6 +21,7 @@ zero custom axioms).
 #print axioms CDTerrace.Palomar.prove_t1c
 #print axioms CDTerrace.Palomar.prove_t1d
 #print axioms CDTerrace.Palomar.prove_t1e
+#print axioms CDTerrace.Palomar.prove_t1f
 #print axioms CDTerrace.Palomar.prove_t2a
 #print axioms CDTerrace.Palomar.prove_t2b
 #print axioms CDTerrace.Palomar.prove_t2c
@@ -35,6 +36,8 @@ zero custom axioms).
 #print axioms CDTerrace.Palomar.prove_t4b
 #print axioms CDTerrace.Palomar.prove_t4c
 #print axioms CDTerrace.Palomar.prove_t4d
+#print axioms CDTerrace.Palomar.prove_t4e
+#print axioms CDTerrace.Palomar.prove_t4f
 #print axioms CDTerrace.Palomar.prove_all_terrace_theorems
 
 #print axioms CDTerrace.nonvacuity_pillar1_split_sedenion
@@ -48,3 +51,5 @@ zero custom axioms).
 #print axioms CDTerrace.refute_split_preserves_individual_bins
 #print axioms CDTerrace.refute_third_universal_multiplier
 #print axioms CDTerrace.refute_gaussian_imaginary_intercalate
+#print axioms CDTerrace.refute_pathion_15d_or_unbalanced_14d
+#print axioms CDTerrace.refute_cd6_split56_contiguous_bins

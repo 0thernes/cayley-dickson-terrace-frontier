@@ -6,7 +6,7 @@ This project requires **zero runtime secrets, API keys, or external services** f
 | --- | --- |
 | `lean/lean-toolchain` | Pins `leanprover/lean4:v4.35.0` |
 | `lean/lakefile.toml` | Zero-Mathlib Lake configuration (`autoImplicit = false`, `relaxedAutoImplicit = false`, `linter.unusedVariables = true`, `defaultTargets = ["CDTerrace", "Challenge", "Solution", "PalomarSolution"]`) |
-| `lean/comparator.json` | Palomar Comparator 20-target statement contract & allowed axiom list |
+| `lean/comparator.json` | Palomar Comparator 23-target statement contract & allowed axiom list |
 | `lean/formalization.yaml` | Machine-readable formalization metadata |
 | `rust/Cargo.toml` | Zero-dependency Rust 2021 edition configuration |
 | `c/Makefile` | Strict ISO C11 flags (`-std=c11 -Wall -Wextra -Wpedantic -Werror -Wshadow -Wconversion`), ASan/UBSan & fuzz targets |

@@ -5,5 +5,6 @@ public import CDTerrace.MirrorConservation
 public import CDTerrace.TerraceLaw
 public import CDTerrace.HurwitzRupture
 public import CDTerrace.FiniteCertificates
+public import CDTerrace.PathionRupture
 public import CDTerrace.NonVacuity
 public import CDTerrace.AdversarialTests

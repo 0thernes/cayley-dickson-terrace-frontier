@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "sedenion_triple_42": {
     "total_affine_2planes": 140,
     "bad_affine_2planes_count": 42,
@@ -1483,10 +1483,16 @@
     "dim": 32,
     "bad_affine_2planes": 630,
     "exact_max_symmetric_coord_dim": 14,
+    "lean_kernel_proved": true,
+    "strict_7_plus_7_balance": true,
+    "exact_14d_subspace_count": 280,
+    "all_14d_contain_e0_and_e16": true,
+    "valid_lo_ge8_count": 2995,
+    "greedy_clique_cover_failures": 0,
     "yiu_general_integer_dim": 16,
     "symmetric_rupture_gap": 2,
-    "milp_status": 0,
-    "milp_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "milp_crosscheck_status": 0,
+    "milp_crosscheck_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
     "canonical_witness_14": [
       0,
       1,

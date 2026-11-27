@@ -90,13 +90,61 @@ public section
     countSingularIdx n i j m +
       (if blockDelta n i j m == 1 then 1 else 0)
 
-/-- Exact 2-blade left-annihilator nullity $\nu_n^\gamma(i, j) = \frac{1}{2}\#\{k < 2^n : \delta_n^\gamma(i, j, k) = +1\}$. -/
+/-- 2-blade block-count nullity $\nu_n^\gamma(i, j) = \frac{1}{2}\#\{k < 2^n : \delta_n^\gamma(i, j, k) = +1\}$.
+    Proved equal to the exact cardinality of a linearly independent spanning $\mathbb{Z}$-basis
+    of the left-annihilator kernel $\ker L_{e_i + e_j}$ in
+    `CDTerrace.twoblade_left_annihilator_basis_exact` (`T1f`). -/
 @[expose] def twobladeNullityGamma (n flipMask i j : Nat) : Nat :=
   countSingularIdxGamma n flipMask i j (2 ^ n) / 2
 
-/-- Standard Euclidean 2-blade left-annihilator nullity $\nu_n^{\mathrm{std}}(i, j)$. -/
+/-- Standard Euclidean 2-blade block-count nullity $\nu_n^{\mathrm{std}}(i, j)$, proved equal
+    to the exact left-annihilator kernel rank in `CDTerrace.twoblade_left_annihilator_basis_exact`. -/
 @[expose] def twobladeNullity (n i j : Nat) : Nat :=
   countSingularIdx n i j (2 ^ n) / 2
+
+/-- Finite sum $\sum_{a=0}^{m-1} f(a)$ in $\mathbb{Z}$. -/
+@[expose] def sumInt (f : Nat → Int) : Nat → Int
+  | 0 => 0
+  | m + 1 => sumInt f m + f m
+
+/-- Coordinate vector of basis element $e_i \in \mathrm{CD}_n(\gamma)$. -/
+@[expose] def basisVec (i : Nat) (x : Nat) : Int :=
+  if x == i then 1 else 0
+
+/-- Coordinate vector of a 2-blade $e_i + e_j \in \mathrm{CD}_n(\gamma)$. -/
+@[expose] def twobladeVec (i j : Nat) (x : Nat) : Int :=
+  basisVec i x + basisVec j x
+
+/-- Coordinate vector of a signed 2-blade $e_k + s\,e_l \in \mathrm{CD}_n(\gamma)$. -/
+@[expose] def signedBladeVec (k l : Nat) (s : Int) (x : Nat) : Int :=
+  basisVec k x + s * basisVec l x
+
+/-- Full bilinear Cayley-Dickson product $(u \cdot v)_t$ at coordinate $t < 2^n$ in
+    $\mathrm{CD}_n(\gamma)$:
+    $(u \cdot v)_t = \sum_{a=0}^{2^n - 1} \sigma_n^\gamma(a, a \oplus t)\, u_a\, v_{a \oplus t}$. -/
+@[expose] def cdMulCoordGamma (n flipMask : Nat) (u v : Nat → Int) (t : Nat) : Int :=
+  sumInt (fun a => cdSignGamma n flipMask a (a ^^^ t) * u a * v (a ^^^ t)) (2 ^ n)
+
+/-- Canonical list of singular $2 \times 2$ orbit representatives $k < k \oplus i \oplus j$
+    with $\delta_n^\gamma(i, j, k) = +1$ for the left-annihilator of $e_i + e_j$. -/
+@[expose] def singularOrbitRepsGamma (n flipMask i j : Nat) : List Nat :=
+  (List.range (2 ^ n)).filter (fun k =>
+    decide (k < (k ^^^ (i ^^^ j))) && (blockDeltaGamma n flipMask i j k == 1))
+
+/-- Explicit 2-sparse $\mathbb{Z}$-basis vector $b_k \in \ker L_{e_i + e_j}$ supported on
+    the singular orbit $\{k, k \oplus i \oplus j\}$:
+    $b_k = e_k - \sigma_n^\gamma(i, k)\,\sigma_n^\gamma(j, k \oplus i \oplus j)\, e_{k \oplus i \oplus j}$. -/
+@[expose] def twobladeKernelBasisVec (n flipMask i j k : Nat) (x : Nat) : Int :=
+  if x == k then 1
+  else if x == (k ^^^ (i ^^^ j)) then
+    -(cdSignGamma n flipMask i k * cdSignGamma n flipMask j (k ^^^ (i ^^^ j)))
+  else 0
+
+/-- Linear combination $\sum_{k \in \mathrm{reps}} c(k)\, b_k(x)$ over a list of orbit
+    representatives `reps` at coordinate `x`. -/
+@[expose] def linearCombKernelBasis (n flipMask i j : Nat)
+    (reps : List Nat) (c : Nat → Int) (x : Nat) : Int :=
+  reps.foldl (fun acc k => acc + c k * twobladeKernelBasisVec n flipMask i j k x) 0
 
 /-- Row helper for 2-blade nullity histogram over $j < \mathrm{lim}$. -/
 @[expose] def nullityHistRow (n flipMask v i : Nat) : Nat → Nat

@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and the Dimension-64 Hurwitz-Radon Rupture Across Generalized Cayley-Dickson Algebras"
+title: "The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and Coordinate Norm-Multiplicativity Ruptures Across Cayley-Dickson Algebras"
 message: "If you use this software, Lean 4 formalization, datasets, or white paper, please cite it as below."
 type: software
 authors:
@@ -8,29 +8,33 @@ authors:
     orcid: "https://orcid.org/0009-0006-8168-9648"
     email: "0_0@0thernes.art"
     affiliation: "Independent Researcher, Spokane, WA, USA"
-version: "1.0.0"
+version: "2.0.0"
 date-released: "2026-11-26"
 license: "Apache-2.0"
 repository-code: "https://github.com/0thernes/cayley-dickson-terrace-frontier"
 url: "https://0thernes.github.io/cayley-dickson-terrace-frontier/"
 abstract: >-
-  Zero-Mathlib Lean 4.35.0 proofs of all-n counting identities for 2-blade
-  nullities in the explicit Cayley-Dickson sign table, for all signatures
-  (Pillar 1 and the midpoint law) or the Euclidean signature (Pillar 2); the
-  bound n+5 for coordinate right-multiplier families in the Euclidean CD_n,
-  which equals the Hurwitz-Radon number for n = 3, 4, 5 and is smaller for
-  n >= 6; and finite certificates for sedenion, pathion and chingon
-  coordinate subsets, including a re-verification of de Marrais's 7
-  box-kites. The Lean statements concern the sign table and block counts;
-  that these counts equal annihilator dimensions is a lemma proved in the
-  paper. The bound r_max(CD_5) = 14 and the CD_6-CD_8 tables rest on exact
-  computation outside Lean. The divisibility of nullities by 4 is the
-  2-blade case of a theorem of Moreno. The title is that of the frozen
-  v1.0.0 manuscript; its "dimension-64 rupture" refers to coordinate
-  right-multiplier families in the Euclidean CD_n only. See ERRATA.md.
+  Zero-Mathlib Lean 4.35.0 six-kernel formalization (22 headline theorems,
+  23 Palomar Comparator targets, 35 axiom-audited declarations strictly within
+  propext, Classical.choice, Quot.sound) and tri-language Rust/ISO C11/Python
+  differential verifiers covering: (1) universal all-n, all-signature Nilpotent
+  Mirror Conservation, full bilinear 2-blade nilpotency, and the exact 2x2 block
+  linear-algebra Z-basis isomorphism for ker L_{e_i + e_j} (T1a-T1f); (2) the
+  Euclidean Dyadic-Palindromic Terrace Law, Moreno's 2-blade divisibility 4 | nu,
+  attained ceiling 2^{n-1}-4 with BDI equality iff n=4 among n>=4, and the
+  all-signature midpoint law H_n^gamma(2^{n-2}) = 42 * 2^{n-4} (T2a-T2f);
+  (3) Euclidean coordinate right-multiplier clique number omega(G_n^comp) = n+5,
+  breakaway below rho(2^n) at dimension 64 (11 < 12), and [2^{n-1}, 2(n+4), 2^n]
+  doubling tower (T3a-T3d); (4) Sedenion Triple-42 duality (42 bad 2+2 planes,
+  pure-product re-verification of de Marrais's 7xK_{2,2,2} box-kites, 42 maximal
+  10D subspaces with Fano split 7+28+7), pure-kernel Pathion ceiling r_max(CD_5)=14
+  with strict 7+7 half-balance rigidity across all 2^32 subsets retiring MILP from
+  the proof trust base (T4e), and pure-kernel certification of the dimension-64
+  split interior spectral gap H_6^{56}(20)=0 (T4f).
 keywords:
   - cayley-dickson-algebras
   - sedenions
+  - pathions
   - zero-divisors
   - hurwitz-radon
   - sums-of-squares

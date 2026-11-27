@@ -7,6 +7,7 @@
     "CDTerrace.Palomar.prove_t1c",
     "CDTerrace.Palomar.prove_t1d",
     "CDTerrace.Palomar.prove_t1e",
+    "CDTerrace.Palomar.prove_t1f",
     "CDTerrace.Palomar.prove_t2a",
     "CDTerrace.Palomar.prove_t2b",
     "CDTerrace.Palomar.prove_t2c",
@@ -21,6 +22,8 @@
     "CDTerrace.Palomar.prove_t4b",
     "CDTerrace.Palomar.prove_t4c",
     "CDTerrace.Palomar.prove_t4d",
+    "CDTerrace.Palomar.prove_t4e",
+    "CDTerrace.Palomar.prove_t4f",
     "CDTerrace.Palomar.prove_all_terrace_theorems"
   ],
   "definition_names": [],

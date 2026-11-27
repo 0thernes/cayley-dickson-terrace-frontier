@@ -16,8 +16,9 @@
 \usepackage{enumitem}
 \usepackage[margin=1.0in]{geometry}
 \usepackage[colorlinks=true,linkcolor=oiBlue,citecolor=oiGreen,urlcolor=oiBlue]{hyperref}
-\newcommand{\code}[1]{\texttt{\small\nolinkurl{#1}}}
-\newcommand{\cmd}[1]{\texttt{\small #1}}
+\def\UrlBreaks{\do\/\do-\do.\do_}
+\newcommand{\code}[1]{\textnormal{\texttt{\small\nolinkurl{#1}}}}
+\newcommand{\cmd}[1]{\textnormal{\texttt{\small #1}}}
 \raggedbottom
 
 % Okabe-Ito publication colors
@@ -67,77 +68,90 @@
 \newcommand{\Ann}{\mathrm{Ann}}
 \DeclareMathOperator{\rk}{rank}
 
-\title[Cayley--Dickson Terrace Law, Mirror Conservation \& Dim-64 Rupture]{%
+\title[Cayley--Dickson Terrace Law, Mirror Conservation \& Coordinate Ruptures]{%
   The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation,\\
-  and the Dimension-64 Hurwitz--Radon Rupture Across\\
-  Generalized Cayley--Dickson Algebras%
+  and Coordinate Norm-Multiplicativity Ruptures Across\\
+  Cayley--Dickson Algebras%
 }
 
 \author{Alexander Stephen Donahue}
 \address{Independent Researcher, Spokane, WA, USA}
 \email{0\_0@0thernes.art}
-\thanks{ORCID: \href{https://orcid.org/0009-0006-8168-9648}{0009-0006-8168-9648}.
-Repository, six-kernel Lean~4.35.0 proofs, Rust/C11/Python engines, and interactive WebGL observatory:
-\url{https://github.com/0thernes/cayley-dickson-terrace-frontier}. Archive ID: \texttt{0TH-2026-019}.}
+\thanks{Version~2.0.0. ORCID: \href{https://orcid.org/0009-0006-8168-9648}{0009-0006-8168-9648}.
+Code, six-kernel Lean~4.35.0 proofs, Rust/C11/Python engines, and 3D~Canvas observatory:
+\url{https://github.com/0thernes/cayley-dickson-terrace-frontier}.
+Archive ID: \texttt{0TH-2026-019}.}
 
 \subjclass[2020]{Primary 17A35, 17A75, 11E25; Secondary 05C69, 68V20}
-\keywords{Cayley--Dickson algebras, sedenions, zero divisors, Hurwitz--Radon numbers,
-sums-of-squares composition, Box-Kites, Lean~4 formal verification}
+\keywords{Cayley--Dickson algebras, sedenions, pathions, zero divisors, Hurwitz--Radon numbers,
+sums-of-squares composition, box-kites, Lean~4 formal verification}
 
 \begin{document}
 
 \begin{abstract}
-We establish four interconnected structural theorems governing zero-divisor nullity spectra,
-signature deformations, and norm-multiplicative subspaces across the entire infinite tower of
-generalized Cayley--Dickson algebras $\CD_n(\gamma)$ of dimension $2^n$ ($n \ge 1$,
-$\gamma \in \{\pm 1\}^n$).
+We establish four interconnected families of machine-checked structural theorems governing
+$2$-blade left-annihilator spectra, signature deformations, and coordinate norm-multiplicative
+subspaces across Cayley--Dickson algebras $\CD_n(\gamma)$ of dimension $2^n$ ($n \ge 1$,
+$\gamma \in \{\pm 1\}^n$). Pillar~1, Theorem~\texttt{T2f}, and the split-phase classifications
+hold across all $2^n$ Euclidean and split signatures $\gamma$; the remaining theorems of
+Pillar~2, Pillar~3, and Pillar~4 concern Euclidean $\CD_n$ coordinate subspaces.
 
-\emph{First (Nilpotent Mirror Conservation)}, we prove that the generalized basis sign cocycle
-factorizes universally as
+\emph{First (Nilpotent Mirror Conservation and Exact Kernel Basis, \texttt{T1a}--\texttt{T1f})},
+we prove that the generalized basis sign cocycle factorizes universally as
 $\sigma_n^\gamma(i,j) = \sigma_n^{\std}(i,j)(-1)^{\pop(i\,\&\,j\,\&\,\flip(\gamma))}$,
-forcing every $2\times 2$ left-multiplication block determinant $\delta_n^\gamma(i,j,k)$ of a
-basis 2-blade $e_i + e_j$ to flip by a sign completely independent of the block index $k$.
-Consequently, non-nilpotent 2-blades preserve their Euclidean nullity while nilpotent 2-blades
-undergo exact mirror inversion $\nu_n^\gamma(i,j) = 2^{n-1} - \nu_n^{\std}(i,j)$, conserving
-every mirror-pair histogram sum $H_n^\gamma(v) + H_n^\gamma(2^{n-1}-v)$ and pinning the
-midpoint stratum $H_n^\gamma(2^{n-2})$ across all $2^n$ signatures.
+forcing every $2\times 2$ left-multiplication block determinant sign $\delta_n^\gamma(i,j,k)$ of
+a basis $2$-blade $e_i + e_j$ to flip by a factor independent of $k$. We formalize directly in
+Lean that the block-count nullity $\nu_n^\gamma(i,j)$ equals the exact cardinality of an explicit
+$2$-sparse linearly independent spanning $\Z$-basis of $\ker L_{e_i + e_j}$ under the full
+bilinear product of $\CD_n(\gamma)$, and that $(e_i+e_j)^2 = 0$ identically across all $2^n$
+coordinates iff $\parbit_n((i\oplus j)\,\&\,\flip(\gamma)) = 1$. Consequently, non-nilpotent
+$2$-blades preserve Euclidean nullity while nilpotent $2$-blades invert to
+$2^{n-1} - \nu_n^{\std}(i,j)$, conserving every mirror-pair histogram sum
+$H_n^\gamma(v) + H_n^\gamma(2^{n-1}-v)$ and pinning $H_n^\gamma(2^{n-2})$ across all $2^n$
+signatures.
 
-\emph{Second (The Dyadic-Palindromic Terrace Law)}, we derive an exact four-branch doubling
-recurrence for Euclidean 2-blade nullity, yielding closed-form all-$n$ laws for total nullity
-mass $M_n = 8(2^{n-1}-1)(2^{n-2}-1)(2^{n-3}-1)$, zero-divisor-free counts
+\emph{Second (The Dyadic-Palindromic Terrace Law, \texttt{T2a}--\texttt{T2f})}, we derive an exact
+four-branch doubling recurrence for Euclidean $2$-blade nullity, yielding closed forms for total
+nullity mass $M_n = 8(2^{n-1}-1)(2^{n-2}-1)(2^{n-3}-1)$, nullity-zero counts
 $H_n^{\std}(0) = (6n-9)2^{n-2}+3$, exact even/odd bin interleaving
 $H_{n+1}^{\std}(8m) = H_{n+1}^{\std}(2^n-4-8m) = 2H_n^{\std}(4m)$, interior palindromic
-symmetry, an exact top-bin jump $3(2^n-2)$, sharp separation from the Biss--Dugger--Isaksen
-annihilator ceiling $2^n - 4n + 4$ for every $n \ge 5$ (with uniqueness of equality at $n=4$),
-and the crowning \emph{Universal Midpoint 42 Law}: $H_n^\gamma(2^{n-2}) = 42 \cdot 2^{n-4}$
-for all $n \ge 4$ and all $2^n$ signatures $\gamma$.
+symmetry, exact top-bin jump $3(2^n-2)$, an independent $2$-blade proof of Moreno's divisibility
+$4 \mid \nu_n^{\std}$ with attained ceiling $2^{n-1}-4$ (equal to the Biss--Dugger--Isaksen
+bound $2^n - 4n + 4$ among $n \ge 4$ only at $n = 4$, and strictly below it for every $n \ge 5$),
+and the all-signature midpoint law $H_n^\gamma(2^{n-2}) = 42 \cdot 2^{n-4}$ for all $n \ge 4$ and
+all $2^n$ signatures $\gamma$.
 
-\emph{Third (The Dimension-64 Hurwitz--Radon Bott Rupture)}, we determine the exact doubling
-law and clique number of the basis right-compatibility graph $G_n^{\comp}$, proving
-$\omega(G_n^{\comp}) = n+5$ for every $n \ge 3$ and uniqueness of the two universal
-right-multipliers $\{e_0, e_{2^{n-1}}\}$ for all $n \ge 4$. Thus Cayley--Dickson coordinate
-multiplication saturates the Hurwitz--Radon ceiling $\rho(2^n)$ at dimensions $8, 16, 32$
-($8, 9, 10$), but suffers an irrevocable Bott-periodicity rupture at dimension~$64$
-($11 < 12 = \rho(64)$) with diverging deficit $\rho(2^n) - (n+5) \ge n-5$ for all $n \ge 6$,
-while an explicit doubling tower realizes $[2^{n-1}, 2(n+4), 2^n]$ pairs for all $n \ge 4$.
+\emph{Third (Coordinate Right-Multiplier Rupture at Dimension~64, \texttt{T3a}--\texttt{T3d})}, we
+determine the exact doubling law and clique number of the Euclidean basis right-compatibility
+graph $G_n^{\comp}$, proving $\omega(G_n^{\comp}) = n+5$ for every $n \ge 3$ and uniqueness of
+the two universal right-multipliers $\{e_0, e_{2^{n-1}}\}$ for all $n \ge 4$. Comparing against
+the classical Hurwitz--Radon formula $\rho(2^n) = 8\lfloor n/4\rfloor + 2^{n \bmod 4}$, Euclidean
+Cayley--Dickson coordinate right-multiplier families match $\rho(2^n)$ at dimensions $8, 16, 32$
+($8, 9, 10$), fall strictly short beginning at dimension~$64$ ($11 < 12 = \rho(64)$) with deficit
+$\rho(2^n) - (n+5) \ge n-5$ for all $n \ge 6$, and admit an explicit doubling tower realizing
+$[2^{n-1}, 2(n+4), 2^n]$ coordinate pairs for all $n \ge 4$.
 
-\emph{Fourth (Sedenion Triple-42 Duality, Symmetric Rupture, and Base-Field Rigidity)}, we
-classify all $2^{16} = 65{,}536$ coordinate subspaces of $\SSed$, proving a simultaneous
-Triple-42 coincidence---$42$ bad affine $2$-planes, $42$ Box-Kite assessors forming
-$7 \times K_{2,2,2}$, and $42$ maximal $10$-dimensional norm-multiplicative subspaces with
-Fano intersection split $7 + 28 + 7 = 42$ and zero subspaces of dimension $\ge 11$---alongside
-exhaustive split-phase classifications of $\CD_4(\gamma)$ ($1{:}1{:}7{:}7$) and
-$\CD_5(\gamma)$ ($4{\times}1 + 4{\times}7$), MILP-certified Pathion symmetric rupture
-$r_{\max}(\CD_5) = 14 < 16$ relative to Yiu's $[16,16,32]$ integral bilinear form, and
-pure-intercalate base-field rigidity over integral domains and $\Z[i] \subset \Q(i)$
-illuminating the 2026 base-field dependence breakthrough of Zhang and Zhu.
+\emph{Fourth (Sedenion Triple-42 Duality, Pure-Kernel Pathion Ceiling $r_{\max}(\CD_5) = 14$ with
+$7+7$ Rigidity, and Dimension-64 Split Spectral Gap, \texttt{T4a}--\texttt{T4f})}, we classify
+all $2^{16}$ coordinate subspaces of $\SSed$ (42 bad $2+2$ affine $2$-planes, formal
+re-verification of de~Marrais's $7 \times K_{2,2,2}$ box-kites under pure vanishing-product
+adjacency, and 42 maximal $10$-dimensional norm-multiplicative subspaces with Fano split
+$7 + 28 + 7 = 42$ and zero subspaces of dimension $\ge 11$), classify all split phases of
+$\CD_4(\gamma)$ ($1{:}1{:}7{:}7$) and $\CD_5(\gamma)$ ($4{\times}1 + 4{\times}7$), certify the
+dimension-64 split interior spectral gap $H_6^{56}(16)=168, H_6^{56}(20)=0, H_6^{56}(24)=56$
+directly in the kernel, and prove in pure Lean over all $2^{32}$ subsets of $\CD_5$---using
+universal all-$n$ half-swap symmetry and a zero-backtracking greedy clique-cover certificate,
+retiring external MILP solvers from the proof trust base---that $r_{\max}(\CD_5) = 14$ and that
+every $14$-dimensional norm-multiplicative coordinate subset of $\CD_5$ splits strictly $7 + 7$
+across $\{0,\dots,15\}$ and $\{16,\dots,31\}$ (with exactly $280$ such subspaces verified
+exhaustively in Rust and Python).
 
-All 19 headline theorems and their master conjunction (20 Palomar Comparator targets, plus
-4 non-vacuity witnesses and 6 adversarial refutations) are formally machine-checked from
-scratch in zero-Mathlib Lean~4.35.0 across six independent kernels using strictly standard
-axioms (\code{propext}, \code{Classical.choice}, \code{Quot.sound}), and
-cross-checked differentially across Rust, ISO~C11, and Python up to dimension $256$
-(all $496$ generalized algebras $\CD_4(\gamma)$--$\CD_8(\gamma)$).
+All 22 headline theorems and their master conjunction (23 Palomar Comparator targets, plus 4
+non-vacuity witnesses and 8 adversarial refutations; 35 axiom-audited declarations) are
+machine-checked from scratch in zero-Mathlib Lean~4.35.0 across six independent kernels using
+strictly standard axioms (\code{propext}, \code{Classical.choice}, \code{Quot.sound}), and
+cross-checked differentially across Rust, ISO~C11, and Python across all $496$ generalized
+algebras $\CD_4(\gamma)$--$\CD_8(\gamma)$.
 \end{abstract}
 
 \maketitle
@@ -145,111 +159,154 @@ cross-checked differentially across Rust, ISO~C11, and Python up to dimension $2
 \noindent\fcolorbox{oiRule}{oiBg}{%
 \begin{minipage}{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}
 \small
-\textbf{Epistemic Scope \& Verification Discipline.}
-Every claim in this paper carries an explicit verification provenance tag:
+\textbf{Epistemic Scope \& Verification Discipline (v2.0.0).}
+Every mathematical claim in this paper carries an explicit verification tag:
 \tagLean{} denotes a theorem machine-checked in zero-Mathlib Lean~4.35.0 across six
 independent kernels (\texttt{lean}, \texttt{leanchecker-paranoid}, \texttt{lean4lean},
 \texttt{nanoda}, \texttt{con-leche}, \texttt{con-ron}) via the Palomar Comparator statement
-contract with zero \texttt{sorry}, zero \texttt{admit}, zero \texttt{native\_decide}, and
-strictly standard axioms;
+contract with zero \texttt{sorry}, zero \texttt{admit}, zero \texttt{native\_decide}, zero
+\texttt{maxRecDepth}/\texttt{maxHeartbeats} overrides, and strictly standard axioms;
 \tagComp{} denotes an exact-arithmetic computational certificate (Rust/C11/Python differential
-enumeration or exact HiGHS MILP optimization) not yet lifted into the Lean kernel;
+enumeration) outside Lean;
 \tagOpen{} denotes an open mathematical frontier explicitly \emph{not} claimed solved.
+Version~2.0.0 resolves every manuscript, formal, and tooling item logged in \code{ERRATA.md}
+against v1.0.0, adds kernel proofs \code{T1f}, \code{T4e}, and \code{T4f}, and removes external
+MILP solvers from the proof trust base for $r_{\max}(\CD_5) = 14$.
 \end{minipage}}
 
 \tableofcontents
 
 % ==============================================================================
-\section{Introduction and Summary of Principal Results}
+\section{Introduction, Related Work, and Summary of Results}
 \label{sec:intro}
 % ==============================================================================
 
-The Cayley--Dickson doubling process~\cite{dickson1919,schafer1954,baez2002} produces a
-canonical infinite tower of $2^n$-dimensional real algebras $\CD_n$ ($n \ge 0$), beginning
+The Cayley--Dickson doubling process~\cite{dickson1919,schafer1954,baez2002} builds a
+canonical infinite tower of $2^n$-dimensional real algebras $\CD_n$ ($n \ge 0$), starting
 with the four normed division algebras $\R = \CD_0$, $\C = \CD_1$, $\HH = \CD_2$, and
 $\OO = \CD_3$ characterized by Hurwitz's theorem~\cite{hurwitz1898}. At $n = 4$, the
 $16$-dimensional sedenions $\SSed = \CD_4$ lose alternativity and acquire zero divisors.
-Since Moreno's identification of the sedenion zero-divisor locus with the Stiefel manifold
-$V_{7,2}$ and the exceptional Lie group $G_2$~\cite{moreno1998}, and the combinatorial
-discovery of the $42$ sedenion Box-Kite assessors by de~Marrais~\cite{demarrais2000} and
-Cawagas~\cite{cawagas2004}, two rich research trajectories have unfolded largely in parallel:
+Albuquerque and Majid~\cite{albuquerque1999} and Morier-Genoud and
+Ovsienko~\cite{moriergenoud2011} frame these algebras and their Hurwitz--Radon extensions
+as twisted group algebras $\R[\F_2^n]_\sigma$ determined by an explicit sign cochain
+$\sigma_n : \F_2^n \times \F_2^n \to \{\pm 1\}$.
+
+Three research trajectories provide the direct context for this work:
 \begin{enumerate}[leftmargin=2em]
-  \item \emph{Zero-divisor annihilator geometry:} Biss, Dugger, and Isaksen
-    \cite{biss2008i,biss2007ii,biss2009eigen} established the general upper bound
-    $\dim \Ann(x) \le 2^n - 4n + 4$ for nonzero $x \in \CD_n$ ($n \ge 4$) and analyzed the
+  \item \emph{Zero-divisor annihilator geometry and basis-pair graphs:}
+    Moreno~\cite{moreno1998} identified the sedenion zero-divisor locus with the Stiefel manifold
+    $V_{7,2}$ and $G_2$, established that annihilator dimensions in $\CD_n$ are multiples of
+    four (see also Biss--Dugger--Isaksen~\cite{biss2008i}), and analyzed alternative elements
+    in~\cite{moreno2004}. Combinatorially, de~Marrais~\cite{demarrais2000,demarrais2002}
+    discovered the $42$ sedenion assessors arranged into $7$ octahedral \emph{box-kites} and
+    studied higher $2^n$-ion assessor patterns, while Cawagas~\cite{cawagas2004} classified
+    sedenion subalgebras. Biss, Christensen, Dugger, and
+    Isaksen~\cite{biss2008i,biss2007ii,biss2009eigen} proved the general upper bound
+    $\dim \Ann(x) \le 2^n - 4n + 4$ for nonzero $x \in \CD_n$ ($n \ge 4$) and developed the
     eigentheory of left-multiplication operators; Reggiani~\cite{reggiani2024sedenions}
-    recently clarified the Riemannian geometry of the sedenion zero-divisor manifold.
-  \item \emph{Composition of quadratic forms and intercalate matrices:} Hurwitz~\cite{hurwitz1922},
-    Radon~\cite{radon1922}, and Adams~\cite{adams1962} determined the maximal dimension
-    $\rho(2^n)$ of an orthogonal family acting on $\R^{2^n}$, while Adem~\cite{adem1975},
-    Lam~\cite{lam1985}, Lam--Yiu~\cite{lamyiu1987}, Yiu~\cite{yiu1987,yiu1990,yiu1994}, and
-    Shapiro~\cite{shapiro2000} investigated integer and real sums-of-squares formulas
-    $[r, s, N]$ via signed intercalate matrices. Remarkably, Zhang and
-    Zhu~\cite{zhangzhu2026hurwitz} proved in May~2026 that the Hurwitz sum-of-squares problem
-    depends on the base field, constructing a $[12, 12, 18]$ formula over $\Q(i)$ where none
-    exists over $\R$.
+    clarified the Riemannian geometry of the sedenion zero-divisor manifold. Most closely
+    related to our Euclidean $2$-blade analysis, Zhilina~\cite{zhilina2021i,zhilina2021ii}
+    studied orthogonality graphs of real Cayley--Dickson algebras, classifying doubly alternative
+    zero divisors and the zero-divisor subgraph on pairs of standard basis elements up to sign.
+  \item \emph{Composition of quadratic forms and intercalate matrices:}
+    Hurwitz~\cite{hurwitz1922}, Radon~\cite{radon1922}, and Adams~\cite{adams1962} determined
+    the maximal dimension $\rho(2^n)$ of an orthogonal family acting on $\R^{2^n}$.
+    Adem~\cite{adem1975} constructed normed bilinear maps directly from Cayley--Dickson algebras,
+    while Lam~\cite{lam1985}, Lam--Yiu~\cite{lamyiu1987}, Yiu~\cite{yiu1987,yiu1990,yiu1994},
+    and Shapiro~\cite{shapiro2000} investigated integer and real sums-of-squares formulas
+    $[r, s, N]$ via signed intercalate matrices---including Yiu's $[16, 16, 32]$ integral
+    bilinear form~\cite{yiu1990}. Recently, Zhang and Zhu~\cite{zhangzhu2026hurwitz} established
+    that the general Hurwitz sum-of-squares problem depends on the base field by constructing a
+    $[12, 12, 18]$ formula over $\Q(i)$ where none exists over $\R$.
+  \item \emph{Independent formal verification:}
+    Machine-checked proofs in Lean~4~\cite{demoura2021lean4} replayed across independent external
+    checkers such as \texttt{lean4lean}~\cite{carneiro2024lean4lean} make it possible to certify
+    both infinite-family algebraic recurrences and large combinatorial ceilings without trusting
+    heuristic scripts or external floating-point/MILP solvers.
 \end{enumerate}
 
-Despite this deep literature, four fundamental structural questions across the full tower
-$\CD_n(\gamma)$ remained unified only in fragments:
+Motivated by these lines of inquiry, we pose and investigate four structural questions:
 \begin{itemize}[leftmargin=2em]
-  \item How does the entire $2$-blade zero-divisor nullity spectrum behave when the doubling
-    parameters $\gamma = (\gamma_0, \dots, \gamma_{n-1}) \in \{\pm 1\}^n$ vary across all
-    $2^n$ Euclidean and split Cayley--Dickson signatures?
-  \item What exact global law governs the complete Euclidean $2$-blade nullity histogram
-    $H_n^{\std}(v)$ for arbitrary $n \ge 3$, and exactly when do $2$-blades fail to saturate
-    the Biss--Dugger--Isaksen annihilator ceiling $2^n - 4n + 4$?
-  \item Exactly how much of the Bott-periodic Hurwitz--Radon capacity $\rho(2^n)$ can be
-    realized by native Cayley--Dickson basis multiplication inside $\CD_n$, and at what
-    dimension does the Bott-periodicity ceiling break away?
-  \item Why does the integer $42$ appear simultaneously across sedenion affine $2$-planes,
-    Box-Kite zero-divisor assessors, and maximal $10$-dimensional norm-multiplicative
-    coordinate subspaces, and how does coordinate norm-multiplicativity behave at dimensions
-    $32$ and $64$ or over complexified intercalate rings such as $\Z[i] \subset \Q(i)$?
+  \item \emph{Q1 (All-Signature Deformation):} How does the complete $2$-blade left-annihilator
+    nullity spectrum transform as the doubling signature
+    $\gamma = (\gamma_0, \dots, \gamma_{n-1}) \in \{\pm 1\}^n$ ranges over all $2^n$ Euclidean
+    and split Cayley--Dickson algebras $\CD_n(\gamma)$?
+  \item \emph{Q2 (Global Euclidean Terrace Law and BDI Threshold):} What closed-form global law
+    governs the complete Euclidean $2$-blade nullity histogram $H_n^{\std}(v)$ for arbitrary
+    $n \ge 3$, and for which $n \ge 4$ do $2$-blades reach or fall short of the
+    Biss--Dugger--Isaksen annihilator ceiling $2^n - 4n + 4$?
+  \item \emph{Q3 (Native Coordinate Capacity vs.\ $\rho(2^n)$):} How large can a coordinate
+    right-multiplier family be inside the Euclidean algebra $\CD_n$ against the full left space,
+    and at what dimension does native coordinate multiplication break away from $\rho(2^n)$?
+  \item \emph{Q4 (Coordinate Norm-Multiplicativity in $\SSed$, $\CD_5$, and $\CD_6$):} How do the
+    $42$ sedenion bad affine $2$-planes, de~Marrais's $42$ box-kite assessors ($7 \times K_{2,2,2}$),
+    and maximal $10$-dimensional norm-multiplicative coordinate subspaces fit together, and what
+    is the exact symmetric coordinate ceiling $r_{\max}(\CD_5)$ and split-signature spectral gap
+    structure at dimension~$64$?
 \end{itemize}
 
-This work resolves all four questions through four tightly coupled algebraic pillars, backed
-by a zero-Mathlib six-kernel Lean~4.35.0 formalization and tri-language differential
-verification up to dimension $256$. Table~\ref{tab:headline_theorems} summarizes all 19
-headline theorems and their exact epistemic status.
+This work addresses these four questions through four formally verified algebraic pillars backed
+by a zero-Mathlib six-kernel Lean~4.35.0 suite and tri-language differential checks across all
+$496$ generalized algebras $\CD_4(\gamma)$--$\CD_8(\gamma)$; Section~\ref{sec:boundaries} states
+explicitly what remains open. Relative to the prior work of Moreno~\cite{moreno1998,moreno2004},
+de~Marrais~\cite{demarrais2000,demarrais2002}, Albuquerque--Majid~\cite{albuquerque1999},
+Morier-Genoud--Ovsienko~\cite{moriergenoud2011}, and Zhilina~\cite{zhilina2021i,zhilina2021ii},
+the principal new contributions established and machine-checked here are: (i)~the universal
+all-$n$, all-signature Nilpotent Mirror Conservation law and exact $2$-sparse kernel-basis
+isomorphism (\texttt{T1a}--\texttt{T1f}), (ii)~the closed-form Dyadic-Palindromic Terrace Law
+including exact even/odd bin interleaving, interior palindromicity, the top-bin jump $3(2^n-2)$,
+and the all-signature midpoint law $42 \cdot 2^{n-4}$ (\texttt{T2a}--\texttt{T2f}, while noting
+potential overlap with Zhilina's Euclidean basis-pair results for the base $2$-blade
+classifications), (iii)~the exact Euclidean right-compatibility clique number $\omega(G_n^{\comp}) = n+5$,
+dimension-$64$ coordinate breakaway from $\rho(2^n)$, and $[2^{n-1}, 2(n+4), 2^n]$ doubling
+tower (\texttt{T3a}--\texttt{T3d}), and (iv)~the exhaustive $2^{16}$ sedenion $7+28+7=42$
+classification, the pure-kernel proof over all $2^{32}$ subsets of $\CD_5$ establishing
+$r_{\max}(\CD_5) = 14$ with strict $7+7$ half-balance rigidity (\texttt{T4e}), and the
+pure-kernel certification of the dimension-$64$ split interior spectral gap $H_6^{56}(20) = 0$
+(\texttt{T4f}). Table~\ref{tab:headline_theorems} indexes all 22 \tagLean{} headline theorems
+and the 2 \tagComp{} certificates.
 
 \begin{table}[htbp]
 \centering
-\caption{Summary of the 19 headline theorems (\code{T1a}--\code{T4d}) and key computational
+\caption{Summary of all 22 headline theorems (\code{T1a}--\code{T4f}) and 2 exact computational
 certificates across the four pillars. Every \tagLean{} row is discharged in \code{Solution.lean}
-and matched against \code{PalomarChallenge.lean} across six independent Lean~4.35.0 kernels.}
+and matched against \code{PalomarChallenge.lean} (23 targets including the master conjunction)
+across six independent Lean~4.35.0 kernels.}
 \label{tab:headline_theorems}
 \footnotesize
-\setlength{\tabcolsep}{4pt}
-\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}p{5.5cm} >{\raggedright\arraybackslash}X l@{}}
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}p{5.8cm} >{\raggedright\arraybackslash}X l@{}}
 \toprule
 ID & Headline Result & Lean Declaration(s) & Status \\
 \midrule
 T1a & All-$n$ cocycle factorization $\sigma_n^\gamma = \sigma_n^{\std}\chi_\gamma$ & \code{cdSignGamma_factorization} & \tagLean \\
 T1b & $k$-independent $2\times 2$ block-sign flip law $\delta_n^\gamma$ & \code{blockDeltaGamma_eq} & \tagLean \\
-T1c & Exact 2-blade nilpotency iff $\parbit((i\oplus j)\,\&\,\flip)=1$ & \code{twoblade_nilpotent_iff} & \tagLean \\
+T1c & Full 2-blade nilpotency: cross-term cancel \& $(e_i+e_j)^2=0$ iff $\parbit=1$ & \code{cdSignGamma_anticomm}, \code{twoblade_nilpotent_full_iff} & \tagLean \\
 T1d & Universal all-$n$ Nilpotent Mirror-Inversion Law & \code{nilpotent_mirror_law} & \tagLean \\
 T1e & Mirror-Pair Conservation \& Midpoint Invariance & \code{mirror_sum_conservation} & \tagLean \\
+T1f & Exact $2\times 2$ block $\Z$-basis isomorphism for $\ker L_{e_i+e_j}$ & \code{twoblade_left_annihilator_basis_exact} & \tagLean \\
 \addlinespace[2pt]
-T2a & Exact four-branch 2-blade nullity doubling law & \code{nullity_doubling_lower}, \code{upper}, \code{axis}, \code{cross} & \tagLean \\
-T2b & $4\mid \nu_n^{\std}$, ceiling $2^{n-1}-4$, strict BDI gap ($\forall n\ge 5$) & \code{nullity_mod4_and_bound}, \code{twoblade_strictly_below_bdi} & \tagLean \\
-T2c & Closed-form mass $M_n$ \& non-ZD count $H_n^{\std}(0)$ & \code{totalNullityMass_all_n}, \code{nonZDCount_all_n} & \tagLean \\
+T2a & Exact four-branch Euclidean 2-blade nullity doubling law & \code{nullity_doubling_lower}, \code{upper}, \code{axis}, \code{cross} & \tagLean \\
+T2b & $4\mid \nu_n^{\std}$ (Moreno 2-blade), attained $2^{n-1}-4$, BDI eq.\ iff $n=4$ ($n\ge 4$) & \code{nullity_mod4_and_bound}, \code{twoblade_ceiling_attained}, \code{twoblade_bdi_eq_iff_four} & \tagLean \\
+T2c & Closed-form mass $M_n$ \& nullity-zero count $H_n^{\std}(0)$ & \code{totalNullityMass_all_n}, \code{nonZDCount_all_n} & \tagLean \\
 T2d & Dyadic-Palindromic Terrace Law (interleave + palindrome) & \code{terrace_interleave_even}, \code{odd}, \code{terrace_palindrome_all_n} & \tagLean \\
 T2e & Exact top terrace bin $2H_n(0)$ \& top jump $3(2^n-2)$ & \code{terrace_top_bin_all_n}, \code{terrace_top_jump_all_n} & \tagLean \\
 T2f & Universal All-Signature Midpoint 42 Law $42\cdot 2^{n-4}$ & \code{terrace_midpoint_std_all_n}, \code{universal_split_midpoint_42} & \tagLean \\
 \addlinespace[2pt]
-T3a & $G_n^{\comp}$ doubling law \& unique multipliers $\{e_0,e_{2^{n-1}}\}$ & \code{rightCompat_doubling_*}, \code{universal_right_multipliers_all_n} & \tagLean \\
-T3b & Exact right-compatibility clique number $\omega(G_n^{\comp})=n+5$ & \code{compat_clique_le_all_n}, \code{cdMaxClique_valid} & \tagLean \\
-T3c & Saturation $n\in\{3,4,5\}$ \& Dim-64 Bott Rupture ($\forall n\ge 6$) & \code{hurwitz_radon_saturation_345}, \code{hurwitz_radon_rupture_all_ge6} & \tagLean \\
+T3a & Euclidean $G_n^{\comp}$ doubling \& unique multipliers $\{e_0,e_{2^{n-1}}\}$ & \code{rightCompat_doubling_*}, \code{universal_right_multipliers_all_n} & \tagLean \\
+T3b & Exact Euclidean right-compatibility clique number $\omega(G_n^{\comp})=n+5$ & \code{compat_clique_le_all_n}, \code{cdMaxClique_valid} & \tagLean \\
+T3c & Arithmetic corollary vs.\ $\rho(2^n)$: eq.\ $n\in\{3,4,5\}$, gap $\ge n-5$ ($n\ge 6$) & \code{hurwitz_radon_saturation_345}, \code{hurwitz_radon_rupture_all_ge6} & \tagLean \\
 T3d & Full-left $[2^n,n+5,2^n]$ \& doubling tower $[2^{n-1},2(n+4),2^n]$ & \code{compatClique_implies_full_normMult}, \code{asymmetric_doubling_tower_all_n} & \tagLean \\
 \addlinespace[2pt]
-T4a & Sedenion Triple-42 \& Fano $7+28+7=42$ (all $2^{16}$), no 11D & \code{sedenion_42_fano_duality}, \code{sedenion_no_11d_coord_subspace} & \tagLean \\
-T4b & Sedenion $7\times K_{2,2,2}$ Box-Kites \& 9D $\OO\oplus\R e_8$ & \code{sedenion_box_kites_7x6} & \tagLean \\
+T4a & Sedenion Triple-42: $42$ bad $2+2$ planes, Fano $7+28+7=42$, no 11D & \code{sedenion_bad_planes_split_2_2}, \code{sedenion_42_fano_duality}, \code{sedenion_no_11d_coord_subspace} & \tagLean \\
+T4b & Re-verification of de~Marrais's $7\times K_{2,2,2}$ (pure product) \& 9D $\OO\oplus\R e_8$ & \code{sedenion_box_kites_7x6} & \tagLean \\
 T4c & Split-phase tables: $\CD_4(\gamma)$ ($1{:}1{:}7{:}7$) \& $\CD_5(\gamma)$ ($4{\times}1{+}4{\times}7$) & \code{split_sedenion_4_phases}, \code{split_pathion_8_phases} & \tagLean \\
-T4d & $[14,14,32]$, $[16,16,64]$ witnesses \& $\Z[i]$ base-field rigidity & \code{pathion_14_and_chingon_16_witnesses}, \code{gaussInt_sq_eq_one_iff} & \tagLean \\
+T4d & $[14,14,32]$, $[16,16,64]$ witnesses \& domain/$\Z$/$\Z[i]$ unit-square lemma & \code{pathion_14_and_chingon_16_witnesses}, \code{domain_sq_eq_one_imp}, \code{gaussInt_sq_eq_one_iff} & \tagLean \\
+T4e & Pure-kernel Pathion ceiling $r_{\max}(\CD_5)=14$ \& strict $7+7$ rigidity (all $2^{32}$) & \code{pathion_exact_ceiling_14_and_7_7_rigidity} & \tagLean \\
+T4f & Dimension-64 split interior spectral gap $H_6^{56}(20)=0$ (full 9-bin table) & \code{cd6_split56_interior_spectral_gap} & \tagLean \\
 \addlinespace[2pt]
 C1 & Exhaustive split phases $\CD_6(\gamma)$--$\CD_8(\gamma)$ (448 algebras) & Rust / C11 / Python exact engines & \tagComp \\
-C2 & Exact Pathion symmetric rupture $r_{\max}(\CD_5)=14<16$ & HiGHS certified MILP over 630 bad 4-planes & \tagComp \\
+C2 & Exact census of $280$ 14D Pathion subspaces (100\% $7+7$, contain $\{e_0,e_{16}\}$) & Rust / Python exact branch-and-bound & \tagComp \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -280,7 +337,7 @@ Using the canonical basis $\{e_0, e_1, \dots, e_{2^n-1}\}$ indexed in binary (wh
 places $(a, 0) \mapsto e_i$ and $(0, b) \mapsto e_{b + 2^n}$), every basis product satisfies
 $e_i e_j = \sigma_n^\gamma(i, j)\, e_{i \oplus j}$ with $\sigma_n^\gamma(i, j) \in \{\pm 1\}$
 and bitwise XOR $\oplus$. Setting $h = 2^n$ and $s_n = (-1)^{\mathrm{bit}_n(f)} = -\gamma_n \in \{\pm 1\}$,
-the sign cocycle obeys the exact recursive law (implemented directly in \texttt{CDTerrace.Basic.cdSignGamma}):
+the sign cocycle obeys the exact recursive law (implemented directly in \code{CDTerrace.Basic.cdSignGamma}):
 \begin{equation}
 \label{eq:cd_rec}
   \sigma_{n+1}^{f}(i, j) =
@@ -297,11 +354,19 @@ $\sigma_n^{\std}(i, i) = -1$ for $i > 0$, anticommutativity
 $\sigma_n^{\std}(i, j) = -\sigma_n^{\std}(j, i)$ for distinct $i, j > 0$, and basis left- and
 right-alternativity $\sigma_n^{\std}(i, i \oplus k)\sigma_n^{\std}(i, k) = -1$ for $i > 0$.
 
+For any two coordinate vectors $u, v : \{0, \dots, 2^n-1\} \to \Z$ (or $\R$), the literal
+bilinear Cayley--Dickson product in coordinate $t < 2^n$ is
+\begin{equation}
+\label{eq:cd_mul_coord}
+  (u \cdot v)_t \coloneqq \sum_{a = 0}^{2^n - 1} \sigma_n^{f}(a,\, a \oplus t)\, u(a)\, v(a \oplus t),
+\end{equation}
+formalized verbatim in \code{CDTerrace.Basic.cdMulCoordGamma}.
+
 \begin{definition}[2-Blade Block Decomposition and Nullity Spectrum]
 \label{def:twoblade}
 Fix $n \ge 1$, flip mask $f$, and distinct basis indices $1 \le i < j < 2^n$. Let
-$d = i \oplus j \neq 0$. Left multiplication $L_{e_i + e_j} : \CD_n(f) \to \CD_n(f)$ maps the
-$2$-dimensional subspace $\mathrm{span}\{e_k, e_{k \oplus d}\}$ into
+$d = i \oplus j \neq 0$. Left multiplication $L_{e_i + e_j} : \CD_n(f) \to \CD_n(f)$ maps each
+$2$-dimensional orbit subspace $\mathrm{span}\{e_k, e_{k \oplus d}\}$ into
 $\mathrm{span}\{e_{k \oplus i}, e_{k \oplus j}\}$ via the $2 \times 2$ signed matrix
 \begin{equation}
   M_{i,j,k}^{f} =
@@ -321,32 +386,29 @@ if and only if its normalized \emph{block-determinant sign}
   \sigma_n^{f}(j, k)\,\sigma_n^{f}(j, k \oplus d) \in \{\pm 1\}
 \end{equation}
 equals $+1$, and rank~$2$ (nullity~$0$) iff $\delta_n^{f}(i, j, k) = -1$. Because
-$k \mapsto k \oplus d$ is a fixed-point-free involution preserving $\delta_n^{f}(i,j,k)$, the
-exact left-multiplication nullity of the $2$-blade $e_i + e_j$ is
+$k \mapsto k \oplus d$ is a fixed-point-free involution preserving $\delta_n^{f}(i,j,k)$, we define
+the \emph{block-count $2$-blade nullity}
 \begin{equation}
-  \nu_n^{f}(i, j) \coloneqq \dim \ker L_{e_i + e_j}
-  = \frac{1}{2} \bigl|\{k \in \{0, \dots, 2^n-1\} : \delta_n^{f}(i, j, k) = +1\}\bigr|.
+  \nu_n^{f}(i, j)
+  \coloneqq \frac{1}{2} \bigl|\{k \in \{0, \dots, 2^n-1\} : \delta_n^{f}(i, j, k) = +1\}\bigr|.
 \end{equation}
+Theorem~\ref{thm:t1f} (\tagLean) proves directly inside Lean that $\nu_n^{f}(i, j)$ equals the
+exact cardinality of an explicit $2$-sparse linearly independent spanning $\Z$-basis of
+$\ker L_{e_i + e_j} = \{v : \forall t < 2^n,\; ((e_i+e_j) \cdot v)_t = 0\}$, closing the gap
+between block counts and linear-algebraic annihilator dimension.
 For each integer $v \ge 0$, the \emph{2-blade nullity histogram} is
 $H_n^{f}(v) \coloneqq \bigl|\{(i, j) : 1 \le i < j < 2^n,\; \nu_n^{f}(i, j) = v\}\bigr|$,
 and the \emph{total 2-blade nullity mass} is
 $M_n \coloneqq \sum_{1 \le i < j < 2^n} \nu_n^{\std}(i, j)$.
 \end{definition}
 
-Note that in $\CD_n(f)$ over $\R$, the exact block decomposition shows that $\ker L_{e_i + e_j}$
-has an explicit orthogonal basis of $2$-blades $\{e_k \pm e_{k \oplus d}\}$ across all singular
-orbits $\{k, k \oplus d\}$, so $\nu_n^{f}(i, j)$ coincides identically with the exact
-$\Q$- and $\R$-linear algebraic nullity of the $2^n \times 2^n$ matrix $L_{e_i + e_j}$ (verified
-independently by exact rational Gaussian elimination in our differential test suite).
-
 % ==============================================================================
-\section{Pillar 1: Nilpotent Mirror Conservation Across All $2^n$ Signatures}
+\section{Pillar 1: Nilpotent Mirror Conservation and Exact Kernel Basis Across All $2^n$ Signatures}
 \label{sec:pillar1}
 % ==============================================================================
 
-Our first pillar reveals an unexpected exact symmetry governing every signature deformation
-$\gamma \in \{\pm 1\}^n$ of $\CD_n(\gamma)$. Write $\parbit_n(m) = \pop(m \bmod 2^n) \bmod 2$
-and $\chi_n(m) = (-1)^{\parbit_n(m)} \in \{\pm 1\}$.
+Our first pillar governs every signature deformation $\gamma \in \{\pm 1\}^n$ of $\CD_n(\gamma)$.
+Write $\parbit_n(m) = \pop(m \bmod 2^n) \bmod 2$ and $\chi_n(m) = (-1)^{\parbit_n(m)} \in \{\pm 1\}$.
 
 \begin{theorem}[Multiplicative Cocycle Factorization, \texttt{T1a} \tagLean]
 \label{thm:t1a}
@@ -360,7 +422,7 @@ For every $n \in \N$, every flip mask $f \in \N$, and all $0 \le i, j < 2^n$,
 \begin{proof}
 We proceed by induction on $n$. For $n = 0$, $i = j = 0$ and both sides equal $1$. Assuming
 \eqref{eq:factorization} at level $n$, set $h = 2^n$ and $f' = f \bmod h$, and observe that
-$\chi_{n+1}(m) = \chi_n(m \bmod h)\cdot (-1)^{\lfloor m / h \rfloor \bmod 2}$. Consider the
+$\chi_{n+1}(m) = \chi_n(m \bmod h)\cdot (-1)^{\lfloor m / h \rfloor \bmod 2}$. Checking the
 four quadrants of \eqref{eq:cd_rec} for $0 \le i, j < 2h$:
 \begin{itemize}[leftmargin=2em]
   \item \emph{Lower-left ($i < h, j < h$):} $\lfloor (i \,\&\, j \,\&\, f)/h \rfloor = 0$ and
@@ -376,6 +438,15 @@ four quadrants of \eqref{eq:cd_rec} for $0 \le i, j < 2h$:
 \end{itemize}
 \end{proof}
 
+\begin{remark}
+In the twisted group-algebra framework of Albuquerque--Majid~\cite{albuquerque1999} and
+Morier-Genoud--Ovsienko~\cite{moriergenoud2011}, flipping doubling signs multiplies the
+$\F_2^n$ $2$-cochain $\sigma_n^{\std}$ by the symmetric diagonal bilinear character
+$(i, j) \mapsto (-1)^{\langle i, j \rangle_f}$, which is \eqref{eq:factorization}. We do not
+claim priority for this cochain factorization in the abstract; it serves as the machine-checked
+engine for Theorems~\ref{thm:t1b}--\ref{thm:t1f}.
+\end{remark}
+
 \begin{theorem}[$k$-Independent Block-Sign Flip Law, \texttt{T1b} \tagLean]
 \label{thm:t1b}
 For every $n \in \N$, every flip mask $f$, and all $i, j, k < 2^n$,
@@ -390,35 +461,34 @@ independent of the block index $k$.
 Substitute Theorem~\ref{thm:t1a} into all four factors of \eqref{eq:block_delta} with
 $d = i \oplus j$ and $k' = k \oplus d$. Because $\chi_n(a)\chi_n(b) = \chi_n(a \oplus b)$,
 the product of the four $\chi_n$ factors equals $\chi_n(E)$, where
-\[
-  E = (i \,\&\, k \,\&\, f) \oplus (i \,\&\, k' \,\&\, f) \oplus
-      (j \,\&\, k \,\&\, f) \oplus (j \,\&\, k' \,\&\, f).
-\]
-Testing bit-by-bit in $\F_2$ using distributivity of $\&$ over $\oplus$:
-\[
-  E = \bigl((i \oplus j) \,\&\, (k \oplus k')\bigr) \,\&\, f
-    = (d \,\&\, d) \,\&\, f = d \,\&\, f = (i \oplus j) \,\&\, f,
-\]
+\begin{align*}
+  E &= (i \,\&\, k \,\&\, f) \oplus (i \,\&\, k' \,\&\, f) \oplus
+       (j \,\&\, k \,\&\, f) \oplus (j \,\&\, k' \,\&\, f) \\
+    &= \bigl((i \oplus j) \,\&\, (k \oplus k')\bigr) \,\&\, f
+     = (d \,\&\, d) \,\&\, f = (i \oplus j) \,\&\, f,
+\end{align*}
 independently of $k$.
 \end{proof}
 
-\begin{theorem}[Exact 2-Blade Nilpotency Criterion, \texttt{T1c} \tagLean]
+\begin{theorem}[Full 2-Blade Nilpotency Criterion, \texttt{T1c} \tagLean]
 \label{thm:t1c}
-For every $n \ge 1$, flip mask $f$, and $1 \le i < j < 2^n$, the basis $2$-blade $e_i + e_j$ is
-nilpotent in $\CD_n(f)$---that is, $(e_i + e_j)^2 = (e_i^2 + e_j^2) e_0 = 0$---if and only if
-$\parbit_n((i \oplus j) \,\&\, f) = 1$.
+For every $n \ge 1$, flip mask $f$, and distinct nonzero $1 \le i, j < 2^n$:
+\begin{enumerate}[leftmargin=2em]
+  \item \emph{Cross-term cancellation:} $\sigma_n^{f}(i, j) + \sigma_n^{f}(j, i) = 0$.
+  \item \emph{Full bilinear nilpotency:} The literal bilinear square satisfies
+    $((e_i + e_j) \cdot (e_i + e_j))_t = 0$ for every coordinate $t < 2^n$ if and only if
+    $\parbit_n((i \oplus j) \,\&\, f) = 1$.
+\end{enumerate}
 \end{theorem}
 
 \begin{proof}
-Because $e_i e_j + e_j e_i = 0$ for distinct $i, j > 0$ under every signature (since
-$i \,\&\, j \,\&\, f$ is symmetric in $i, j$), we have
-$(e_i + e_j)^2 = (\sigma_n^{f}(i, i) + \sigma_n^{f}(j, j)) e_0$. By Theorem~\ref{thm:t1a} and
-$\sigma_n^{\std}(i, i) = \sigma_n^{\std}(j, j) = -1$,
-\[
-  \sigma_n^{f}(i, i) + \sigma_n^{f}(j, j) = -\chi_n(i \,\&\, f) - \chi_n(j \,\&\, f),
-\]
-which vanishes iff $\chi_n(i \,\&\, f) = -\chi_n(j \,\&\, f)$, i.e., iff
-$\parbit_n((i \,\&\, f) \oplus (j \,\&\, f)) = \parbit_n((i \oplus j) \,\&\, f) = 1$.
+By Theorem~\ref{thm:t1a} and symmetry of $i \,\&\, j \,\&\, f$,
+$\sigma_n^{f}(i, j) + \sigma_n^{f}(j, i) = \chi_n(i \,\&\, j \,\&\, f)(\sigma_n^{\std}(i, j) + \sigma_n^{\std}(j, i)) = 0$.
+Evaluating \eqref{eq:cd_mul_coord} on $u = v = e_i + e_j$, coordinate $t = i \oplus j$ receives
+$\sigma_n^{f}(i, j) + \sigma_n^{f}(j, i) = 0$, every $t \notin \{0, i \oplus j\}$ vanishes
+identically, and coordinate $t = 0$ equals
+$\sigma_n^{f}(i, i) + \sigma_n^{f}(j, j) = -\chi_n(i \,\&\, f) - \chi_n(j \,\&\, f)$,
+which vanishes iff $\parbit_n((i \oplus j) \,\&\, f) = 1$.
 \end{proof}
 
 \begin{theorem}[Universal Nilpotent Mirror-Inversion Law, \texttt{T1d} \tagLean]
@@ -434,11 +504,11 @@ For every $n \ge 1$, flip mask $f$, and distinct $i, j < 2^n$:
 
 \begin{proof}
 In Case~(1), Theorem~\ref{thm:t1b} gives $\delta_n^{f}(i, j, k) = \delta_n^{\std}(i, j, k)$ for
-all $k < 2^n$, so the counts of $k$ with $\delta = +1$ coincide identically.
+all $k < 2^n$, so singular counts coincide identically.
 In Case~(2), $\delta_n^{f}(i, j, k) = -\delta_n^{\std}(i, j, k)$ for all $k < 2^n$. Since
-$\delta \in \{\pm 1\}$, the singular index sets $\{k : \delta_n^{f} = +1\}$ and
+$\delta \in \{\pm 1\}$, the singular sets $\{k : \delta_n^{f} = +1\}$ and
 $\{k : \delta_n^{\std} = +1\}$ partition $\{0, \dots, 2^n-1\}$. Because $k \mapsto k \oplus (i\oplus j)$
-pairs singular indices into orbits of size $2$, dividing the sum $2^n$ by $2$ yields
+pairs singular indices into orbits of size $2$, dividing $2^n$ by $2$ yields
 $\nu_n^{f}(i, j) + \nu_n^{\std}(i, j) = 2^{n-1}$.
 \end{proof}
 
@@ -457,11 +527,45 @@ In particular, setting $v = 2^{n-2}$ for any $n \ge 2$ gives universal midpoint 
 
 \begin{proof}
 By Theorem~\ref{thm:t1d}, each unordered pair $\{i, j\}$ ($1 \le i < j < 2^n$) either stays in
-its Euclidean bin $\nu_n^{\std}(i, j)$ or swaps into the exact mirror bin
-$2^{n-1} - \nu_n^{\std}(i, j)$. Therefore the indicator sum
+$\nu_n^{\std}(i, j)$ or swaps into $2^{n-1} - \nu_n^{\std}(i, j)$, so the indicator sum
 $\mathbf{1}[\nu_n^{f}(i, j) = v] + \mathbf{1}[\nu_n^{f}(i, j) = 2^{n-1}-v]$ is pointwise
-invariant under $f$, and summing over all $1 \le i < j < 2^n$ yields \eqref{eq:mirror_conservation}.
-For $n \ge 2$ and $v = 2^{n-2}$, we have $2^{n-1} - v = v$, so $2 H_n^{f}(2^{n-2}) = 2 H_n^{\std}(2^{n-2})$.
+invariant under $f$. Summing over $1 \le i < j < 2^n$ yields \eqref{eq:mirror_conservation}, and
+$v = 2^{n-2}$ satisfies $2^{n-1} - v = v$.
+\end{proof}
+
+\begin{theorem}[Exact $2\times 2$ Block Left-Annihilator Kernel-Basis Isomorphism, \texttt{T1f} \tagLean]
+\label{thm:t1f}
+Fix any $n \ge 1$, flip mask $f$, and distinct $i, j < 2^n$ with $d = i \oplus j$. Let
+$R = \{k < 2^n : k < k \oplus d \land \delta_n^{f}(i, j, k) = +1\}$ be the canonical list of
+lower singular orbit representatives, and for each $k \in R$ define the $2$-sparse signed blade
+\[
+  w_k \coloneqq e_k - \sigma_n^{f}(i, k)\,\sigma_n^{f}(j, k \oplus d)\, e_{k \oplus d}.
+\]
+Then, under the literal bilinear product \eqref{eq:cd_mul_coord}:
+\begin{enumerate}[leftmargin=2em]
+  \item \emph{Exact cardinality:} $|R| = \nu_n^{f}(i, j)$.
+  \item \emph{Kernel membership:} For every $k \in R$ and every $t < 2^n$, $((e_i+e_j) \cdot w_k)_t = 0$.
+  \item \emph{Spanning:} Every $v : \{0,\dots,2^n-1\} \to \Z$ satisfying
+    $\forall t < 2^n,\; ((e_i+e_j) \cdot v)_t = 0$ equals the exact $\Z$-linear combination
+    $v(t) = \sum_{k \in R} v(k)\, w_k(t)$ for all $t < 2^n$.
+  \item \emph{Linear independence:} If $\sum_{k \in R} c(k)\, w_k(t) = 0$ for all $t < 2^n$,
+    then $c(k) = 0$ for every $k \in R$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Because $k \mapsto k \oplus d$ is a fixed-point-free involution preserving $\delta_n^f(i,j,k)$,
+each singular orbit $\{k, k \oplus d\}$ contains exactly one element with $k < k \oplus d$,
+giving $|R| = \frac{1}{2}|\{k : \delta_n^f = +1\}| = \nu_n^f(i,j)$. By \eqref{eq:cd_mul_coord},
+$((e_i + e_j) \cdot v)_t = \sigma_n^f(i, t \oplus i)\, v(t \oplus i) + \sigma_n^f(j, t \oplus j)\, v(t \oplus j)$.
+Evaluating at $t = k \oplus i$ and $t = k \oplus j$ couples strictly the two coordinates
+$(v(k), v(k \oplus d))$ through $M_{i,j,k}^f$: if $\delta_n^f(i,j,k) = -1$, eliminating $v(k\oplus d)$
+forces $2 v(k) = 0$ hence $v(k) = v(k \oplus d) = 0$; if $\delta_n^f(i,j,k) = +1$, the two equations
+are proportional and hold iff $v(k \oplus d) = -\sigma_n^f(i,k)\sigma_n^f(j, k \oplus d)\, v(k)$.
+Because distinct orbits $\{k, k \oplus d\}$ ($k \in R$) are pairwise disjoint, $\{w_k\}_{k \in R}$
+has unit diagonal entries $w_k(k) = 1$ with $w_{k'}(k) = 0$ for $k' \neq k$, proving both
+spanning and $\Z$-linear independence (and hence identical $\Q$- and $\R$-rank). All four parts
+are formalized in \code{CDTerrace.MirrorConservation.twoblade_left_annihilator_basis_exact}.
 \end{proof}
 
 \begin{figure}[htbp]
@@ -471,24 +575,25 @@ For $n \ge 2$ and $v = 2^{n-2}$, we have $2^{n-1} - v = v$, so $2 H_n^{f}(2^{n-2
   emergence across split signatures. \textbf{Left:} All $8$ spectral phases of $\CD_5(\gamma)$
   ($4\times 1 + 4\times 7$ multiplicities, Theorem~\ref{thm:t4c}) intersect at the pinned
   midpoint $H_5^\gamma(8) = 84$. \textbf{Right:} At dimension $64$, split signature
-  $\flip = 56$ opens an exact interior spectral gap $H_6^\gamma(20) = 0$ while conserving
-  every mirror sum $H_6^\gamma(v) + H_6^\gamma(32-v)$ and pinning $H_6^\gamma(16) = 168$.}
+  $\flip = 56$ opens an exact interior spectral gap $H_6^{56}(20) = 0$ (now formally proved in
+  Lean Theorem~\ref{thm:t4f} \tagLean) while conserving every mirror sum
+  $H_6^\gamma(v) + H_6^\gamma(32-v)$ and pinning $H_6^\gamma(16) = 168$.}
   \label{fig:mirror_conservation}
 \end{figure}
 
-Figure~\ref{fig:mirror_conservation} illustrates a striking higher-dimensional phenomenon
-uncovered by our exhaustive multi-language scan \tagComp{} across all $496$ generalized
-algebras $\CD_4(\gamma)$--$\CD_8(\gamma)$ (Table~\ref{tab:split_summary}): while every phase
-of $\CD_4(\gamma)$ and $\CD_5(\gamma)$ has contiguous non-zero interior nullity strata,
-starting at dimension~$64$ ($\CD_6(\gamma)$) exact \emph{interior spectral gaps} appear where
-an intermediate multiple of $4$ becomes completely unpopulated ($H_n^\gamma(v) = 0$ for
-$0 < v < 2^{n-1}$, e.g.\ $H_6^{56}(20) = 0$), even as all mirror sums remain strictly conserved.
+Figure~\ref{fig:mirror_conservation} and Table~\ref{tab:split_summary} display the split-signature
+phase transition across all $496$ generalized algebras $\CD_4(\gamma)$--$\CD_8(\gamma)$. While
+every phase of $\CD_4(\gamma)$ and $\CD_5(\gamma)$ has contiguous non-zero interior nullity
+strata, beginning at dimension~$64$ ($\CD_6(\gamma)$) exact \emph{interior spectral gaps} appear
+where an intermediate multiple of $4$ becomes completely unpopulated ($H_n^\gamma(v) = 0$ for
+$0 < v < 2^{n-1}$). Theorem~\ref{thm:t4f} (\tagLean) proves the first such gap
+($H_6^{56}(16) = 168$, $H_6^{56}(20) = 0$, $H_6^{56}(24) = 56$) directly inside the Lean kernel.
 
 \begin{table}[htbp]
 \centering
 \caption{Exhaustive split-signature phase counts across all $496$ generalized algebras
-$\CD_4(\gamma)$--$\CD_8(\gamma)$ ($n = 4, 5$ proved in Lean \tagLean{}; $n = 6, 7, 8$ certified
-independently by Rust, C11, and Python \tagComp{}).}
+$\CD_4(\gamma)$--$\CD_8(\gamma)$ ($n = 4, 5$ and the $n = 6, \flip = 56$ gap proved in Lean
+\tagLean{}; complete $n = 6, 7, 8$ tables certified independently by Rust, C11, and Python \tagComp{}).}
 \label{tab:split_summary}
 \footnotesize
 \begin{tabular}{@{}rrrrrrl@{}}
@@ -497,7 +602,7 @@ $n$ & $\dim$ & Sigs $2^n$ & Phases & Midpoint $H_n^\gamma(2^{n-2})$ & Gaps & Sta
 \midrule
 $4$ & $16$  & $16$  & $4$  & $42$  & $0$  & \tagLean{} ($1{:}1{:}7{:}7$) \\
 $5$ & $32$  & $32$  & $8$  & $84$  & $0$  & \tagLean{} ($4{\times}1 + 4{\times}7$) \\
-$6$ & $64$  & $64$  & $16$ & $168$ & $2$  & \tagComp{} (gap at $\nu=20$ or $12$) \\
+$6$ & $64$  & $64$  & $16$ & $168$ & $2$  & \tagLean{} ($\flip=56$) + \tagComp{} (all $64$) \\
 $7$ & $128$ & $128$ & $32$ & $336$ & $6$  & \tagComp{} \\
 $8$ & $256$ & $256$ & $64$ & $672$ & $14$ & \tagComp{} \\
 \bottomrule
@@ -509,11 +614,11 @@ $8$ & $256$ & $256$ & $64$ & $672$ & $14$ & \tagComp{} \\
 \label{sec:pillar2}
 % ==============================================================================
 
-We now turn to the exact global structure of the Euclidean $2$-blade nullity distribution
-$H_n^{\std}(v)$ for every $n \ge 3$. The key engine is an exact four-branch doubling recurrence
-relating $\CD_{n+1}$ directly to $\CD_n$.
+We now establish the exact global structure of the Euclidean $2$-blade nullity distribution
+$H_n^{\std}(v)$ for every $n \ge 3$ (Theorems~\ref{thm:t2a}--\ref{thm:t2de}), together with the
+all-signature Midpoint~42 Law (Theorem~\ref{thm:t2f}).
 
-\begin{theorem}[Four-Branch 2-Blade Nullity Doubling Recurrence, \texttt{T2a} \tagLean]
+\begin{theorem}[Four-Branch Euclidean 2-Blade Nullity Doubling Recurrence, \texttt{T2a} \tagLean]
 \label{thm:t2a}
 Let $h = 2^n$. For every $n \ge 1$ and distinct $1 \le i, j < h$:
 \begin{align}
@@ -550,41 +655,50 @@ indices $k + h$ ($k < h$), direct expansion of \eqref{eq:cd_rec} with $f = 0$ sh
 \end{itemize}
 \end{proof}
 
-\begin{theorem}[Quantization, Ceiling, and Sharp BDI Separation, \texttt{T2b} \tagLean]
+\begin{theorem}[Quantization, Attained Ceiling, and Sharp BDI Separation, \texttt{T2b} \tagLean]
 \label{thm:t2b}
-For every $n \ge 3$ and all $1 \le i < j < 2^n$, we have $4 \mid \nu_n^{\std}(i, j)$, and for
-every $n \ge 4$,
+For every $n \ge 3$ and all $1 \le i < j < 2^n$, we have $4 \mid \nu_n^{\std}(i, j)$
+(an independent machine-checked proof for $2$-blades of Moreno's multiple-of-four theorem;
+cf.~\cite{moreno1998,biss2008i}). For every $n \ge 4$,
 \begin{equation}
-  \nu_n^{\std}(i, j) \le 2^{n-1} - 4.
+  \nu_n^{\std}(i, j) \le 2^{n-1} - 4,
 \end{equation}
-Moreover, comparing this exact $2$-blade ceiling against the Biss--Dugger--Isaksen general
-annihilator bound $\mathrm{BDI}(n) = 2^n - 4n + 4$~\cite{biss2008i}, equality holds
-\emph{uniquely} at $n = 4$ ($4 = 4$), and strict separation holds for every $n \ge 5$:
-\begin{equation}
-  2^{n-1} - 4 < 2^n - 4n + 4 \qquad (\forall\, n \ge 5).
-\end{equation}
+and this ceiling is \emph{attained} explicitly by $\nu_n^{\std}(1,\, 2 + 2^{n-1}) = 2^{n-1} - 4$.
+Comparing this exact $2$-blade ceiling against the Biss--Dugger--Isaksen closed-form general
+annihilator bound $\mathrm{BDI}(n) = 2^n - 4n + 4$~\cite{biss2008i} (whose general theorem is
+classical and not formalized in Lean):
+\begin{enumerate}[leftmargin=2em]
+  \item Among $n \ge 4$, equality $2^{n-1} - 4 = 2^n - 4n + 4$ holds \emph{if and only if}
+    $n = 4$ ($4 = 4$). (At $n = 3$, both the true $2$-blade maximum and $\mathrm{BDI}(3)$ equal $0$.)
+  \item Strict separation holds for every $n \ge 5$:
+    \begin{equation}
+      2^{n-1} - 4 < 2^n - 4n + 4 \qquad (\forall\, n \ge 5).
+    \end{equation}
+\end{enumerate}
 \end{theorem}
 
 \begin{proof}
-At $n = 3$ ($\OO$), $\nu_3^{\std}(i, j) = 0$ for all $1 \le i < j < 8$ because $\OO$ is a
-division algebra. Induction via Theorem~\ref{thm:t2a} immediately preserves $4 \mid \nu_n^{\std}$
-(since $2^n - 4$ is divisible by $4$ for $n \ge 3$ and every branch multiplies by $2$) and the
-upper bound $2^{n-1} - 4$ for $n \ge 4$. Finally, $2^{n-1} - 4 < 2^n - 4n + 4$ is equivalent
-to $4n < 2^{n-1} + 8$, which holds at $n = 5$ ($20 < 24$) and follows for all $n \ge 5$ by
-elementary induction, while at $n = 4$ both sides equal $4$ ($16 = 16$).
+At $n = 3$ ($\OO$), $\nu_3^{\std}(i, j) = 0$ for all $1 \le i < j < 8$. Induction via
+Theorem~\ref{thm:t2a} preserves $4 \mid \nu_n^{\std}$ (since $4 \mid (2^n - 4)$ for $n \ge 3$
+and every branch doubles) and the upper bound $2^{n-1} - 4$ for $n \ge 4$. Attainment follows
+directly from \eqref{eq:dbl_cross} because $\nu_{n-1}^{\std}(1, 2) = 0$ for all $n \ge 4$
+(inducting from $\nu_3^{\std}(1, 2) = 0$ via \eqref{eq:dbl_lo}), yielding
+$\nu_n^{\std}(1, 2 + 2^{n-1}) = 2^{n-1} - 4 - 2 \cdot 0 = 2^{n-1} - 4$. Finally,
+$2^{n-1} - 4 < 2^n - 4n + 4 \iff 4n < 2^{n-1} + 8$, which holds at $n = 5$ ($20 < 24$) and
+for all $n \ge 5$ by induction, while at $n = 4$ both sides equal $4$.
 \end{proof}
 
 \begin{remark}
-Theorem~\ref{thm:t2b} sharpens a subtle geometric threshold: although $2$-blades achieve the
-full Biss--Dugger--Isaksen annihilator dimension~$4$ in the sedenions $\SSed$, already in the
-$32$-dimensional pathions $\CD_5$ every $2$-blade has nullity at most $12 < 16 = \mathrm{BDI}(5)$,
-so attaining maximal annihilators in $\CD_n$ strictly requires higher blades ($\ge 3$ basis
-terms) for \emph{every} $n \ge 5$ (Figure~\ref{fig:bdi_symmetric}, left).
+Theorem~\ref{thm:t2b} sharpens a geometric threshold: although $2$-blades attain the full
+Biss--Dugger--Isaksen annihilator dimension~$4$ in $\SSed$, already in the $32$-dimensional
+pathions $\CD_5$ every $2$-blade has nullity at most $12 < 16 = \mathrm{BDI}(5)$, so attaining
+maximal annihilators in $\CD_n$ strictly requires higher blades ($\ge 3$ basis terms) for every
+$n \ge 5$ (Figure~\ref{fig:bdi_symmetric}, left).
 \end{remark}
 
 For any statistic $F : \N \to \N$, summing $F(\nu_{n+1}^{\std}(i,j))$ over all unordered pairs
 $1 \le i < j < 2^{n+1}$ splits by Theorem~\ref{thm:t2a} into the master generating identity
-(\texttt{sumUnordered\_nullity\_doubling} in \texttt{CDTerrace.TerraceLaw}):
+(\code{sumUnordered_nullity_doubling} in \code{CDTerrace.TerraceLaw}):
 \begin{equation}
 \label{eq:master_sum}
   \sum_{1 \le i < j < 2^{n+1}} F(\nu_{n+1}^{\std}(i, j))
@@ -593,10 +707,9 @@ $1 \le i < j < 2^{n+1}$ splits by Theorem~\ref{thm:t2a} into the master generati
   + 2 \sum_{1 \le i < j < 2^n} F\bigl(2^n - 4 - 2\nu_n^{\std}(i, j)\bigr),
 \end{equation}
 where the factor $2$ on the cross sum accounts for both orderings $(i, b+h)$ and $(b, i+h)$
-($i < b$). Specializing $F$ in \eqref{eq:master_sum} unlocks the entire spectral architecture
-of $\CD_n$ in closed form.
+($i < b$).
 
-\begin{theorem}[Total Nullity Mass and Zero-Divisor-Free Count, \texttt{T2c} \tagLean]
+\begin{theorem}[Total Nullity Mass and Nullity-Zero Count, \texttt{T2c} \tagLean]
 \label{thm:t2c}
 For every $n \ge 3$,
 \begin{align}
@@ -606,17 +719,16 @@ For every $n \ge 3$,
 \end{theorem}
 
 \begin{proof}
-Setting $F(x) = x$ in \eqref{eq:master_sum} for $m = n - 1 \ge 3$ produces an exact
-cancellation of $4M_m$:
+Setting $F(x) = x$ in \eqref{eq:master_sum} for $m = n - 1 \ge 3$ cancels $4M_m$ identically:
 \begin{align*}
-  M_{m+1} &= 4M_m + 0 + 2\sum_{1 \le i < b < 2^m} \bigl(2^m - 4 - 2\nu_m^{\std}(i, b)\bigr) \\
+  M_{m+1} &= 4M_m + 2\sum_{1 \le i < b < 2^m} \bigl(2^m - 4 - 2\nu_m^{\std}(i, b)\bigr) \\
           &= (2^m - 4)(2^m - 1)(2^m - 2)
            = 8(2^m - 1)(2^{m-1} - 1)(2^{m-2} - 1),
 \end{align*}
 and at $n = 3$ both sides vanish. Setting $F(x) = \mathbf{1}[x = 0]$ in \eqref{eq:master_sum},
-the cross term vanishes identically for all $n \ge 3$ because $2\nu_n^{\std}(i, b) \le 2^n - 8 < 2^n - 4$,
-leaving the linear recurrence $H_{n+1}^{\std}(0) = 2H_n^{\std}(0) + 3(2^n - 1)$ with base
-$H_3^{\std}(0) = \binom{7}{2} = 21$. Solving by induction gives \eqref{eq:nonzd}.
+the cross term vanishes for all $n \ge 3$ because $2\nu_n^{\std}(i, b) \le 2^n - 8 < 2^n - 4$,
+leaving $H_{n+1}^{\std}(0) = 2H_n^{\std}(0) + 3(2^n - 1)$ with $H_3^{\std}(0) = \binom{7}{2} = 21$,
+whose unique solution is \eqref{eq:nonzd}.
 \end{proof}
 
 \begin{theorem}[The Dyadic-Palindromic Terrace Law, \texttt{T2d}--\texttt{T2e} \tagLean]
@@ -641,17 +753,12 @@ For every $n \ge 3$, the Euclidean $2$-blade nullity histogram satisfies:
 Because $4 \mid \nu_n^{\std}(i, j)$ (Theorem~\ref{thm:t2b}) and $8 \mid 2^n$ for $n \ge 3$,
 the lower/upper branches produce exclusively multiples of $8$ ($2\nu_n^{\std} \equiv 0 \pmod 8$),
 whereas the cross branch produces exclusively values congruent to $4 \pmod 8$
-($2^n - 4 - 2\nu_n^{\std} \equiv 4 \pmod 8$). Thus the two sums in \eqref{eq:master_sum} are
-disjoint in residue modulo~$8$, immediately yielding~(1) and~(2). Combining~(1) and~(2)
-according to the parity of $k$ proves the interior palindrome~(3). Setting $m = 0$ in~(2) yields
-$H_{n+1}^{\std}(2^n - 4) = 2 H_n^{\std}(0)$, while~(3) and~(1) give
+($2^n - 4 - 2\nu_n^{\std} \equiv 4 \pmod 8$). Disjointness modulo~$8$ in \eqref{eq:master_sum}
+yields~(1) and~(2); combining~(1) and~(2) by parity of $k$ gives~(3); setting $m = 0$ in~(2)
+gives $H_{n+1}^{\std}(2^n - 4) = 2 H_n^{\std}(0)$, while~(3) and~(1) give
 $H_{n+1}^{\std}(4) = H_{n+1}^{\std}(2^n - 8) = 2 H_n^{\std}(2^{n-1} - 4) = 4 H_{n-1}^{\std}(0)$
-for $n \ge 4$. Substituting \eqref{eq:nonzd} yields
-$2 H_n^{\std}(0) - 4 H_{n-1}^{\std}(0) = 6(2^{n-1} - 1) = 3(2^n - 2)$.
+for $n \ge 4$, and substituting \eqref{eq:nonzd} yields $3(2^n - 2)$.
 \end{proof}
-
-Combining Pillar~1 (Theorem~\ref{thm:t1e}) with Pillar~2 (Theorem~\ref{thm:t2de}) yields our
-signature invariant across all dimensions and all signatures simultaneously.
 
 \begin{theorem}[Universal All-Signature Midpoint 42 Law, \texttt{T2f} \tagLean]
 \label{thm:t2f}
@@ -662,17 +769,17 @@ For every $n \ge 4$ and every signature flip mask $f \in \{0, \dots, 2^n - 1\}$,
 \end{theorem}
 
 \begin{proof}
-For $f = 0$, the base case $n = 4$ is $H_4^{\std}(4) = 42$ (the $42$ sedenion Box-Kite
-assessors). For $n \ge 4$, writing $2^{(n+1)-2} = 8 \cdot 2^{n-4}$ and applying
-Theorem~\ref{thm:t2de}(1) gives
-$H_{n+1}^{\std}(2^{n-1}) = 2 H_n^{\std}(2^{n-2}) = 2 \cdot 42 \cdot 2^{n-4} = 42 \cdot 2^{(n+1)-4}$.
-Finally, Theorem~\ref{thm:t1e} transfers this exact count to every split signature $f$.
+At $f = 0$, the base case $n = 4$ is $H_4^{\std}(4) = 42$ (de~Marrais's $42$ sedenion box-kite
+assessors~\cite{demarrais2000}). For $n \ge 4$, writing $2^{(n+1)-2} = 8 \cdot 2^{n-4}$ and
+applying Theorem~\ref{thm:t2de}(1) gives
+$H_{n+1}^{\std}(2^{n-1}) = 2 H_n^{\std}(2^{n-2}) = 42 \cdot 2^{(n+1)-4}$, and
+Theorem~\ref{thm:t1e} transfers this invariant to every split signature $f$.
 \end{proof}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{figures/fig1_dyadic_terrace_cathedral.pdf}
-  \caption{The Dyadic-Palindromic Terrace Cathedral across $\CD_4$--$\CD_7$
+  \caption{The Dyadic-Palindromic Terrace Cathedral across Euclidean $\CD_4$--$\CD_7$
   (Theorems~\ref{thm:t2c}--\ref{thm:t2f}). Each doubling step interleaves a doubled copy of the
   previous spectrum onto even bins ($8m$, blue) with a reversed doubled copy onto odd bins
   ($2^{n-1}-4-8m$, green), locking the universal midpoint spine at $42 \cdot 2^{n-4}$ (vermilion)
@@ -701,43 +808,45 @@ $8$ & $256$ & $32{,}385$ & $2{,}499$ & $29{,}886$ & $1{,}965{,}540$ & $124$ & $2
 \end{table}
 
 % ==============================================================================
-\section{Pillar 3: The Dimension-64 Hurwitz--Radon Bott Rupture}
+\section{Pillar 3: Coordinate Right-Multiplier Rupture at Dimension~64}
 \label{sec:pillar3}
 % ==============================================================================
 
-A real bilinear map $\beta : \R^r \times \R^s \to \R^N$ satisfying the composition identity
-$\|\beta(x, y)\|^2 = \|x\|^2 \|y\|^2$ is called a sums-of-squares formula of type $[r, s, N]$.
-By the classical Hurwitz--Radon theorem~\cite{hurwitz1922,radon1922,adams1962}, a formula of
-full-left type $[2^n, s, 2^n]$ exists over $\R$ if and only if $s \le \rho(2^n)$, where the
-Bott $8$-periodic Hurwitz--Radon function is given for $n = 4a + b$ ($0 \le b \le 3$) by
+Throughout this section we restrict strictly to \emph{coordinate subspaces} inside the
+\emph{Euclidean} Cayley--Dickson algebra $\CD_n = \CD_n(0)$. A real bilinear map
+$\beta : \R^r \times \R^s \to \R^N$ satisfying $\|\beta(x, y)\|^2 = \|x\|^2 \|y\|^2$ is a
+sums-of-squares formula of type $[r, s, N]$. By the classical Hurwitz--Radon
+theorem~\cite{hurwitz1922,radon1922,adams1962} (not formalized in Lean), a general real formula
+of full-left type $[2^n, s, 2^n]$ exists iff $s \le \rho(2^n)$, where for $n = 4a + b$
+($0 \le b \le 3$),
 \begin{equation}
   \rho(2^n) = 8a + 2^b.
 \end{equation}
-We ask a sharper structural question: \emph{if we restrict to coordinate subspaces
-$U = \mathrm{span}\{e_i : i \in S_L\}$ and $V = \mathrm{span}\{e_j : j \in S_R\}$ under the
-native Cayley--Dickson product of $\CD_n$, what is the exact maximum right dimension $s$ for
-full left space $S_L = \{0, \dots, 2^n - 1\}$?}
+We determine the exact capacity of \emph{native Euclidean Cayley--Dickson coordinate
+multiplication} on $U = \mathrm{span}\{e_i : i \in S_L\}$ and
+$V = \mathrm{span}\{e_j : j \in S_R\}$ when $S_L = \{0, \dots, 2^n - 1\}$.
 
-\begin{definition}[Right-Compatibility Graph $G_n^{\comp}$]
+\begin{definition}[Euclidean Right-Compatibility Graph $G_n^{\comp}$]
 \label{def:compat}
-Let $S_L, S_R \subseteq \{0, \dots, 2^n - 1\}$. Expanding $\|(\sum_{i \in S_L} x_i e_i)(\sum_{j \in S_R} y_j e_j)\|^2 = \|x\|^2 \|y\|^2$
-shows that $(S_L, S_R)$ is \emph{norm-multiplicative} in $\CD_n$ iff for all distinct
+Let $S_L, S_R \subseteq \{0, \dots, 2^n - 1\}$. Expanding
+$\|(\sum_{i \in S_L} x_i e_i)(\sum_{j \in S_R} y_j e_j)\|^2 = \|x\|^2 \|y\|^2$ shows that
+$(S_L, S_R)$ is \emph{norm-multiplicative} in Euclidean $\CD_n$ iff for all distinct
 $i, k \in S_L$ and distinct $j, l \in S_R$ with $i \oplus k = j \oplus l$,
 \begin{equation}
 \label{eq:nm_pair}
   \sigma_n^{\std}(i, j)\,\sigma_n^{\std}(k, l) + \sigma_n^{\std}(i, l)\,\sigma_n^{\std}(k, j) = 0.
 \end{equation}
-Define the \emph{right-compatibility graph} $G_n^{\comp}$ on vertex set $\{0, \dots, 2^n - 1\}$
-by placing an edge between distinct $j, x$ iff \eqref{eq:nm_pair} holds for ALL
-$i, k \in \{0, \dots, 2^n - 1\}$ with $i \oplus k = j \oplus x$. A subset $S_R$ is
-norm-multiplicative against all of $\CD_n$ iff $S_R$ is a clique in $G_n^{\comp}$.
+Define the \emph{right-compatibility graph} $G_n^{\comp}$ on $\{0, \dots, 2^n - 1\}$ by placing
+an edge between distinct $j, x$ iff \eqref{eq:nm_pair} holds for all $i, k \in \{0, \dots, 2^n - 1\}$
+with $i \oplus k = j \oplus x$. A subset $S_R$ is norm-multiplicative against all of $\CD_n$ iff
+$S_R$ is a clique in $G_n^{\comp}$.
 \end{definition}
 
-A direct sign identity (\texttt{rightCompat\_iff\_nullity\_zero} in \texttt{CDTerrace.HurwitzRupture})
-links $G_n^{\comp}$ straight back to Pillar~2: for distinct $j, x > 0$, $(j, x)$ is an edge of
-$G_n^{\comp}$ if and only if $\nu_n^{\std}(j, x) = 0$ (i.e., $e_j + e_x$ is zero-divisor-free),
-while $e_0$ is adjacent to every other basis element! Theorem~\ref{thm:t2a} therefore dictates
-the exact recursive topology of $G_n^{\comp}$.
+A direct sign identity (\code{rightCompat_iff_nullity_zero} in \code{CDTerrace.HurwitzRupture})
+links $G_n^{\comp}$ to Pillar~2: for distinct $j, x > 0$, $(j, x)$ is an edge of $G_n^{\comp}$
+iff $\nu_n^{\std}(j, x) = 0$, while $e_0$ is adjacent to every other basis element. (Note that
+this pairwise right-compatibility condition on basis indices differs from Moreno's
+characterization of alternative elements in~\cite{moreno2004}.)
 
 \begin{theorem}[Doubling Law of $G_n^{\comp}$ and Universal Multipliers, \texttt{T3a} \tagLean]
 \label{thm:t3a}
@@ -751,22 +860,18 @@ and for every $n \ge 3$ and $0 \le a, b < h$,
   G_{n+1}^{\comp}(a, b + h) = \mathrm{true} \iff (a = 0 \;\lor\; b = 0 \;\lor\; a = b).
 \end{equation}
 Consequently, for every $n \ge 4$, a basis element $e_j$ is a \emph{universal right-multiplier}
-(adjacent to all other vertices of $G_n^{\comp}$) if and only if $j \in \{0, 2^{n-1}\}$.
+in Euclidean $\CD_n$ (adjacent to all other vertices of $G_n^{\comp}$) iff $j \in \{0, 2^{n-1}\}$.
 \end{theorem}
 
 \begin{proof}
-For $a, b > 0$, Theorem~\ref{thm:t2a} gives $\nu_{n+1}^{\std}(a, b) = 0 \iff \nu_n^{\std}(a, b) = 0$
-and similarly for $(a+h, b+h)$, while for $a = 0$ or $b = 0$ the axis identity
-\eqref{eq:dbl_axis} preserves universality of $0$ and $h$ inside their respective halves. For
-cross edges $(a, b+h)$ with $a, b > 0$ and $a \neq b$, Theorem~\ref{thm:t2b} implies
-$2\nu_n^{\std}(a, b) \le 2^n - 8 < 2^n - 4$, so by \eqref{eq:dbl_cross},
-$\nu_{n+1}^{\std}(a, b+h) = 2^n - 4 - 2\nu_n^{\std}(a, b) > 0$, destroying compatibility.
-When $a = 0$, $b = 0$, or $a = b$, \eqref{eq:dbl_axis} yields $\nu = 0$, proving
-\eqref{eq:compat_cross}. Universal right-multipliers must have full degree in both halves and
-across the cut; by \eqref{eq:compat_cross} only $0$ and $2^{n-1}$ satisfy this for $n \ge 4$.
+For $a, b > 0$, Theorem~\ref{thm:t2a} preserves $\nu = 0$ in both halves, while \eqref{eq:dbl_axis}
+preserves compatibility of $0$ and $h$. For cross pairs $(a, b+h)$ with $a, b > 0$ and $a \neq b$,
+Theorem~\ref{thm:t2b} gives $2\nu_n^{\std}(a, b) \le 2^n - 8 < 2^n - 4$, so \eqref{eq:dbl_cross}
+forces $\nu_{n+1}^{\std}(a, b+h) > 0$. By \eqref{eq:compat_cross}, only $0$ and $2^{n-1}$ have
+full degree for $n \ge 4$.
 \end{proof}
 
-\begin{theorem}[Exact Right-Compatibility Clique Number, \texttt{T3b} \tagLean]
+\begin{theorem}[Exact Euclidean Right-Compatibility Clique Number, \texttt{T3b} \tagLean]
 \label{thm:t3b}
 For every $n \ge 3$, the clique number of $G_n^{\comp}$ is exactly
 \begin{equation}
@@ -777,113 +882,102 @@ $C_n = \{0, 1, 2, 3, 4, 5, 6, 7\} \cup \{2^3, 2^4, \dots, 2^{n-1}\}$.
 \end{theorem}
 
 \begin{proof}
-For $n = 3$ ($\OO$), $G_3^{\comp} = K_8$, so $\omega(G_3^{\comp}) = 8 = 3 + 5$. Inductively,
-let $S$ be any clique in $G_{n+1}^{\comp}$ ($n \ge 3$), and partition $S = S_0 \sqcup S_1$
-with $S_0 = S \cap [0, 2^n)$ and $S_1' = \{x - 2^n : x \in S \cap [2^n, 2^{n+1})\}$.
-By Theorem~\ref{thm:t3a}, both $S_0$ and $S_1'$ are cliques in $G_n^{\comp}$ (hence each has
-size $\le n + 5$), and every pair $(a, b) \in S_0 \times S_1'$ satisfies $a = 0 \lor b = 0 \lor a = b$.
-We examine three cases:
-\begin{itemize}[leftmargin=2em]
-  \item If $|S_0| \le 1$ or $|S_1'| \le 1$, then $|S| = |S_0| + |S_1'| \le (n + 5) + 1 = (n + 1) + 5$.
-  \item If $|S_0| \ge 2$ and $|S_1'| \ge 2$, then $S_0$ contains some $a_0 > 0$ and $S_1'$
-    contains some $b_0 > 0$. By \eqref{eq:compat_cross}, every $b \in S_1'$ satisfies $b \in \{0, a_0\}$
-    and every $a \in S_0$ satisfies $a \in \{0, b_0\}$, forcing $|S_0| \le 2$, $|S_1'| \le 2$, and
-    $|S| \le 4 < (n+1) + 5$.
-\end{itemize}
-Conversely, $C_{n+1} = C_n \cup \{2^n\}$ is a valid clique of size $n + 6$ because $2^n$ is
-universally compatible with every vertex of $[0, 2^n)$ by \eqref{eq:compat_cross}.
+For $n = 3$ ($\OO$), $G_3^{\comp} = K_8$, giving $\omega(G_3^{\comp}) = 8 = 3 + 5$. Inductively,
+partition any clique $S$ in $G_{n+1}^{\comp}$ ($n \ge 3$) as $S_0 = S \cap [0, 2^n)$ and
+$S_1' = \{x - 2^n : x \in S \cap [2^n, 2^{n+1})\}$. By Theorem~\ref{thm:t3a}, both $S_0$ and
+$S_1'$ are cliques in $G_n^{\comp}$ (size $\le n+5$) and every $(a, b) \in S_0 \times S_1'$
+satisfies $a = 0 \lor b = 0 \lor a = b$. If $|S_0| \le 1$ or $|S_1'| \le 1$, then
+$|S| \le (n+5) + 1 = (n+1) + 5$; if both have size $\ge 2$, then non-zero elements $a_0 \in S_0$
+and $b_0 \in S_1'$ force $S_0 \subseteq \{0, b_0\}$ and $S_1' \subseteq \{0, a_0\}$, so
+$|S| \le 4 < (n+1)+5$. Conversely, $C_{n+1} = C_n \cup \{2^n\}$ is a valid $(n+6)$-clique.
 \end{proof}
 
-\begin{theorem}[Dimension-64 Hurwitz--Radon Bott Rupture, \code{T3c} \tagLean]
+\begin{corollary}[Arithmetic Comparison Against $\rho(2^n)$: Coordinate Breakaway at Dimension~64, \code{T3c} \tagLean]
 \label{thm:t3c}
-Full-left Cayley--Dickson coordinate multiplication saturates the Hurwitz--Radon
-ceiling at dimensions $8, 16, 32$:
+Comparing the proved Euclidean coordinate clique ceiling $\omega(G_n^{\comp}) = n + 5$
+(Theorem~\ref{thm:t3b}) against the closed formula $\rho(2^n) = 8\lfloor n/4\rfloor + 2^{n \bmod 4}$
+(which classically equals the Hurwitz--Radon number~\cite{hurwitz1922,radon1922,adams1962}):
 \[
   \omega(G_3^{\comp}) = 8 = \rho(8), \qquad
   \omega(G_4^{\comp}) = 9 = \rho(16), \qquad
-  \omega(G_5^{\comp}) = 10 = \rho(32).
+  \omega(G_5^{\comp}) = 10 = \rho(32),
 \]
-However, at dimension $64$ ($n = 6$) and for every $n \ge 6$ thereafter, Cayley--Dickson
-coordinate cliques strictly underperform the Hurwitz--Radon ceiling with a linearly diverging
-deficit:
+whereas for every $n \ge 6$ (starting at dimension~$64$: $11 < 12 = \rho(64)$), Euclidean
+coordinate right-multiplier families fall strictly below $\rho(2^n)$ with linearly growing gap
 \begin{equation}
   \omega(G_n^{\comp}) = n + 5 < \rho(2^n), \qquad
   \rho(2^n) - (n + 5) \ge n - 5 \qquad (\forall\, n \ge 6).
 \end{equation}
-\end{theorem}
+\end{corollary}
 
 \begin{proof}
-Write $n = 4a + b$ with $b \in \{0, 1, 2, 3\}$. Since $2^b \ge b + 1$ for all $b \in \{0, 1, 2, 3\}$
-(strictly so when $b \in \{2, 3\}$), we have $\rho(2^n) = 8a + 2^b \ge 2n - (b - 2^b) \ge 2n$
-whenever $n \ge 6$ (checking the four residues modulo~$4$: $2^b - b \in \{1, 1, 2, 5\}$, so
-$\rho(2^n) - 2n = 2^b - 2b \in \{1, 0, 0, 2\} \ge 0$ for all $n \in \N$!). Therefore
-$\rho(2^n) - (n + 5) \ge 2n - (n + 5) = n - 5 \ge 1$ for all $n \ge 6$, with exact value
-$\rho(64) = 12 > 11 = \omega(G_6^{\comp})$ at $n = 6$.
+Writing $n = 4a + b$ ($0 \le b \le 3$), direct residue check gives
+$\rho(2^n) - 2n = 2^b - 2b \in \{1, 0, 0, 2\} \ge 0$ for all $n \in \N$. Hence
+$\rho(2^n) - (n+5) \ge 2n - (n+5) = n - 5 \ge 1$ for all $n \ge 6$. (No Bott-periodicity
+theorem is formalized in Lean; \code{T3cStmt} certifies this exact arithmetic comparison, while
+its algebraic meaning comes from Theorem~\ref{thm:t3b} for Euclidean coordinate subsets.)
 \end{proof}
 
 \begin{theorem}[Constructive Asymmetric Doubling Tower, \texttt{T3d} \tagLean]
 \label{thm:t3d}
 For every $n \ge 3$, every clique $S_R$ of $G_n^{\comp}$ yields an exact $[2^n, |S_R|, 2^n]$
-norm-multiplicative pair (in particular $[2^n, n+5, 2^n]$ via $C_n$). Furthermore, for every
-$n \ge 4$, pairing the lower half $S_L = \{0, \dots, 2^{n-1}-1\}$ with the doubled right set
+coordinate norm-multiplicative pair in $\CD_n$ (in particular $[2^n, n+5, 2^n]$ via $C_n$).
+Furthermore, for every $n \ge 4$, pairing the lower half $S_L = \{0, \dots, 2^{n-1}-1\}$ with
 $D_n = C_{n-1} \cup \{x + 2^{n-1} : x \in C_{n-1}\}$ yields an exact norm-multiplicative
-coordinate pair of type $[2^{n-1}, 2(n+4), 2^n]$ inside $\CD_n$.
+coordinate pair of type $[2^{n-1}, 2(n+4), 2^n]$ inside Euclidean $\CD_n$.
 \end{theorem}
 
 \begin{proof}
-Because $S_L \subseteq [0, 2^{n-1})$, any two elements $i, k \in S_L$ satisfy $i \oplus k < 2^{n-1}$.
-Therefore, in \eqref{eq:nm_pair}, two indices $j, l \in D_n$ with $j \oplus l = i \oplus k$ must
-lie in the \emph{same} half of $D_n$ (either both in $C_{n-1}$ or both in $C_{n-1} + 2^{n-1}$).
-In the lower half, \eqref{eq:cd_rec} reduces directly to the clique property of $C_{n-1}$ in
-$\CD_{n-1}$. In the upper half, writing $j = a + 2^{n-1}$ and $l = b + 2^{n-1}$, the second
-branch of \eqref{eq:cd_rec} transforms the cross-term into
-$\sigma_{n-1}^{\std}(a, i)\sigma_{n-1}^{\std}(b, k) + \sigma_{n-1}^{\std}(b, i)\sigma_{n-1}^{\std}(a, k)$,
-which vanishes identically by anticommutativity and the clique identity of $C_{n-1}$ (checked
-explicitly across all boundary cases involving $0$ and $\{i,k\}\cap\{a,b\}$ in
-\texttt{asymmetric\_doubling\_tower\_all\_n}).
+Because $S_L \subseteq [0, 2^{n-1})$, any distinct $i, k \in S_L$ satisfy $i \oplus k < 2^{n-1}$,
+so any $j, l \in D_n$ with $j \oplus l = i \oplus k$ lie in the same half of $D_n$. In the lower
+half \eqref{eq:cd_rec} reduces to the clique property of $C_{n-1}$ in $\CD_{n-1}$; in the upper
+half ($j = a + 2^{n-1}, l = b + 2^{n-1}$), \eqref{eq:cd_rec} yields
+$\sigma_{n-1}^{\std}(a, i)\sigma_{n-1}^{\std}(b, k) + \sigma_{n-1}^{\std}(b, i)\sigma_{n-1}^{\std}(a, k) = 0$
+by anticommutativity and the clique identity of $C_{n-1}$ (checked across all boundary cases in
+\code{asymmetric_doubling_tower_all_n}).
 \end{proof}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{figures/fig3_hurwitz_rupture.pdf}
-  \caption{The Dimension-64 Hurwitz--Radon Bott Rupture (Theorems~\ref{thm:t3b}--\ref{thm:t3d}).
-  \textbf{Left:} Native $\CD_n$ cliques ($n+5$, blue) saturate $\rho(2^n)$ (vermilion) through
-  dimension $32$ ($8, 9, 10$), rupture at dimension $64$ ($11 < 12$), and diverge linearly,
-  while the asymmetric doubling tower achieves $[2^{n-1}, 2(n+4), 2^n]$ (green).
-  \textbf{Right:} Exact Bott deficit $\rho(2^n) - (n+5)$ versus the certified linear lower
-  bound $n - 5$ for $n = 3 \dots 12$.}
+  \caption{Coordinate Right-Multiplier Capacity vs.\ $\rho(2^n)$
+  (Theorems~\ref{thm:t3b}--\ref{thm:t3d}).
+  \textbf{Left:} Euclidean $\CD_n$ coordinate cliques ($n+5$, blue) match $\rho(2^n)$ (vermilion)
+  through dimension $32$ ($8, 9, 10$), break away at dimension $64$ ($11 < 12$), and diverge
+  linearly, while the doubling tower achieves $[2^{n-1}, 2(n+4), 2^n]$ (green).
+  \textbf{Right:} Exact deficit $\rho(2^n) - (n+5)$ versus the proved lower bound $n - 5$ across
+  $n = 3, \dots, 12$.}
   \label{fig:hurwitz_rupture}
 \end{figure}
 
-Figure~\ref{fig:hurwitz_rupture} visualizes the sharp phase transition at dimension~$64$.
-Notably, at $n = 4$ and $n = 5$ the asymmetric doubling tower recovers $[8, 16, 16]$ (classical
-double octonions) and $[16, 18, 32]$, while at $n = 6$ it produces $[32, 20, 64]$ directly inside
-the chingons $\CD_6$.
+Figure~\ref{fig:hurwitz_rupture} visualizes the breakaway at dimension~$64$. At $n = 4, 5, 6$,
+Theorem~\ref{thm:t3d} constructs explicit $[8, 16, 16]$, $[16, 18, 32]$, and $[32, 20, 64]$
+coordinate pairs directly inside $\SSed$, $\CD_5$, and $\CD_6$ (complementing classical
+constructions of Adem~\cite{adem1975}, Lam~\cite{lam1985}, and Yiu~\cite{yiu1987,yiu1994}).
 
 % ==============================================================================
-\section{Pillar 4: Sedenion Triple-42 Duality, Pathion Symmetric Rupture, and Base-Field Rigidity}
+\section{Pillar 4: Sedenion Triple-42, Pure-Kernel Pathion Ceiling 14, and Dim-64 Gap}
 \label{sec:pillar4}
 % ==============================================================================
 
-A coordinate subspace $S \subseteq \{0, \dots, 2^n - 1\}$ is \emph{symmetrically
-norm-multiplicative} (giving an $[r, r, 2^n]$ sums-of-squares formula with $r = |S|$) iff
-$(S, S)$ satisfies \eqref{eq:nm_pair}. Equivalently, $S$ must contain no \emph{bad affine
-$2$-plane} $\{a, b, c, d\} \subset \F_2^n$ ($a \oplus b \oplus c \oplus d = 0$) on which any of
-the three unordered pairings violates norm cancellation.
+A coordinate subset $S \subseteq \{0, \dots, 2^n - 1\}$ is \emph{symmetrically
+norm-multiplicative} in Euclidean $\CD_n$ (realizing an $[r, r, 2^n]$ formula with $r = |S|$)
+iff $(S, S)$ satisfies \eqref{eq:nm_pair}, equivalently iff $S$ contains no \emph{bad affine
+$2$-plane} $\{a, b, c, d\} \subset \F_2^n$ ($a \oplus b \oplus c \oplus d = 0$) violating norm
+cancellation on at least one of its three pairings.
 
 \begin{theorem}[Sedenion Triple-42 and Fano $7 + 28 + 7 = 42$ Duality, \texttt{T4a} \tagLean]
 \label{thm:t4a}
 Inside the $16$-dimensional sedenions $\SSed = \CD_4$:
 \begin{enumerate}[leftmargin=2em]
-  \item Out of all $140$ affine $2$-planes in $\F_2^4$, exactly \textbf{42} are bad; every bad
-    affine $2$-plane splits $2 + 2$ across $\{1,\dots,7\} \times \{9,\dots,15\}$ (neither $e_0$
-    nor $e_8$ belongs to any bad $2$-plane).
-  \item Over all $2^{16} = 65{,}536$ coordinate subspaces of $\SSed$, there are \textbf{ZERO}
-    norm-multiplicative coordinate subspaces of dimension $\ge 11$, and exactly \textbf{42}
-    maximal $10$-dimensional norm-multiplicative coordinate subspaces ($[10, 10, 16]$).
-  \item Partitioning those $42$ maximal $10$-dimensional subspaces by their intersection size
-    $|S \cap \OO|$ with the standard octonion subalgebra $\OO = \mathrm{span}\{e_0, \dots, e_7\}$
-    yields the exact Fano-plane decomposition
+  \item Out of all $140$ affine $2$-planes in $\F_2^4$, exactly \textbf{42} are bad, and
+    \emph{every} bad affine $2$-plane $\{a < b < c < d\}$ splits strictly $2 + 2$ across
+    $\{1,\dots,7\} \times \{9,\dots,15\}$ (\code{sedenion_bad_planes_split_2_2}).
+  \item Over all $2^{16} = 65{,}536$ coordinate subsets of $\SSed$, there are \textbf{zero}
+    norm-multiplicative coordinate subsets of size $\ge 11$, and exactly \textbf{42}
+    maximal $10$-dimensional norm-multiplicative coordinate subsets ($[10, 10, 16]$).
+  \item Partitioning those $42$ maximal $10$-dimensional subsets by their overlap $|S \cap \OO|$
+    with $\OO = \mathrm{span}\{e_0, \dots, e_7\}$ yields the exact Fano decomposition
     \begin{equation}
       42 = 7 + 28 + 7 \qquad
       \bigl(\text{$7$ with $|S\cap\OO|=8$,\; $28$ with $|S\cap\OO|=5$,\; $7$ with $|S\cap\OO|=2$}\bigr).
@@ -892,43 +986,43 @@ Inside the $16$-dimensional sedenions $\SSed = \CD_4$:
 \end{theorem}
 
 \begin{proof}
-In \code{CDTerrace.FiniteCertificates}, we first prove that a $16$-bit mask $m = \mathrm{lo} + 256\,\mathrm{hi}$
-satisfies the full $16^3$ norm-multiplicativity predicate \cmd{isNormMultMask 4 m} iff
-$\mathrm{hi}$ forms an independent set in the $8$-vertex forbidden-neighbor graph induced by
-the $42$ bad affine $2$-planes contained in $\mathrm{lo}$ (\code{isNormMultMask4_eq_hiAvoidsBad}
-and \code{hiAvoidsBad_eq_isIndepForb}). We then prove exact soundness of a pruned
-branch-and-bound independent-set counter \code{countIndepHi} (\code{countIndepHi_sound})
-against full $256 \times 256$ enumeration, and discharge the exact counts $(42, 0, 7, 28, 7)$
-by pure kernel reduction (\code{rfl}) with zero \code{native_decide}.
+In \code{CDTerrace.FiniteCertificates}, we prove that a $16$-bit mask $m = \mathrm{lo} + 256\,\mathrm{hi}$
+satisfies the literal textbook predicate \cmd{isNormMultMask 4 m} iff $\mathrm{hi}$ is an
+independent set in the $8$-vertex forbidden-neighbor graph induced by the $42$ bad $2+2$ affine
+$2$-planes inside $\mathrm{lo}$ (\code{isNormMultMask4_eq_hiAvoidsBad},
+\code{hiAvoidsBad_eq_isIndepForb}), prove soundness of the branch-and-bound counter
+\code{countIndepHi} (\code{countIndepHi_sound}) against full $256 \times 256$ enumeration, and
+discharge $(42, 0, 7, 28, 7)$ by pure kernel reduction (\code{rfl}).
 \end{proof}
 
-\begin{theorem}[Sedenion $7 \times K_{2,2,2}$ Box-Kites and 9D Subspace, \texttt{T4b} \tagLean]
+\begin{theorem}[Re-Verification of de~Marrais's 7 Box-Kites, \texttt{T4b} \tagLean]
 \label{thm:t4b}
-The $42$ sedenion Box-Kite assessors $\{(i, j) : 1 \le i \le 7,\; 9 \le j \le 15,\; j \neq i + 8\}$,
-equipped with mutual $2$-blade zero-divisor adjacency $(e_i + e_j)(e_k \pm e_l) = 0$, form a
-$4$-regular graph ($84$ edges) decomposing by XOR strut signature $s = i \oplus j \in \{9,\dots,15\}$
-into $7$ disjoint octahedra $7 \times K_{2,2,2}$ with exact adjacency spectrum
-$\{4^7, 0^{21}, (-2)^{14}\}$. Furthermore, the $9$-dimensional coordinate subspace
-$\OO \oplus \R e_8$ (mask $511$) is globally norm-multiplicative in $\SSed$.
+The $42$ sedenion box-kite assessors $\{(i, j) : 1 \le i \le 7,\; 9 \le j \le 15,\; j \neq i + 8\}$
+of de~Marrais~\cite{demarrais2000}, equipped with the \emph{pure algebraic vanishing-product}
+adjacency $(e_i + e_j)(e_k + e_l) = 0$ or $(e_i + e_j)(e_k - e_l) = 0$ evaluated across all $16$
+coordinates with \emph{zero} XOR pre-filtering (\code{boxKiteAdj}), form a $4$-regular graph
+($84$ edges) decomposing by XOR strut signature $s = i \oplus j \in \{9,\dots,15\}$ into
+$7$ disjoint octahedra $7 \times K_{2,2,2}$ with zero cross-class edges (spectrum
+$\{4^7, 0^{21}, (-2)^{14}\}$). Furthermore, the $9$-dimensional coordinate subspace
+$\OO \oplus \R e_8$ (mask $511$) is norm-multiplicative in $\SSed$.
 \end{theorem}
 
-The structural origin of the Triple-42 coincidence (Figure~\ref{fig:sedenion_triple_42}) is now
-transparent: each of the $7$ Fano triples of $\OO$ generates $6$ bad $2+2$ affine $2$-planes
-(total $42$), $6$ mutually annihilating Box-Kite assessors forming one octahedron $K_{2,2,2}$
-(total $42$), and under the Fano-line involution on $\{1,\dots,7\} \leftrightarrow \{9,\dots,15\}$,
-the exact $7 + 28 + 7 = 42$ maximal $10$-dimensional norm-multiplicative coordinate subspaces
+Each of the $7$ Fano triples of $\OO$ generates $6$ bad $2+2$ affine $2$-planes (total $42$),
+$6$ mutually annihilating box-kite assessors forming one octahedron $K_{2,2,2}$ (total $42$),
+and via the Fano-line involution on $\{1,\dots,7\} \leftrightarrow \{9,\dots,15\}$, the exact
+$7 + 28 + 7 = 42$ maximal $10$-dimensional norm-multiplicative coordinate subspaces
 (recovering the classical $[10, 10, 16]$ integer sums-of-squares ceiling of Lam and
-Yiu~\cite{lamyiu1987,shapiro2000} natively inside $\SSed$).
+Yiu~\cite{lamyiu1987,shapiro2000} natively inside $\SSed$; Figure~\ref{fig:sedenion_triple_42}).
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{figures/fig4_sedenion_triple_42_boxkites.pdf}
   \caption{Sedenion Triple-42 Duality (Theorems~\ref{thm:t4a}--\ref{thm:t4b}).
-  \textbf{Left:} The $42$ Box-Kite assessors partition by XOR strut $s \in \{9,\dots,15\}$ into
-  $7$ disjoint octahedra $7 \times K_{2,2,2}$ ($84$ edges, spectrum $\{4^7, 0^{21}, (-2)^{14}\}$).
-  \textbf{Right:} Exhaustive enumeration of all $2^{16} = 65{,}536$ coordinate subspaces of $\SSed$
-  yields the exact Fano split $7 + 28 + 7 = 42$ maximal $10$-dimensional subspaces and zero
-  subspaces of dimension $\ge 11$.}
+  \textbf{Left:} de~Marrais's $42$ box-kite assessors partition by XOR strut $s \in \{9,\dots,15\}$
+  into $7$ disjoint octahedra $7 \times K_{2,2,2}$ ($84$ edges, formally re-verified under pure
+  vanishing-product adjacency).
+  \textbf{Right:} Exhaustive kernel enumeration of all $2^{16} = 65{,}536$ coordinate subsets of
+  $\SSed$ yields $7 + 28 + 7 = 42$ maximal $10$-dimensional subspaces and zero of dimension $\ge 11$.}
   \label{fig:sedenion_triple_42}
 \end{figure}
 
@@ -957,7 +1051,7 @@ Yiu~\cite{lamyiu1987,shapiro2000} natively inside $\SSed$).
 \end{enumerate}
 \end{theorem}
 
-\begin{theorem}[Pathion/Chingon Witnesses and Base-Field Rigidity, \code{T4d} \tagLean]
+\begin{theorem}[Pathion/Chingon Witnesses and Elementary Unit-Square Lemma, \code{T4d} \tagLean]
 \label{thm:t4d}
 \hfill\par\noindent
 \begin{enumerate}[leftmargin=2em,topsep=2pt]
@@ -967,52 +1061,136 @@ Yiu~\cite{lamyiu1987,shapiro2000} natively inside $\SSed$).
       W_{14} &= \{0,1,2,4,5,8,10,16,17,18,20,21,24,26\},\\
       W_{16} &= \{0,4,6,8,11,13,14,24,31,32,36,38,56,57,60,63\},
     \end{align*}
-    are strictly norm-multiplicative, realizing $[14, 14, 32]$ and $[16, 16, 64]$ formulas
-    natively inside $\CD_5$ and $\CD_6$.
-  \item \emph{Pure-Intercalate Base-Field Rigidity:} Over \emph{any} integral domain $R$
-    (including $\Z$ and the Gaussian integers $\Z[i] \subset \Q(i)$), every single-slot
-    monomial intercalate entry satisfying $c^2 = 1$ must lie in $\{+1, -1\}$.
+    are duplicate-free and norm-multiplicative in Euclidean $\CD_5$ and $\CD_6$, realizing
+    $[14, 14, 32]$ and $[16, 16, 64]$ coordinate pairs.
+  \item \emph{Elementary unit-square lemma:} Derived directly from the commutative-ring and
+    zero-divisor-free axioms of any integral domain $R$ (specifically instantiated in $\Z$ and
+    $\Z[i]$), every solution of $c^2 = 1$ satisfies $c = 1 \lor c = -1$. (This is an elementary
+    ring-theoretic fact proved cleanly from the ring axioms in \code{domain_sq_eq_one_imp} and
+    \code{gaussInt_sq_eq_one_iff}; it does \emph{not} make a claim about general complex
+    composition formulas or Zhang--Zhu~\cite{zhangzhu2026hurwitz}.)
 \end{enumerate}
 \end{theorem}
 
-\begin{proposition}[Pathion Symmetric Rupture vs.\ Yiu's {$[16, 16, 32]$} Form, \tagComp]
-\label{prop:pathion_milp}
-Over all $630$ bad affine $2$-planes of $\CD_5$ ($\dim = 32$), exact binary integer linear
-programming (\texttt{scipy.optimize.milp} / HiGHS, zero integrality gap, status \texttt{Optimal})
-certifies that the maximum dimension of a symmetric norm-multiplicative coordinate subspace of
-$\CD_5$ is exactly
+A central upgrade of Version~2.0.0 is the complete elimination of external MILP solvers from the
+proof trust base for the $32$-dimensional Pathions $\CD_5$. The key structural ingredient is a
+universal all-$n$ half-swap invariance of bilinear norm cancellation.
+
+\begin{lemma}[Universal All-$n$ Half-Swap Invariance, \tagLean]
+\label{lem:halfswap}
+For every $n \ge 1$ and all distinct $x, y < 2^{n+1}$,
 \[
-  r_{\max}(\CD_5) = 14 < 16,
+  \sigma_{n+1}^{\std}(x \oplus 2^n, y \oplus 2^n)
+  = \sigma_{n+1}^{\std}(x, y) \cdot
+    (-1)^{[\mathrm{sameHalf}_n(x,y)] + [x \in \{0, 2^n\}] + [x \oplus y = 2^n]}.
 \]
-attained by $W_{14}$ above.
+Consequently, for all distinct $a, b, c, d < 2^{n+1}$ with $a \oplus b = c \oplus d$, the
+norm-cancellation identity \eqref{eq:nm_pair} is invariant under simultaneously translating all
+four indices by $\oplus 2^n$ (\code{cdSign_halfSwap}, \code{pairingCancels_halfSwap}).
+\end{lemma}
+
+\begin{theorem}[Pure-Kernel Pathion Ceiling $r_{\max}(\CD_5) = 14$ and Strict $7+7$ Rigidity, \code{T4e} \tagLean]
+\label{thm:t4e}
+Across \emph{all} $2^{32} = 4{,}294{,}967{,}296$ coordinate subsets $S \subseteq \{0, \dots, 31\}$
+of Euclidean $\CD_5$ (equivalently every duplicate-free list $S$ satisfying \cmd{isNormMultPair 5 S S}):
+\begin{enumerate}[leftmargin=2em]
+  \item $|S| \le 14$, establishing together with $W_{14}$ (Theorem~\ref{thm:t4d}) the exact
+    symmetric coordinate ceiling
+    \begin{equation}
+      r_{\max}(\CD_5) = 14.
+    \end{equation}
+  \item \emph{Strict $7 + 7$ half-balance rigidity:} Whenever $|S| = 14$, necessarily
+    \begin{equation}
+      |S \cap \{0, \dots, 15\}| = 7 \qquad \text{and} \qquad |S \cap \{16, \dots, 31\}| = 7.
+    \end{equation}
+    No unbalanced $14$-dimensional norm-multiplicative coordinate subset ($8+6$, $9+5$, or $10+4$)
+    exists in $\CD_5$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Write $S = S_{\mathrm{lo}} \sqcup (S_{\mathrm{hi}} + 16)$ with
+$S_{\mathrm{lo}}, S_{\mathrm{hi}} \subseteq \{0, \dots, 15\}$. If $|S_{\mathrm{lo}}| \le 7$ and
+$|S_{\mathrm{hi}}| \le 7$, then immediately $|S| \le 14$, with equality forcing
+$|S_{\mathrm{lo}}| = |S_{\mathrm{hi}}| = 7$. By Lemma~\ref{lem:halfswap}, swapping
+$S_{\mathrm{lo}} \leftrightarrow S_{\mathrm{hi}}$ preserves norm-multiplicativity in $\CD_5$;
+hence it suffices to prove that whenever $|S_{\mathrm{lo}}| \ge 8$, the total cardinality obeys
+$|S_{\mathrm{lo}}| + |S_{\mathrm{hi}}| \le 13$.
+
+Every valid $S_{\mathrm{lo}}$ is norm-multiplicative in $\SSed = \CD_4$; there are exactly
+$2{,}995$ such subsets with $|S_{\mathrm{lo}}| \ge 8$ (visited via pruned branch-and-bound
+\code{checkIndepHi} without scanning invalid masks). For each fixed $S_{\mathrm{lo}}$, any two
+indices $1 \le u < v < 16$ such that $\{a, b\} \subseteq S_{\mathrm{lo}}$ forms one of the
+$546$ verified cross bad affine $2$-planes $\{a, b, u+16, v+16\}$
+(\code{crossBadPairs_sound}) cannot both belong to $S_{\mathrm{hi}}$. Thus $S_{\mathrm{hi}}$ is
+an independent set in the induced cross-conflict graph $H(S_{\mathrm{lo}})$ on $\{0,\dots,15\}$.
+By pigeonhole (\code{popcount16_le_clique_cover}), $|S_{\mathrm{hi}}| \le |\mathcal{C}|$ for any
+clique cover $\mathcal{C}$ of $H(S_{\mathrm{lo}})$. Executing deterministic descending
+($15, 14, \dots, 1$, plus singleton $\{0\}$) greedy clique cover (\code{greedyCliques}) inside
+the Lean kernel via binary-tree dispatch (\code{hasCrossEdgeFast}) succeeds with
+$|S_{\mathrm{lo}}| + |\mathcal{C}| \le 13$ on \emph{all} $2{,}995$ cases ($0/2{,}995$ failures),
+discharged by pure kernel reduction (\code{rfl}) across 16 blocks (\code{checkPathionLoChunk_0}--\code{15})
+with zero DFS, zero backtracking, zero MILP, and zero \code{native_decide}.
+\end{proof}
+
+\begin{proposition}[Exact Census of 14D Pathion Subspaces, \code{C2} \tagComp]
+\label{prop:pathion_census}
+Independent exhaustive branch-and-bound enumerations in Rust and Python (cross-checked against a
+zero-gap HiGHS MILP over all $630$ bad affine $2$-planes of $\CD_5$) show that $\CD_5$ contains
+exact count \textbf{280} of norm-multiplicative $14$-dimensional coordinate subspaces. Every one
+of these $280$ subspaces splits strictly $7 + 7$ (confirming Theorem~\ref{thm:t4e}) and contains
+both universal multipliers $e_0$ and $e_{16}$.
 \end{proposition}
 
-\begin{remark}[Structural Bridge to Yiu (1990) and Zhang--Zhu (2026)]
-Together, Proposition~\ref{prop:pathion_milp} and Theorem~\ref{thm:t4d}(2) isolate two crisp
-obstructions in the Hurwitz sums-of-squares problem (Figure~\ref{fig:bdi_symmetric}, right):
-\begin{enumerate}[leftmargin=2em]
-  \item While $\SSed$ natively matches the optimal real/integer symmetric formula $[10, 10, 16]$,
-    already in the $32$-dimensional pathions $\CD_5$ native coordinate multiplication stalls at
-    $r_{\max}(\CD_5) = 14$, strictly below Yiu's celebrated integer bilinear formula
-    $[16, 16, 32]$~\cite{yiu1990} (which requires non-Cayley--Dickson intercalate signings).
-  \item Zhang and Zhu's breakthrough $[12, 12, 18]$ formula over $\Q(i)$~\cite{zhangzhu2026hurwitz}
-    breaks real non-existence via \emph{multi-term} complex linear combinations; by
-    Theorem~\ref{thm:t4d}(2), no single-slot monomial rescaling over $\Z[i]$ or any integral
-    domain can escape $\{\pm 1\}$ signs (since $i^2 = -1 \neq 1$). Thus genuine multi-term
-    superposition is algebraically mandatory for base-field dependence.
-\end{enumerate}
+\begin{remark}[Distinction from Yiu's {$[16, 16, 32]$} Integral Bilinear Form]
+Theorem~\ref{thm:t4e} governs \emph{symmetric coordinate subsets} under native $\CD_5$
+multiplication ($r_{\max}(\CD_5) = 14$), whereas Yiu's celebrated $[16, 16, 32]$
+formula~\cite{yiu1990} is a general integral bilinear form not restricted to a Cayley--Dickson
+coordinate subtable. The two results concern different object classes; Theorem~\ref{thm:t4e}
+demonstrates rigorously that no $16$-dimensional (or even $15$-dimensional) symmetric coordinate
+restriction of $\CD_5$ exists, so realizing $[16, 16, 32]$ requires non-Cayley--Dickson
+intercalate structure (Figure~\ref{fig:bdi_symmetric}, right).
 \end{remark}
+
+\begin{theorem}[Dimension-64 Split-Signature Interior Spectral Gap, \code{T4f} \tagLean]
+\label{thm:t4f}
+In the $64$-dimensional split Chingon algebra $\CD_6(\gamma)$ with flip mask $56$
+($\gamma = (-1, -1, -1, +1, +1, +1)$), the complete $9$-bin $2$-blade nullity histogram is
+\begin{equation}
+  \bigl(H_6^{56}(0), H_6^{56}(4), \dots, H_6^{56}(32)\bigr)
+  = (257,\; 422,\; 364,\; 336,\; 168,\; \mathbf{0},\; 56,\; 172,\; 178).
+\end{equation}
+In particular, $\CD_6(56)$ exhibits an exact interior spectral gap at $\nu = 20$:
+$H_6^{56}(16) = 168 > 0$, $H_6^{56}(20) = 0$, and $H_6^{56}(24) = 56 > 0$.
+\end{theorem}
+
+\begin{proof}
+Combining the closed-form doubling reduction \code{nu6Closed_eq}, the C-primitive $3$-bit XOR
+parity identity \code{parityBits6_flip56}, and the depth-$6$ balanced binary-tree accumulator
+\code{cd6QuadTree56} (recursion depth $12$, zero \code{Nat.bitwise}), pure kernel reduction
+(\code{rfl}) certifies
+\[
+  \bigl(H_6^{56}(0), H_6^{56}(4), H_6^{56}(8), H_6^{56}(12)\bigr) = (257, 422, 364, 336).
+\]
+Theorem~\ref{thm:t2f} pins $H_6^{56}(16) = 168$, and Theorem~\ref{thm:t1e} combined with the
+Euclidean mirror sums $(435, 594, 420, 336)$ (from Theorems~\ref{thm:t2b}--\ref{thm:t2de})
+fixes the remaining four bins:
+\[
+  \bigl(H_6^{56}(20), H_6^{56}(24), H_6^{56}(28), H_6^{56}(32)\bigr) = (0, 56, 172, 178). \qedhere
+\]
+\end{proof}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{figures/fig5_bdi_and_symmetric_rupture.pdf}
-  \caption{\textbf{Left:} Sharp separation between the $2$-blade nullity ceiling $2^{n-1}-4$ and
-  the Biss--Dugger--Isaksen ceiling $2^n - 4n + 4$ (Theorem~\ref{thm:t2b}): equality holds
-  uniquely at $n = 4$ ($4 = 4$) and strict separation begins at $n = 5$ ($12 < 16$).
-  \textbf{Right:} Symmetric norm-multiplicative coordinate subspaces inside $\CD_n$ versus
-  integral bilinear forms $[r, r, 2^n]$ (Yiu~\cite{yiu1990}) and full-left cliques
-  $\omega(G_n^{\comp}) = n+5$, highlighting the MILP-certified Pathion symmetric rupture
-  $14 < 16$ (Proposition~\ref{prop:pathion_milp}).}
+  \caption{\textbf{Left:} Sharp separation between the attained $2$-blade nullity ceiling
+  $2^{n-1}-4$ and the Biss--Dugger--Isaksen ceiling $2^n - 4n + 4$ (Theorem~\ref{thm:t2b}):
+  among $n \ge 4$, equality holds only at $n = 4$ ($4 = 4$) and strict separation holds for all
+  $n \ge 5$ ($12 < 16$).
+  \textbf{Right:} Symmetric coordinate norm-multiplicativity inside Euclidean $\CD_n$ versus
+  general integral bilinear forms (Yiu~\cite{yiu1990}) and full-left coordinate cliques
+  $\omega(G_n^{\comp}) = n+5$, highlighting the pure-kernel Lean Theorem~\ref{thm:t4e} ceiling
+  $r_{\max}(\CD_5) = 14$ with strict $7+7$ half-balance rigidity ($280$ subspaces).}
   \label{fig:bdi_symmetric}
 \end{figure}
 
@@ -1021,105 +1199,130 @@ obstructions in the Hurwitz sums-of-squares problem (Figure~\ref{fig:bdi_symmetr
 \label{sec:verification}
 % ==============================================================================
 
-To eliminate single-implementation, single-kernel, and statement-drift risks, we verify the
-mathematical claims through three orthogonal layers:
-
 \subsection{Zero-Mathlib Lean~4.35.0 Formalization and Six-Kernel Replay}
-The entire Lean library (\code{lean/CDTerrace/*.lean}, over $4{,}200$ lines across seven
-modules) is built purely on Lean~4.35.0 core~\cite{demoura2021lean4} with \emph{zero} Mathlib
-dependency, \cmd{autoImplicit = false}, \cmd{relaxedAutoImplicit = false}, zero
-\cmd{sorry} in all production targets, zero \cmd{admit}, zero \code{native_decide},
-and zero custom axioms. To achieve fast, deterministic replay across external typecheckers
-without raising \cmd{maxRecDepth} or \cmd{maxHeartbeats}, finite certificate evaluations
-in \code{FiniteCertificates.lean} avoid \code{Nat.bitwise} recursion inside MetaM
-\cmd{decide} in favor of C-primitive arithmetic (\code{Nat.div}, \code{Nat.mod}, \code{Nat.add})
-proved algebraically equivalent to the textbook definitions and discharged by pure kernel
-reduction (\cmd{rfl}).
+The entire Lean library (\code{lean/CDTerrace/*.lean}, over $6{,}400$ lines across eight modules)
+depends strictly on Lean~4.35.0 core~\cite{demoura2021lean4} with \emph{zero} Mathlib dependency,
+\cmd{autoImplicit = false}, \cmd{relaxedAutoImplicit = false}, zero \cmd{sorry} in production
+targets, zero \cmd{admit}, zero \code{native_decide}, zero \cmd{maxRecDepth} or
+\cmd{maxHeartbeats} overrides, and zero custom axioms. All heavy finite certificates
+(\code{FiniteCertificates.lean} and \code{PathionRupture.lean}) replace MetaM \code{Nat.bitwise}
+recursion with C-primitive arithmetic and balanced binary trees proved algebraically equivalent
+to the textbook definitions and discharged by pure kernel \cmd{rfl}.
 
 Statement fidelity is enforced by the Palomar Comparator contract:
 \begin{itemize}[leftmargin=2em]
-  \item \code{Challenge.lean} defines the 19 theorem abbreviations \cmd{T1aStmt}--\cmd{T4dStmt}
+  \item \code{Challenge.lean} defines the 22 theorem abbreviations \cmd{T1aStmt}--\cmd{T4fStmt}
     and their conjunction \code{AllTerraceTheoremsStmt}.
-  \item \code{PalomarChallenge.lean} (deliberately excluded from \cmd{defaultTargets})
-    exposes the 20 statement-only challenge signatures.
-  \item \code{PalomarSolution.lean} discharges all 20 targets from \code{Solution.lean}
-    with zero \cmd{sorry}.
-  \item Continuous integration replays the complete proof export across six independent kernels:
-    the Lean~4.35.0 C++ kernel, \cmd{leanchecker}, \cmd{leanchecker-paranoid},
-    \cmd{lean4lean}~\cite{carneiro2024lean4lean}, \cmd{nanoda}, \cmd{con-leche}, and
-    \cmd{con-ron}.
-  \item Replay runs both \cmd{lake check -{}-paranoid} and \cmd{lake comparator -{}-paranoid}
-    against \code{comparator.json}, plus a live negative test confirming that an injected
-    \cmd{sorry} or custom axiom is rejected.
+  \item \code{PalomarChallenge.lean} (excluded from \cmd{defaultTargets}) exposes the 23
+    statement-only challenge signatures.
+  \item \code{PalomarSolution.lean} discharges all 23 targets from \code{Solution.lean} with zero
+    \cmd{sorry}, audited by \code{VerifyAxioms.lean} (all 35 declarations within
+    \code{[propext, Classical.choice, Quot.sound]}).
+  \item Continuous integration replays the proof export across six independent kernels (the
+    Lean~4.35.0 C++ kernel, \cmd{leanchecker-paranoid}, \cmd{lean4lean}~\cite{carneiro2024lean4lean},
+    \cmd{nanoda}, \cmd{con-leche}, and \cmd{con-ron}), executing \cmd{lake check -{}-paranoid}
+    and \cmd{lake comparator -{}-paranoid} against \code{comparator.json}.
+  \item A live tamper-injecting negative test copies \code{lean/} to an isolated directory,
+    injects both a \cmd{sorry} and an unpermitted custom axiom into \code{PalomarSolution.lean},
+    and asserts that both \cmd{lake comparator -{}-paranoid} and \code{check_readme_axioms.py}
+    exit non-zero.
 \end{itemize}
 
 \subsection{Non-Vacuity Witnesses and Adversarial Boundary Refutations}
-To rule out vacuous quantifiers or overstated bounds, \code{CDTerrace.NonVacuity} proves four
-concrete inhabited pillar witnesses (split sedenion nilpotent inversion at $\flip=8$, concrete
-terrace evaluations for $n=4,5,6$, dimension-$64$ clique $11 < 12$ with $[32, 20, 64]$ doubling
-pair, and concrete $10$D/$14$D/$16$D witnesses), while \code{CDTerrace.AdversarialTests}
-machine-checks six formal refutations of natural false strengthenings:
+Four concrete inhabited pillar witnesses are proved in \code{CDTerrace.NonVacuity}, while
+eight refutations of natural false strengthenings are machine-checked in
+\code{CDTerrace.AdversarialTests}:
 \begin{enumerate}[leftmargin=2em]
   \item \code{refute_hurwitz_saturation_at_64}: no $12$-clique exists in $G_6^{\comp}$.
-  \item \code{refute_sedenion_11d_coord_subspace}: no $11$D norm-multiplicative coordinate
-    subspace exists in $\SSed$, and $\{0,\dots,10\}$ fails directly.
-  \item \code{refute_twoblade_reaches_bdi_at_64}: $2$-blade equality with BDI holds at
-    $n = 4$ ($4 = 4$) and strictly fails already at $n = 5$ ($12 < 16$) and $n = 6$ ($28 < 44$).
-  \item \code{refute_split_preserves_individual_bins}: split signatures break individual
-    bin invariance ($H_4^{8}(0) = 49 \neq 63$) while conserving mirror sums ($49 + 14 = 63$).
-  \item \code{refute_third_universal_multiplier}: $e_1$ fails universal compatibility in
-    $\SSed$, and no basis element outside $\{e_0, e_{2^{n-1}}\}$ is universal for $n \ge 4$.
-  \item \code{refute_gaussian_imaginary_intercalate}: neither $i$ nor $-i$ satisfies
-    $z^2 = 1$ in $\Z[i]$, and every square root of $1$ in $\Z[i]$ has zero imaginary part.
+  \item \code{refute_sedenion_11d_coord_subspace}: no $11$-dimensional coordinate subspace exists
+    in $\SSed$, and $\{0,\dots,10\}$ fails directly.
+  \item \code{refute_twoblade_reaches_bdi_at_64}: $2$-blade equality with BDI holds at $n = 4$
+    ($4 = 4$) and fails strictly at $n = 5$ ($12 < 16$) and $n = 6$ ($28 < 44$).
+  \item \code{refute_split_preserves_individual_bins}: split signatures break individual bin
+    invariance ($H_4^{8}(0) = 49 \neq 63$) while conserving mirror sums ($49 + 14 = 63$).
+  \item \code{refute_third_universal_multiplier}: no basis element outside $\{e_0, e_{2^{n-1}}\}$
+    is a universal right-multiplier for $n \ge 4$.
+  \item \code{refute_gaussian_imaginary_intercalate}: neither $i$ nor $-i$ satisfies $z^2 = 1$
+    in $\Z[i]$.
+  \item \code{refute_pathion_15d_or_unbalanced_14d}: no $15$-element norm-multiplicative
+    coordinate subset and no unbalanced $8+6$ $14$-element coordinate subset exists in $\CD_5$.
+  \item \code{refute_cd6_split56_contiguous_bins}: interior nullity bin $\nu = 20$ is strictly
+    empty in $\CD_6(56)$ ($H_6^{56}(20) = 0$) despite populated neighbors $H_6^{56}(16) = 168$
+    and $H_6^{56}(24) = 56$.
 \end{enumerate}
 
-\subsection{Tri-Language Differential Verification}
-Independent zero-dependency Rust (\cmd{rust/}), strict ISO~C11 with ASan/UBSan and
-$10^5$-case plus libFuzzer fuzzing (\cmd{c/}), and Python with a naive recursive
-Cayley--Dickson oracle, exact $\Q$ linear algebra, and Hypothesis property tests
-(\cmd{src/}, \cmd{reference/}, \cmd{tests/}) agree bit-for-bit across all $496$ generalized
-algebras $\CD_4(\gamma)$--$\CD_8(\gamma)$, all $n = 3 \dots 12$ Hurwitz--Radon tables, and
-all $65{,}536$ sedenion coordinate subspaces. Every frozen JSON dataset in \cmd{data/} is
-SHA-256 checksummed in \code{MANIFEST.sha256}.
+\subsection{Tri-Language Differential Verification and Cryptographic Provenance}
+Independent zero-dependency Rust (with \cmd{\#![forbid(unsafe\_code)]} in \cmd{rust/}), strict
+ISO~C11 compiled with \cmd{-Werror}, \cmd{-Wconversion}, and \cmd{-Wshadow}, ASan/UBSan,
+$10^5$-case plus libFuzzer fuzzing (auditing all $496$ generalized algebras
+$\CD_4(\gamma)$--$\CD_8(\gamma)$ with zero stride in \cmd{c/}), and Python with a naive recursive
+Cayley--Dickson oracle, exact $\Q$ Gaussian elimination, Hypothesis property tests, and surgical
+mutation tests (\cmd{src/}, \cmd{reference/}, \cmd{tests/}) agree bit-for-bit. Frozen JSON
+datasets, deliverables, and manifests carry SHA-256 checksums (\code{data/MANIFEST.sha256} and
+\code{MANIFEST.sha256}), independent RFC~3161 TSA (\code{data/MANIFEST.sha256.tsr}) and
+Bitcoin-anchored OpenTimestamps (\code{data/MANIFEST.sha256.ots}) proofs, and GitHub SLSA build
+provenance attestations.
 
 % ==============================================================================
-\section{Explicit Epistemic Boundaries, Open Frontiers, and Disclosure}
+\section{Explicit Epistemic Boundaries, Open Frontiers, and Disclosures}
 \label{sec:boundaries}
 % ==============================================================================
 
-Scientific integrity demands stating just as clearly what this work does \emph{not} prove:
 \begin{openproblem}[Higher-Blade Annihilator Spectra \tagOpen]
-Our Terrace Law and Mirror Conservation theorems classify \emph{basis $2$-blades} $e_i + e_j$
-for all $n$ and all $2^n$ signatures. By Theorem~\ref{thm:t2b}, $2$-blades fall strictly short
-of the Biss--Dugger--Isaksen ceiling $2^n - 4n + 4$ for every $n \ge 5$. Classifying the full
+Pillars~1 and~2 classify \emph{basis $2$-blades} $e_i + e_j$. By Theorem~\ref{thm:t2b}, $2$-blades
+fall strictly short of $\mathrm{BDI}(n) = 2^n - 4n + 4$ for every $n \ge 5$. Classifying the
 annihilator stratification of $k$-blades ($k \ge 3$) and general elements of $\CD_n(\gamma)$
-remains open (adjacent to Mega-Atlas problem \code{ALG-039}).
+remains open (adjacent to Mega-Atlas entry \code{ALG-039}).
 \end{openproblem}
 
 \begin{openproblem}[Exact Symmetric Coordinate Ceiling $r_{\max}(\CD_n)$ for $n \ge 6$ \tagOpen]
-We establish $r_{\max}(\CD_3) = 8$, $r_{\max}(\CD_4) = 10$ \tagLean{},
-$r_{\max}(\CD_5) = 14$ \tagComp{}, and $r_{\max}(\CD_6) \ge 16$ \tagLean{}. Determining the
-exact maximum symmetric norm-multiplicative coordinate subspace dimension $r_{\max}(\CD_n)$
-for $n \ge 6$, as well as lifting the $n = 5$ HiGHS MILP certificate into a pure Lean kernel
-branch-and-bound proof, remain open (adjacent to \code{COMB-040}).
+We prove $r_{\max}(\CD_3) = 8$, $r_{\max}(\CD_4) = 10$ \tagLean{}, $r_{\max}(\CD_5) = 14$ with
+strict $7+7$ rigidity \tagLean{}, and $r_{\max}(\CD_6) \ge 16$ \tagLean{}. Determining exact
+$r_{\max}(\CD_n)$ for $n \ge 6$ (and lifting the $280$-subspace exact census \code{C2} into Lean)
+remains open (adjacent to \code{COMB-040}).
 \end{openproblem}
 
-\begin{openproblem}[General Real Sums-of-Squares Outside Coordinate Subspaces \tagOpen]
-Theorem~\ref{thm:t3c} and Proposition~\ref{prop:pathion_milp} govern coordinate subspaces under
-native Cayley--Dickson multiplication; they do \emph{not} resolve the general real
-sums-of-squares problem (Hurwitz problem $[r, s, N]$ over $\R$ for arbitrary bilinear maps,
-adjacent to \code{ALG-035}), nor do they settle whether arbitrary real linear combinations
-inside $\CD_n$ can surpass coordinate ceilings.
+\begin{openproblem}[Sums-of-Squares Beyond Coordinate Subspaces \tagOpen]
+Theorems~\ref{thm:t3b}--\ref{thm:t3c} and~\ref{thm:t4e} govern coordinate subsets under native
+Euclidean Cayley--Dickson multiplication; they do \emph{not} resolve the general real or
+field-dependent Hurwitz problem $[r, s, N]$ (adjacent to \code{ALG-035};
+cf.~\cite{yiu1990,zhangzhu2026hurwitz}), nor do they settle whether arbitrary real linear
+combinations inside $\CD_n$ can surpass coordinate ceilings.
 \end{openproblem}
 
-\begin{openproblem}[Asymptotic Phase Counts and Spectral Gaps \tagOpen]
+\begin{openproblem}[Asymptotic Split-Phase Counts and Spectral-Gap Classification \tagOpen]
 For $n = 4, 5$ \tagLean{} and $n = 6, 7, 8$ \tagComp{}, the $2^n$ signatures of $\CD_n(\gamma)$
-collapse into exactly $2^{n-2}$ distinct $2$-blade nullity-histogram phases (each invariant under
-the $7$-fold split-octonion symmetry on the first three doubling bits), with interior spectral
-gaps appearing for $n \ge 6$ (gap-phase counts $0, 2, 6, 14 = 2^{n-4} - 2$ for $n = 5, 6, 7, 8$).
-Proving that the phase count equals $2^{n-2}$ and characterizing all interior spectral-gap
-signatures for arbitrary $n \ge 6$ remain open.
+collapse into exactly $2^{n-2}$ distinct $2$-blade nullity-histogram phases, with interior
+spectral-gap phase counts $0, 0, 2, 6, 14$ for $n = 4, 5, 6, 7, 8$ (and the first gap $\CD_6(56)$
+certified in Lean by Theorem~\ref{thm:t4f}). Proving the phase count $2^{n-2}$ and classifying
+all interior spectral-gap signatures for arbitrary $n \ge 6$ remain open.
 \end{openproblem}
+
+\subsection*{Author Contributions (CRediT)}
+Alexander Stephen Donahue: Conceptualization, Methodology, Formal Analysis, Software, Validation,
+Data Curation, Visualization, Writing --- Original Draft, Writing --- Review \& Editing.
+
+\subsection*{Competing Interests and Funding}
+The author declares no competing financial or non-financial interests. This research received no
+external grant or institutional funding.
+
+\subsection*{Data, Code, and Provenance Availability}
+All Lean~4.35.0 proofs, Rust/C11/Python source code, frozen JSON datasets, figure scripts,
+SHA-256 manifests, RFC~3161/OpenTimestamps proofs, and clean-room arXiv sources are publicly
+archived (code Apache-2.0; paper and data CC-BY-4.0) at
+\url{https://github.com/0thernes/cayley-dickson-terrace-frontier} and registered under archive
+ID \texttt{0TH-2026-019} at \url{https://github.com/0thernes/0thernes-research-archive}.
+
+\subsection*{Export-Control Self-Screen}
+This work consists exclusively of pure mathematics, open-source formal verification code, and
+publicly released educational software, qualifying as fundamental research in the public domain
+under 15~CFR~734.8 with no controlled dual-use technologies or restricted data.
+
+\subsection*{Errata and Withdrawal Policy}
+This preprint has not undergone external journal peer review. All corrections discovered after
+release are logged transparently in \code{ERRATA.md} (Version~2.0.0 resolves all 23 v1.0.0 audit
+entries); should any mathematical error invalidate a headline result, a dated correction or
+withdrawal notice will be published promptly in \code{ERRATA.md} and the release archive.
 
 \subsection*{Transparent AI-Assistance Disclosure}
 In accordance with reproducible independent research standards, this project was conceived,
@@ -1127,9 +1330,10 @@ directed, audited, and authored by Alexander Stephen Donahue with substantial AI
 drafting, algebraic exploration, Lean~4 proof engineering, multi-language implementation, and
 editorial verification. Every mathematical claim tagged \tagLean{} stands solely on independent
 machine verification by six distinct Lean~4.35.0 kernels from scratch (with zero trust in any
-AI model or unverified proof assistant output), every \tagComp{} claim stands on open-source
-deterministic exact arithmetic across three compiled/interpreted languages, and every primary
-literature reference in the bibliography was verified live against Crossref and arXiv.
+AI model or unverified output), every \tagComp{} claim stands on deterministic open-source exact
+arithmetic, and every bibliography entry carrying a DOI or arXiv identifier ($28/30$, with
+$2$ print-only classical works \cite{hurwitz1898,adem1975}) was verified live against Crossref
+and arXiv for title, author, year, and retraction status.
 
 \bibliographystyle{amsalpha}
 \bibliography{references}

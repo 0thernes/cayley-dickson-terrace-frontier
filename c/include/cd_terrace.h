@@ -2,8 +2,8 @@
  * Copyright (c) 2026 Alexander Stephen Donahue
  *
  * Strict ISO C11 verifier for Generalized Cayley-Dickson Algebras CD_n(gamma):
- * Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and
- * Dimension-64 Hurwitz-Radon Rupture.
+ * Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation,
+ * Euclidean Coordinate Right-Multiplier Rupture, and Pathion Exact Ceiling (r_max = 14).
  */
 
 #ifndef CD_TERRACE_H
@@ -21,10 +21,10 @@ extern "C" {
 #define CD_MAX_N 8u
 #define CD_MAX_DIM (1u << CD_MAX_N)
 
-/* Standard Euclidean Cayley-Dickson sign sigma_n(i, j) in {-1, +1}. */
+/* Standard Euclidean Cayley-Dickson sign sigma_n(i, j) in {-1, +1}; returns 0 if n > CD_MAX_N. */
 int8_t cd_sign(uint32_t n, uint32_t i, uint32_t j);
 
-/* Direct recursive generalized Cayley-Dickson sign sigma_n^gamma(i, j). */
+/* Direct recursive generalized Cayley-Dickson sign sigma_n^gamma(i, j); returns 0 if n > CD_MAX_N. */
 int8_t cd_sign_gamma_direct(uint32_t n, uint32_t flip_mask, uint32_t i, uint32_t j);
 
 /* Pillar 1 factored sign cocycle: sigma_n^std(i, j) * (-1)^popcount(i & j & flip_mask). */
@@ -58,7 +58,8 @@ bool cd_right_compat(uint32_t n, uint32_t j, uint32_t x);
 bool cd_is_norm_mult_pair(uint32_t n, const uint32_t *sl, size_t len_l,
                           const uint32_t *sr, size_t len_r);
 
-/* Run complete C11 audit over CD_3..CD_7 (and CD_8 terrace/mirror spot checks); returns 0 on PASS. */
+/* Run exhaustive C11 audit across all 496 algebras CD_4..CD_8 (zero striding), CD_5 r_max=14,
+ * and CD_6(flip=56) interior spectral gap; returns 0 on PASS. */
 int cd_run_full_audit(bool verbose);
 
 #ifdef __cplusplus

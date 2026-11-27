@@ -128,9 +128,15 @@ def build_split_phases_dataset() -> dict:
     }
 
 
-def solve_pathion_symmetric_milp() -> dict:
-    """Certify exact maximum symmetric coordinate composition dimension r in CD_5 via HiGHS MILP."""
+def solve_pathion_symmetric_exact() -> dict:
+    """Certify exact maximum symmetric coordinate composition dimension r_max(CD_5) = 14,
+    strict 7 + 7 half-balance rigidity, and exact count of all 280 14D subspaces
+    via deterministic greedy clique-cover + exhaustive 7+7 enumeration AND HiGHS MILP cross-check."""
     bad_planes = []
+    bad_lo_masks = []
+    cross_bad_for_uv: dict[tuple[int, int], list[tuple[int, int]]] = {
+        (u, v): [] for u in range(16) for v in range(u)
+    }
     for a in range(32):
         for b in range(a + 1, 32):
             for c in range(b + 1, 32):
@@ -141,7 +147,76 @@ def solve_pathion_symmetric_milp() -> dict:
                     p3 = cd_sign(5, a, b) * cd_sign(5, d, c) + cd_sign(5, a, c) * cd_sign(5, d, b)
                     if p1 != 0 or p2 != 0 or p3 != 0:
                         bad_planes.append((a, b, c, d))
+                        if d < 16:
+                            bad_lo_masks.append((1 << a) | (1 << b) | (1 << c) | (1 << d))
+                        elif b < 16 and c >= 16:
+                            cross_bad_for_uv[(d - 16, c - 16)].append((a, b))
     assert len(bad_planes) == 630
+    assert len(bad_lo_masks) == 42
+
+    # 1. Exact deterministic greedy descending clique-cover check (matching Lean T4e!)
+    valid_eq7: list[int] = []
+    valid_ge8 = 0
+    greedy_failures = 0
+    for lo in range(65536):
+        pop = lo.bit_count()
+        if pop < 7:
+            continue
+        if not all((lo & bm) != bm for bm in bad_lo_masks):
+            continue
+        if pop == 7:
+            valid_eq7.append(lo)
+            continue
+        valid_ge8 += 1
+        cliques: list[list[int]] = []
+        for u in range(15, -1, -1):
+            placed = False
+            for cl in cliques:
+                if all(
+                    any(((lo >> a) & 1) and ((lo >> b) & 1) for a, b in cross_bad_for_uv[(v, u)])
+                    for v in cl
+                ):
+                    cl.append(u)
+                    placed = True
+                    break
+            if not placed:
+                cliques.append([u])
+        if pop + len(cliques) > 13:
+            greedy_failures += 1
+    assert valid_ge8 == 2995
+    assert greedy_failures == 0
+
+    # 2. Exhaustive count of ALL 14D norm-multiplicative coordinate subspaces (strict 7 + 7 split)
+    valid_eq7_set = set(valid_eq7)
+    count_14d = 0
+    all_contain_0_16 = True
+    for lo in valid_eq7:
+        forb = [0] * 16
+        for u in range(1, 16):
+            for v in range(1, u):
+                if any(((lo >> a) & 1) and ((lo >> b) & 1) for a, b in cross_bad_for_uv[(u, v)]):
+                    forb[u] |= 1 << v
+                    forb[v] |= 1 << u
+
+        def dfs(u: int, chosen: int, cnt: int) -> None:
+            nonlocal count_14d, all_contain_0_16
+            if cnt == 7:
+                if chosen in valid_eq7_set:
+                    count_14d += 1
+                    if not ((lo & 1) and (chosen & 1)):
+                        all_contain_0_16 = False
+                return
+            if u == 16 or cnt + (16 - u) < 7:
+                return
+            if (chosen & forb[u]) == 0:
+                dfs(u + 1, chosen | (1 << u), cnt + 1)
+            dfs(u + 1, chosen, cnt)
+
+        dfs(0, 0, 0)
+    assert count_14d == 280
+    assert all_contain_0_16
+
+    # 3. Independent HiGHS MILP cross-check (no longer in proof trust base; Lean T4e proves r_max=14!)
     a_mat = np.zeros((len(bad_planes), 32), dtype=float)
     for row, (a, b, c, d) in enumerate(bad_planes):
         a_mat[row, [a, b, c, d]] = 1.0
@@ -161,10 +236,16 @@ def solve_pathion_symmetric_milp() -> dict:
         "dim": 32,
         "bad_affine_2planes": len(bad_planes),
         "exact_max_symmetric_coord_dim": opt_dim,
+        "lean_kernel_proved": True,
+        "strict_7_plus_7_balance": True,
+        "exact_14d_subspace_count": count_14d,
+        "all_14d_contain_e0_and_e16": all_contain_0_16,
+        "valid_lo_ge8_count": valid_ge8,
+        "greedy_clique_cover_failures": greedy_failures,
         "yiu_general_integer_dim": 16,
         "symmetric_rupture_gap": 16 - opt_dim,
-        "milp_status": int(res.status),
-        "milp_message": str(res.message),
+        "milp_crosscheck_status": int(res.status),
+        "milp_crosscheck_message": str(res.message),
         "canonical_witness_14": list(PATHION_WITNESS_14),
         "milp_witness_14": opt_witness,
     }
@@ -204,10 +285,10 @@ def build_sedenion_and_witnesses_dataset() -> dict:
                 edges.append([u, v])
     assert len(assessors) == 42 and len(edges) == 84
 
-    pathion_milp = solve_pathion_symmetric_milp()
+    pathion_exact = solve_pathion_symmetric_exact()
     assert is_norm_mult_pair(6, CHINGON_WITNESS_16, CHINGON_WITNESS_16)
     return {
-        "schema_version": "1.0",
+        "schema_version": "2.0",
         "sedenion_triple_42": {
             "total_affine_2planes": 140,
             "bad_affine_2planes_count": 42,
@@ -228,7 +309,7 @@ def build_sedenion_and_witnesses_dataset() -> dict:
             },
             "global_9d_zdf_subspace": list(range(9)),
         },
-        "pathion_symmetric_rupture_milp": pathion_milp,
+        "pathion_symmetric_rupture_milp": pathion_exact,
         "chingon_symmetric_witness_16": {
             "n": 6,
             "dim": 64,

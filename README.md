@@ -3,58 +3,54 @@
 [![CI](https://github.com/0thernes/cayley-dickson-terrace-frontier/actions/workflows/ci.yml/badge.svg)](https://github.com/0thernes/cayley-dickson-terrace-frontier/actions/workflows/ci.yml)
 [![Lean 4.35.0](https://img.shields.io/badge/Lean-4.35.0%20(Zero--Mathlib%20%C2%B7%206%20Kernels)-0072B2)](lean/formalization.yaml)
 [![License: Apache-2.0 / CC-BY-4.0](https://img.shields.io/badge/License-Apache--2.0%20%2F%20CC--BY--4.0-009E73)](REUSE.toml)
-[![Interactive 3D Observatory](https://img.shields.io/badge/WebGL%20Observatory-GitHub%20Pages-D55E00)](https://0thernes.github.io/cayley-dickson-terrace-frontier/)
+[![Interactive 3D Canvas Observatory](https://img.shields.io/badge/3D%20Canvas%20Observatory-GitHub%20Pages-D55E00)](https://0thernes.github.io/cayley-dickson-terrace-frontier/)
 
-**The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and the Dimension-64 Hurwitz–Radon Rupture Across Generalized Cayley–Dickson Algebras**
-
-*This is the title of the frozen v1.0.0 manuscript.* The "dimension-64 rupture" in the title concerns coordinate right-multiplier families in the Euclidean $\mathrm{CD}_n$ only. It compares the bound $n+5$ with the classical formula for $\rho(2^n)$; it says nothing about general bilinear maps. See [Scope of the Lean statements](#scope-of-the-lean-statements) and [`ERRATA.md`](ERRATA.md).
+**The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and Coordinate Norm-Multiplicativity Ruptures Across Cayley–Dickson Algebras (`v2.0.0`)**
 
 *Author:* **Alexander Stephen Donahue** (Independent Researcher, Spokane, WA, USA · ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648) · `0_0@0thernes.art`)  
-*Maintenance status:* **Active** (v1.0.0 — frozen proof & manuscript archive; errata and community verification issues welcomed).
+*Maintenance status:* **Active (`v2.0.0`)** — resolves every manuscript, formal Lean, and tooling entry logged in [`ERRATA.md`](ERRATA.md) against `v1.0.0`, formalizes the exact $2 \times 2$ block linear-algebra kernel-basis isomorphism (`T1f`), proves the Pathion ceiling $r_{\max}(\mathrm{CD}_5) = 14$ with strict $7 + 7$ half-balance rigidity in pure Lean across all $2^{32}$ subsets retiring external MILP solvers (`T4e`), and certifies the dimension-64 split interior spectral gap $H_6^{56}(20) = 0$ in pure Lean (`T4f`).
+
+![Cayley–Dickson Terrace Frontier v2.0.0 Visual Overview](docs/media/social-preview.svg)
 
 ---
 
 ## Summary
 
-This repository contains a zero-Mathlib Lean 4.35.0 formalization, differential checkers in Rust, ISO C11 and Python, an interactive WebGL page with a proof blueprint, and a 17-page manuscript. The results are all-$n$ counting identities for the nullities of 2-blades $e_i+e_j$ in the explicit Cayley–Dickson sign table of $\mathrm{CD}_n(\gamma)$ ($\dim = 2^n$, $\gamma \in \{\pm 1\}^n$), the bound $n+5$ for coordinate right-multiplier families in the Euclidean $\mathrm{CD}_n$, and finite certificates for the sedenions, pathions and chingons. Pillar 1 and the midpoint law `T2f` hold for every signature $\gamma$; the rest of Pillar 2 and all of Pillar 3 concern the Euclidean signature only.
+This repository contains a **zero-Mathlib Lean 4.35.0 formalization** (**22 headline theorems `T1a`–`T4f`**, **23 Palomar Comparator targets**, **4 non-vacuity witnesses**, **8 adversarial boundary refutations**, and **35 axiom-audited declarations**), independent differential checkers in **Rust** (`#![forbid(unsafe_code)]`), **strict ISO C11** (`-Werror -Wconversion -Wshadow`, ASan/UBSan, 100k + libFuzzer fuzzing across all 496 algebras with zero stride), and **Python** (naive recursive $\mathbb{Q}$ Gaussian elimination oracle, Hypothesis property tests, and surgical mutation suite), a zero-CDN WCAG 2.2 AA **interactive 3D Canvas observatory** and **Proof Dependency Blueprint**, cryptographic **DigiCert RFC 3161 (`.tsr`)** and **Bitcoin OpenTimestamps (`.ots`)** proofs, and a 21-page zero-warning AMS-LaTeX white paper.
 
-### Scope of the Lean statements
+### Scope of the Lean Statements (`v2.0.0`)
 
-- The Lean development defines no algebra, linear map or kernel. It proves statements about the explicit sign table (`cdSign`, `cdSignGamma`) and about block counts. `twobladeNullity` is half the number of indices $k$ for which the $2\times 2$ block of left multiplication by $e_i+e_j$ on $\{e_k, e_{k\oplus i\oplus j}\}$ is singular. That this count equals $\dim \mathrm{Ann}(e_i+e_j)$ is a lemma proved in the paper (the $2\times 2$ block argument), not in Lean.
-- Results tagged `[LEAN-6K]` are kernel-checked by Lean (`lake build`, `leanchecker`, `leanchecker-paranoid`); CI also replays them with `lake check --paranoid` and `lake comparator --paranoid` on 6 kernels. The 30 audited declarations use at most `propext`, `Classical.choice` and `Quot.sound` (listed below).
-- Results tagged `[EXACT-COMP]` rest on exact computation outside Lean (Rust, C11, Python and a HiGHS MILP certificate).
-- Prior work. The divisibility $4 \mid \nu$ is the 2-blade case of Moreno's theorem that only multiples of four occur as annihilator dimensions in Cayley–Dickson algebras (as stated by Biss, Dugger and Isaksen, arXiv:math/0511691); the Lean proof is an independent re-proof for 2-blades. The 42 sedenion assessors and their 7 box-kites are due to de Marrais (arXiv:math/0011260). Zhilina (Int. J. Algebra Comput. 31 (2021); arXiv:2608.28176) classifies the zero divisors whose two components are standard basis elements up to sign; the overlap with `T1c`, `T2a` and `T2c` has not been assessed. The manuscript cites neither the Moreno divisibility for `T2b` nor Zhilina; see [`ERRATA.md`](ERRATA.md).
+- **Literal Bilinear Algebra Inside Lean (`T1c`, `T1f`):** `CDTerrace.Basic` defines the literal bilinear Cayley–Dickson product `cdMulCoordGamma`. Theorem `T1c` proves both cross-term cancellation $\sigma_n^\gamma(i,j) + \sigma_n^\gamma(j,i) = 0$ and full coordinate-wise nilpotency $((e_i+e_j)^2)_t = 0$. Theorem `T1f` (`twoblade_left_annihilator_basis_exact`) formally proves in Lean that the block-count nullity `twobladeNullityGamma` equals the exact cardinality of an explicit 2-sparse linearly independent spanning $\mathbb{Z}$-basis of $\ker L_{e_i + e_j}$ across all $n \ge 1$ and all $2^n$ signatures $\gamma$.
+- **Signature & Subspace Scope:** Pillar 1 (`T1a`–`T1f`), the midpoint law (`T2f`), and the split-phase theorems (`T4c`, `T4f`) hold for generalized signatures $\gamma \in \{\pm 1\}^n$. Theorems `T2a`–`T2e`, Pillar 3 (`T3a`–`T3d`), and `T4a`, `T4b`, `T4d`, `T4e` concern **Euclidean $\mathrm{CD}_n$ coordinate subsets**. Nothing is claimed about non-coordinate subspaces or general real sums-of-squares formulas.
+- **Verification Tiers:**
+  - `[LEAN-6K]`: Machine-checked in zero-Mathlib Lean 4.35.0 (`lake build`, `leanchecker --fresh`, `leanchecker-paranoid --fresh`), audited via `VerifyAxioms.lean` strictly within `{propext, Classical.choice, Quot.sound}` (0 `sorry`, 0 `admit`, 0 `native_decide`, 0 `maxRecDepth`/`maxHeartbeats` overrides), and replayed in CI across **6 independent kernels** (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`) via `lake check --paranoid` and `lake comparator --config comparator.json --paranoid`.
+  - `[EXACT-COMP]`: Verified with exact integer/rational arithmetic outside Lean (Rust, ISO C11, Python).
+- **Prior Work Credit:** $4 \mid \nu$ is the 2-blade case of Moreno's multiple-of-four theorem (cf. Moreno 1998; Biss–Dugger–Isaksen 2008); the 42 sedenion assessors and 7 box-kites ($7 \times K_{2,2,2}$) are due to de Marrais (2000, 2002); cochain presentations of Cayley–Dickson algebras appear in Albuquerque–Majid (1999) and Morier-Genoud–Ovsienko (2011); Moreno (2004) studies alternative elements; Zhilina (2021, Parts I–II) studies orthogonality graphs of real Cayley–Dickson algebras including basis-pair zero divisors.
 
-### Results
+### Principal Results
 
-1. **Pillar 1 — Signature change and 2-blade nullities (`T1a`–`T1e`, `[LEAN-6K]`, all $n$, all $\gamma$):**
-   - The generalized sign table factorizes as $\sigma_n^\gamma(i,j) = \sigma_n^{\mathrm{std}}(i,j)\,(-1)^{\mathrm{popcount}(i\,\&\,j\,\&\,\mathrm{flip}(\gamma))}$.
-   - The sign $\delta_n^\gamma(i,j,k)$ of each $2\times 2$ block determinant flips by $(-1)^{\mathrm{popcount}((i\oplus j)\,\&\,\mathrm{flip}(\gamma))}$, independently of $k$.
-   - Hence the block-count nullity is either kept, $\nu_n^\gamma(i,j) = \nu_n^{\mathrm{std}}(i,j)$, or replaced by $2^{n-1} - \nu_n^{\mathrm{std}}(i,j)$. The mirror-pair sums $H_n^\gamma(v) + H_n^\gamma(2^{n-1}-v)$ and the midpoint bin $H_n^\gamma(2^{n-2})$ do not depend on $\gamma$.
-   - `T1c` states only the scalar part of $(e_i+e_j)^2$: $\sigma_n^\gamma(i,i)+\sigma_n^\gamma(j,j) = 0 \iff \mathrm{parity}_n((i\oplus j)\,\&\,\mathrm{flip}(\gamma)) = 1$. The cross term is not part of the Lean statement.
-2. **Pillar 2 — Euclidean nullity recurrence and closed forms (`T2a`–`T2e`) and the midpoint law (`T2f`), `[LEAN-6K]`:**
-   - A four-branch doubling recurrence for $\nu_{n+1}^{\mathrm{std}}$ gives closed forms for all $n$: total nullity mass $M_n = 8(2^{n-1}-1)(2^{n-2}-1)(2^{n-3}-1)$, the count $H_n^{\mathrm{std}}(0) = (6n-9)2^{n-2}+3$ of 2-blades with nullity $0$, the bin interleaving $H_{n+1}^{\mathrm{std}}(8m) = H_{n+1}^{\mathrm{std}}(2^n-4-8m) = 2 H_n^{\mathrm{std}}(4m)$, an interior palindrome, and the top-bin jump $+3(2^n-2)$.
-   - For $n \ge 3$, $4 \mid \nu_n^{\mathrm{std}}$ (Moreno's divisibility in the 2-blade case, re-proved in Lean), and for $n \ge 4$, $\nu_n^{\mathrm{std}} \le 2^{n-1}-4$, attained. This ceiling is below the Biss–Dugger–Isaksen bound $2^n - 4n + 4$ for every $n \ge 5$ ($12 < 16$ at $n = 5$, $28 < 44$ at $n = 6$); among $n \ge 4$ the two are equal only at $n = 4$ ($4 = 4$). In Lean this comparison is arithmetic on the two closed formulas; the Biss–Dugger–Isaksen theorem itself is not formalized.
-   - **Midpoint law (`T2f`):** $H_n^\gamma(2^{n-2}) = 42 \cdot 2^{n-4}$ for every $n \ge 4$ and every signature $\gamma \in \{\pm 1\}^n$. The case $n = 4$ is de Marrais's count of 42 assessors.
-3. **Pillar 3 — Coordinate right-multiplier families in the Euclidean $\mathrm{CD}_n$ (`T3a`–`T3d`, `[LEAN-6K]`):**
-   - Doubling law of the right-compatibility graph $G_n^{\mathrm{comp}}$; for $n \ge 4$ only $e_0$ and $e_{2^{n-1}}$ are compatible with every index; for $n \ge 3$ the largest pairwise compatible coordinate set has $n + 5$ elements (attained), and each such set gives a norm-multiplicative $[2^n, n+5, 2^n]$ coordinate pair; an explicit doubling tower gives $[2^{n-1}, 2(n+4), 2^n]$ coordinate pairs for $n \ge 4$.
-   - `T3c` is arithmetic on the formula $\rho(2^n) = 8\lfloor n/4\rfloor + 2^{n \bmod 4}$: $n + 5 = \rho(2^n)$ for $n = 3, 4, 5$, and $n + 5 < \rho(2^n)$ with gap $\ge n - 5$ for all $n \ge 6$ (first at dimension 64: $11 < 12$). With `T3b`, coordinate right-multiplier families in the Euclidean $\mathrm{CD}_n$ fall short of $\rho(2^n)$ from dimension 64 on. That the formula is the Hurwitz–Radon number is classical and not proved in Lean. Nothing is shown about non-coordinate subspaces.
-4. **Pillar 4 — Sedenion, pathion and chingon finite certificates (`T4a`–`T4d` `[LEAN-6K]`; `C1`, `C2` `[EXACT-COMP]`):**
-   - Exhaustive check over all $2^{16} = 65{,}536$ sedenion coordinate subsets: 42 of the 140 affine 2-planes are bad; exactly 42 coordinate subsets of size 10 are norm-multiplicative, split $7 + 28 + 7$ by their overlap with $e_0,\dots,e_7$; none has size $\ge 11$.
-   - The 42 sedenion box-kite assessors form de Marrais's 7 box-kites, each an octahedron $K_{2,2,2}$ (4-regular, 84 edges in total; spectrum $\{4^7, 0^{21}, (-2)^{14}\}$). This is a formal re-verification of a known result (de Marrais 2000).
-   - Over all signatures, the histogram profiles of $\mathrm{CD}_4(\gamma)$ and $\mathrm{CD}_5(\gamma)$ occur with multiplicities $1{:}1{:}7{:}7$ and $4{\times}1 + 4{\times}7$ (Lean). For the 448 algebras $\mathrm{CD}_6(\gamma)$–$\mathrm{CD}_8(\gamma)$ the tables were computed in Rust, C11 and Python (`[EXACT-COMP]`); interior spectral gaps first occur at dimension 64.
-   - Norm-multiplicative coordinate sets of size 14 in $\mathrm{CD}_5$ and 16 in $\mathrm{CD}_6$ exist (Lean), giving $[14,14,32]$ and $[16,16,64]$ coordinate pairs. A HiGHS MILP certificate outside Lean shows that no symmetric norm-multiplicative coordinate subset of $\mathrm{CD}_5$ has 16 elements, so $r_{\max}(\mathrm{CD}_5) = 14$ (`[EXACT-COMP]`). This bound concerns coordinate subsets of $\mathrm{CD}_5$ and is not comparable with Yiu's general integral $[16,16,32]$ formula.
-   - `T4d` also contains elementary lemmas: $c^2 = 1$ forces $c = \pm 1$ in an integral domain (with the factorization $(c-1)(c+1) = 0$ taken as a hypothesis), in $\mathbb{Z}$ and in $\mathbb{Z}[i]$. These are textbook facts and do not bear on the result of Zhang and Zhu (2026).
+1. **Pillar 1 — Nilpotent Mirror Conservation & Exact Kernel Basis (`T1a`–`T1f`, `[LEAN-6K]`, all $n$, all $\gamma$):**
+   - Multiplicative cocycle factorization $\sigma_n^\gamma(i,j) = \sigma_n^{\mathrm{std}}(i,j)\,(-1)^{\mathrm{popcount}(i\,\&\,j\,\&\,\mathrm{flip}(\gamma))}$ and $k$-independent $2\times 2$ block-sign flip $\delta_n^\gamma(i,j,k) = \chi_n((i\oplus j)\,\&\,\mathrm{flip}(\gamma))\,\delta_n^{\mathrm{std}}(i,j,k)$.
+   - Full bilinear 2-blade nilpotency (`T1c`), Nilpotent Mirror Inversion (`T1d`), Mirror-Pair Conservation & Midpoint Invariance (`T1e`), and the exact $2\times 2$ block linearly independent spanning $\mathbb{Z}$-basis isomorphism for $\ker L_{e_i+e_j}$ (`T1f`).
+2. **Pillar 2 — The Dyadic-Palindromic Terrace Law & Sharp BDI Separation (`T2a`–`T2f`, `[LEAN-6K]`):**
+   - Four-branch Euclidean 2-blade doubling recurrence (`T2a`), closed-form mass $M_n = 8(2^{n-1}-1)(2^{n-2}-1)(2^{n-3}-1)$ and nullity-zero count $H_n^{\mathrm{std}}(0) = (6n-9)2^{n-2}+3$ (`T2c`), exact even/odd bin interleaving and interior palindrome (`T2d`), exact top bin $2H_n(0)$ and top-bin jump $+3(2^n-2)$ (`T2e`), and the universal all-signature midpoint law $H_n^\gamma(2^{n-2}) = 42 \cdot 2^{n-4}$ for all $n \ge 4$ and all $2^n$ signatures (`T2f`).
+   - Independent 2-blade proof of Moreno's $4 \mid \nu_n^{\mathrm{std}}$, explicit attainment of the ceiling $2^{n-1}-4$ at $e_1 + e_{2 + 2^{n-1}}$, exact equivalence $2^{n-1}-4 = 2^n - 4n + 4 \iff n = 4$ among $n \ge 4$, and strict separation below the classical Biss–Dugger–Isaksen formula for all $n \ge 5$ (`T2b`).
+3. **Pillar 3 — Euclidean Coordinate Right-Multiplier Rupture at Dimension 64 (`T3a`–`T3d`, `[LEAN-6K]`):**
+   - Doubling law of $G_n^{\mathrm{comp}}$, unique universal right-multipliers $\{e_0, e_{2^{n-1}}\}$ for $n \ge 4$ (`T3a`), exact clique number $\omega(G_n^{\mathrm{comp}}) = n + 5$ for $n \ge 3$ (`T3b`), arithmetic comparison against $\rho(2^n) = 8\lfloor n/4\rfloor + 2^{n \bmod 4}$ matching at $n \in \{3,4,5\}$ and falling short by $\ge n - 5$ for all $n \ge 6$ (`T3c`), and constructive $[2^n, n+5, 2^n]$ and $[2^{n-1}, 2(n+4), 2^n]$ coordinate pairs (`T3d`).
+4. **Pillar 4 — Sedenion Triple-42, Pure-Kernel Pathion Ceiling 14 ($7+7$ Rigidity), & Dim-64 Gap (`T4a`–`T4f` `[LEAN-6K]`; `C1`, `C2` `[EXACT-COMP]`):**
+   - All $2^{16}$ sedenion coordinate subsets: 42 bad affine 2-planes (all proved strictly $2+2$ split in Lean), 42 maximal 10D norm-multiplicative subspaces with Fano split $7+28+7=42$, and zero of dimension $\ge 11$ (`T4a`).
+   - Pure vanishing-product re-verification of de Marrais's $7 \times K_{2,2,2}$ box-kites (zero XOR pre-filtering) and 9D $\mathbb{O} \oplus \mathbb{R} e_8$ (`T4b`).
+   - Split-phase classifications of $\mathrm{CD}_4(\gamma)$ ($1{:}1{:}7{:}7$) and $\mathrm{CD}_5(\gamma)$ ($4{\times}1+4{\times}7$) (`T4c`), $[14,14,32]$ and $[16,16,64]$ witnesses plus ring-axiom-derived unit-square lemma $c^2=1 \implies c = \pm 1$ (`T4d`).
+   - **Pure-Kernel Pathion Ceiling & $7+7$ Rigidity (`T4e`, `[LEAN-6K]`):** Over all $2^{32} = 4{,}294{,}967{,}296$ coordinate subsets of $\mathrm{CD}_5$, universal all-$n$ half-swap symmetry plus a zero-backtracking greedy clique-cover certificate proves $r_{\max}(\mathrm{CD}_5) = 14$ (retiring external MILP solvers from the proof trust base) and strict $7+7$ half-balance rigidity ($|S|=14 \implies |S_{\mathrm{lo}}|=7 \land |S_{\mathrm{hi}}|=7$). Exhaustive Rust/Python branch-and-bound (`C2`, `[EXACT-COMP]`) counts exactly **280** 14D subspaces (100% $7+7$, 100% containing $\{e_0, e_{16}\}$).
+   - **Dimension-64 Split Interior Spectral Gap (`T4f`, `[LEAN-6K]`):** Complete 9-bin kernel proof at $\mathrm{CD}_6(\mathrm{flip}=56)$: `{0: 257, 4: 422, 8: 364, 12: 336, 16: 168, 20: 0, 24: 56, 28: 172, 32: 178}`, certifying $H_6^{56}(20) = 0$. Complete 448-algebra split tables for $\mathrm{CD}_6$–$\mathrm{CD}_8$ are verified in Rust, C11, and Python (`C1`, `[EXACT-COMP]`).
 
-What remains open is listed in [`LIMITATIONS.md`](LIMITATIONS.md); corrections to the frozen manuscript and known issues in the formal code are in [`ERRATA.md`](ERRATA.md).
-
-> **Explore Live:** Open the zero-CDN interactive 3D Box-Kite & Terrace Observatory at **[0thernes.github.io/cayley-dickson-terrace-frontier](https://0thernes.github.io/cayley-dickson-terrace-frontier/)** or the interactive [Proof Dependency Blueprint](https://0thernes.github.io/cayley-dickson-terrace-frontier/blueprint.html).
+> **Explore Live:** Open the zero-CDN WCAG 2.2 AA **interactive 3D Canvas Box-Kite & Terrace Observatory** at **[0thernes.github.io/cayley-dickson-terrace-frontier](https://0thernes.github.io/cayley-dickson-terrace-frontier/)** or the synchronized 26-node [Proof Dependency Blueprint](https://0thernes.github.io/cayley-dickson-terrace-frontier/blueprint.html).
 
 ---
 
-## Usage Examples
+## Quickstart & Usage Examples
 
-### 1. Verify All 20 Lean 4.35.0 Targets & Strict Axiom Footprint
+### 1. Verify All 23 Lean 4.35.0 Palomar Targets & 35-Declaration Axiom Audit
 ```bash
 cd lean
 lake build
@@ -64,7 +60,7 @@ lake env leanchecker --fresh PalomarSolution
 lake env leanchecker-paranoid --fresh PalomarSolution
 ```
 
-### 2. Exhaustive 496-Algebra Audit in Rust (`CD_4`–`CD_8`, up to 256D)
+### 2. Exhaustive 496-Algebra & 280-Pathion-Subspace Audit in Rust
 ```bash
 cd rust
 cargo clippy --all-targets -- -D warnings
@@ -80,15 +76,16 @@ make clean test sanitize fuzz
 ./build/cd_terrace_cli --verify-all
 ```
 
-### 4. Python Quickstart, Exact $\mathbb{Q}$ Oracle & Differential Test Suite
+### 4. Python Exact $\mathbb{Q}$ Oracle, Hypothesis, Mutation, Citation & Timestamp Checks
 ```bash
 PYTHONPATH=src:. python examples/quickstart_demo.py
 PYTHONPATH=src:. pytest -v tests/test_all.py
 python scripts/check_readme_axioms.py
-python scripts/check_citations.py
+python scripts/check_citations.py --live
+python scripts/stamp_timestamps.py --verify --negative-test
 ```
 
-### 5. Reproduce Figures, Paper PDF & Checksums End-to-End
+### 5. End-to-End Clean-Clone Reproduction
 ```bash
 just reproduce
 ```
@@ -97,7 +94,7 @@ just reproduce
 
 ## Verbatim Lean 4.35.0 Kernel Axiom Audit (`results/lean_axioms.txt`)
 
-Every one of the 20 Palomar Comparator headline targets (`T1a`–`T4d` + master conjunction), 4 pillar non-vacuity witnesses, and 6 adversarial boundary refutations (30 declarations total) depends **exclusively** on a subset of `{propext, Classical.choice, Quot.sound}` — zero `sorryAx`, zero `Lean.ofReduceBool`, zero `native_decide`, zero custom axioms:
+Every one of the 23 Palomar Comparator headline targets (`T1a`–`T4f` + master conjunction), 4 pillar non-vacuity witnesses, and 8 adversarial boundary refutations (**35 declarations total**) depends **exclusively** on a subset of `{propext, Classical.choice, Quot.sound}` — zero `sorryAx`, zero `Lean.ofReduceBool`, zero `native_decide`, zero custom axioms:
 
 ```text
 'CDTerrace.Palomar.prove_t1a' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -105,6 +102,7 @@ Every one of the 20 Palomar Comparator headline targets (`T1a`–`T4d` + master 
 'CDTerrace.Palomar.prove_t1c' depends on axioms: [propext, Classical.choice, Quot.sound]
 'CDTerrace.Palomar.prove_t1d' depends on axioms: [propext, Classical.choice, Quot.sound]
 'CDTerrace.Palomar.prove_t1e' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CDTerrace.Palomar.prove_t1f' depends on axioms: [propext, Classical.choice, Quot.sound]
 'CDTerrace.Palomar.prove_t2a' depends on axioms: [propext, Classical.choice, Quot.sound]
 'CDTerrace.Palomar.prove_t2b' depends on axioms: [propext, Classical.choice, Quot.sound]
 'CDTerrace.Palomar.prove_t2c' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -119,6 +117,8 @@ Every one of the 20 Palomar Comparator headline targets (`T1a`–`T4d` + master 
 'CDTerrace.Palomar.prove_t4b' depends on axioms: [propext, Classical.choice, Quot.sound]
 'CDTerrace.Palomar.prove_t4c' depends on axioms: [propext, Classical.choice, Quot.sound]
 'CDTerrace.Palomar.prove_t4d' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CDTerrace.Palomar.prove_t4e' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CDTerrace.Palomar.prove_t4f' depends on axioms: [propext, Classical.choice, Quot.sound]
 'CDTerrace.Palomar.prove_all_terrace_theorems' depends on axioms: [propext, Classical.choice, Quot.sound]
 'CDTerrace.nonvacuity_pillar1_split_sedenion' depends on axioms: [propext, Classical.choice, Quot.sound]
 'CDTerrace.nonvacuity_pillar2_terrace_instances' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -130,6 +130,8 @@ Every one of the 20 Palomar Comparator headline targets (`T1a`–`T4d` + master 
 'CDTerrace.refute_split_preserves_individual_bins' depends on axioms: [propext, Classical.choice, Quot.sound]
 'CDTerrace.refute_third_universal_multiplier' depends on axioms: [propext, Classical.choice, Quot.sound]
 'CDTerrace.refute_gaussian_imaginary_intercalate' depends on axioms: [propext, Quot.sound]
+'CDTerrace.refute_pathion_15d_or_unbalanced_14d' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CDTerrace.refute_cd6_split56_contiguous_bins' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
 ---
@@ -138,14 +140,14 @@ Every one of the 20 Palomar Comparator headline targets (`T1a`–`T4d` + master 
 
 | Path | Description |
 | --- | --- |
-| [`lean/`](lean/) | Zero-Mathlib Lean 4.35.0 proof suite (`CDTerrace/`, `Challenge.lean`, `PalomarChallenge.lean`, `Solution.lean`, `PalomarSolution.lean`, `VerifyAxioms.lean`, `comparator.json`, `formalization.yaml`) |
-| [`rust/`](rust/) | Zero-dependency Rust differential engine auditing all 496 algebras $\mathrm{CD}_4(\gamma)$–$\mathrm{CD}_8(\gamma)$ |
-| [`c/`](c/) | Strict ISO C11 (`-Wall -Wextra -Wpedantic -Werror -Wshadow -Wconversion`) verifier, ASan/UBSan suite, 100k + libFuzzer harnesses |
+| [`lean/`](lean/) | Zero-Mathlib Lean 4.35.0 proof suite (8 modules including `PathionRupture.lean`, 23 Palomar targets, 35 audited decls) |
+| [`rust/`](rust/) | Zero-dependency `#![forbid(unsafe_code)]` Rust engine auditing all 496 algebras $\mathrm{CD}_4$–$\mathrm{CD}_8$ + exact 280 Pathion 14D subspaces |
+| [`c/`](c/) | Strict ISO C11 (`-Wall -Wextra -Wpedantic -Werror -Wshadow -Wconversion`) verifier, ASan/UBSan, 100k + libFuzzer, all 496 algebras zero-stride |
 | [`src/cd_terrace/`](src/cd_terrace/) & [`reference/`](reference/) | Exact Python engine + independent naive recursive / exact $\mathbb{Q}$ Gaussian elimination oracle |
-| [`paper/`](paper/) & [`dist/`](dist/) | 17-page zero-warning AMS-LaTeX white paper, 5 Okabe-Ito vector figures, 24 BibTeX entries (22 carry a DOI or arXiv identifier that resolves live; the checker does not compare titles), frozen PDF & clean-room `arxiv_submission.tar.gz` |
-| [`docs/site/`](docs/site/) | Zero-CDN interactive 3D Sedenion Box-Kite & Terrace Observatory (`index.html`) + Proof Blueprint (`blueprint.html`) |
-| [`data/`](data/) & [`results/`](results/) | Frozen JSON computational certificates, `data/MANIFEST.sha256`, and `results/lean_axioms.txt` |
-| [`CLAIMS.md`](CLAIMS.md) & [`LIMITATIONS.md`](LIMITATIONS.md) | Granular theorem-to-evidence ledger and explicit epistemic boundaries |
+| [`paper/`](paper/) & [`dist/`](dist/) | 21-page zero-warning AMS-LaTeX white paper (`v2.0.0`), 5 Okabe-Ito vector figures, 30 BibTeX entries (28/30 live Crossref/arXiv title+author+year+retraction verified + 2 print-only classics), frozen PDF & clean-room `arxiv_submission.tar.gz` |
+| [`docs/site/`](docs/site/) | Zero-CDN WCAG 2.2 AA interactive 3D Canvas Observatory (`index.html`) + synchronized 26-node Proof Blueprint (`blueprint.html`) |
+| [`data/`](data/) & [`results/`](results/) | Frozen JSON certificates, `data/MANIFEST.sha256`, DigiCert RFC 3161 `.tsr`, Bitcoin `.ots`, and `results/lean_axioms.txt` |
+| [`CLAIMS.md`](CLAIMS.md), [`LIMITATIONS.md`](LIMITATIONS.md), [`ERRATA.md`](ERRATA.md) | Granular claim ledger, explicit epistemic boundaries, and full resolution log of all 23 v1.0.0 errata |
 
 ---
 

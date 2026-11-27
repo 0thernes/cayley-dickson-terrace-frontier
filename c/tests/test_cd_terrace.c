@@ -41,11 +41,15 @@ int main(int argc, char **argv) {
     };
     assert(cd_is_norm_mult_pair(6u, left32, 32u, right20, 20u));
 
-    /* Negative: out-of-bounds or duplicate inputs must return false cleanly */
+    /* Negative: out-of-bounds or duplicate inputs must return false/0 cleanly (zero shift UB!) */
     static const uint32_t dup[2] = {1, 1};
     assert(!cd_is_norm_mult_pair(4u, dup, 2u, dup, 2u));
     assert(!cd_right_compat(4u, 3u, 3u));
     assert(!cd_right_compat(9u, 0u, 1u));
+    assert(cd_sign(99u, 0u, 0u) == 0);
+    assert(cd_sign_gamma_direct(99u, 0u, 0u, 0u) == 0);
+    assert(cd_twoblade_nullity_fast(99u, 0u, 1u) == 0u);
+    assert(cd_twoblade_nullity_gamma(99u, 0u, 0u, 1u) == 0u);
 
     if (verify_all) {
         printf("CLI --verify-all PASS.\n");
