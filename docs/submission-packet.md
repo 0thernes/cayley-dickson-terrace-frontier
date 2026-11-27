@@ -1,17 +1,17 @@
 # Archival Submission Packet (`docs/submission-packet.md`)
 
-This packet consolidates all metadata, integrity checklists, provenance proofs, and mandatory compliance disclosures for archiving **Cayley--Dickson Terrace Frontier (`0TH-2026-019`, `v2.0.0`)** across GitHub Releases, arXiv, Zenodo, and Software Heritage.
+This packet consolidates all metadata, integrity checklists, provenance proofs, and mandatory compliance disclosures for archiving **Cayley--Dickson Terrace Frontier (`0TH-2026-019`, `v2.1.0`)** across GitHub Releases, arXiv, Zenodo, and Software Heritage.
 
 ## 1. Canonical Bibliographic Metadata
-- **Title:** *The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, Pathion $r_{\max} = 14$ ($7+7$ Rigidity), and Dimension-64 Coordinate Rupture in Generalized Cayley--Dickson Algebras*
+- **Title:** *The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and Coordinate Norm-Multiplicativity Ruptures Across Cayley--Dickson Algebras*
 - **Author:** Alexander Stephen Donahue (`Alexander S. Donahue`)
 - **Affiliation:** Independent Researcher, Spokane, WA, USA
 - **ORCID:** [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648)
 - **Contact:** `0_0@0thernes.art` · `https://0thernes.art`
 - **Repository:** `https://github.com/0thernes/cayley-dickson-terrace-frontier`
-- **Release Version:** `v2.0.0` (superseding `v1.0.0`; all 23 errata in `ERRATA.md` resolved)
+- **Release Version:** `v2.1.0` (superseding `v2.0.0` and `v1.0.0`; all 23 v1.0.0 errata and 34 Cycle 1–3 hardening findings resolved)
 - **Archive Registration ID:** `0TH-2026-019` (`0thernes/0thernes-research-archive`)
-- **Suggested MSC 2020:** `17A35` (Primary), `17A30`, `11E25`, `05C69`, `68V20`
+- **Suggested MSC 2020:** `17A35`, `17A75`, `11E25` (Primary); `05C69`, `68V20` (Secondary)
 - **Suggested arXiv Categories:** `math.RA` (Primary), `math.CO`, `cs.LO`
 - **Licenses:** Apache-2.0 (`LICENSE`, code and Lean formalization) / CC-BY-4.0 (`LICENSE-DOCS`, manuscript, figures, and datasets)
 
@@ -22,7 +22,8 @@ This packet consolidates all metadata, integrity checklists, provenance proofs, 
 - `data/MANIFEST.sha256.tsr` — RFC 3161 trusted timestamp response from DigiCert TSA (`http://timestamp.digicert.com`) over `data/MANIFEST.sha256`.
 - `data/MANIFEST.sha256.ots` — Multi-calendar Bitcoin OpenTimestamps proof (`alice`, `bob`, `finney`) over `data/MANIFEST.sha256`.
 - `MANIFEST.sha256` — Root SHA-256 manifest covering frozen PDF, arXiv tarball, datasets, timestamp proofs, `results/lean_axioms.txt`, and `llms-full.txt`.
-- GitHub Actions SLSA Build Provenance Attestation (`actions/attest-build-provenance@v2`) recorded in the Sigstore Rekor transparency log.
+- GitHub Actions SLSA Build Provenance Attestation (`actions/attest-build-provenance@v4`) recorded in the Sigstore Rekor transparency log.
+- `.zenodo.json` & `docs/gold-standard-checklist.md` — Archival metadata and transparent 43-item Playbook v1.3 release ledger.
 
 ## 3. Mandatory Research Integrity & Compliance Disclosures
 - **CRediT Author Contribution Statement:** Alexander Stephen Donahue: Conceptualization, Methodology, Formal Analysis, Software, Validation, Visualization, Writing -- Original Draft, Writing -- Review & Editing.
@@ -30,7 +31,7 @@ This packet consolidates all metadata, integrity checklists, provenance proofs, 
 - **Conflict of Interest:** The author declares no competing financial or non-financial interests.
 - **Funding:** This research received no external grant funding.
 - **Human Subjects / Dual-Use / Export Control:** Pure mathematics and formal proof verification; involves no human subjects, biological agents, personal data, or export-controlled technologies.
-- **Prior External Submission Status:** As of the `v2.0.0` freeze, this preprint has not been submitted to a peer-reviewed journal or assigned an arXiv/Zenodo DOI. No external peer review or DOI is claimed prior to actual submission.
+- **Prior External Submission Status:** As of the `v2.1.0` freeze, this preprint has not been submitted to a peer-reviewed journal or assigned an arXiv/Zenodo DOI. No external peer review or DOI is claimed prior to actual submission.
 
 ## 4. Independent Verification Commands for Reviewers
 ```bash

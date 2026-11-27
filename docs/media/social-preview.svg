@@ -21,7 +21,7 @@
     <line x1="880" y1="217" x2="1200" y2="402"/>
     <line x1="1200" y1="217" x2="880" y2="402"/>
   </g>
-  <text x="72" y="96" fill="#56B4E9" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" font-weight="700" letter-spacing="2">0TH-2026-019 · v2.0.0 · LEAN 4.35.0 (6 KERNELS) · RUST · ISO C11 · PYTHON</text>
+  <text x="72" y="96" fill="#56B4E9" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" font-weight="700" letter-spacing="2">0TH-2026-019 · v2.1.0 · LEAN 4.35.0 (6 KERNELS) · RUST · ISO C11 · PYTHON</text>
   <text x="72" y="182" fill="#F8FAFC" font-family="Georgia, serif" font-size="50" font-weight="700">Cayley–Dickson Terrace Frontier</text>
   <text x="72" y="242" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation,</text>
   <text x="72" y="278" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">Pathion r_max = 14 (7+7 Rigidity) &amp; Dim-64 Coordinate Rupture</text>

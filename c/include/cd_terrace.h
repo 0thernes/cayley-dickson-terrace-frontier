@@ -17,6 +17,9 @@
 extern "C" {
 #endif
 
+/* Canonical release version synchronized with root VERSION. */
+#define CD_TERRACE_VERSION "2.1.0"
+
 /* Maximum algebra level supported in fixed-stack buffers (CD_8 = 256D). */
 #define CD_MAX_N 8u
 #define CD_MAX_DIM (1u << CD_MAX_N)

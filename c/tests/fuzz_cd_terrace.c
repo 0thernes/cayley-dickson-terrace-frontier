@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
 
     for (uint64_t step = 0ULL; step < iters; step++) {
         uint64_t r = splitmix64(&rng);
-        uint32_t n = 1u + (uint32_t)(r % 6u); /* CD_1..CD_6 */
+        uint32_t n = 1u + (uint32_t)(r % 7u); /* CD_1..CD_7 */
         uint32_t dim = 1u << n;
         uint32_t flip = (uint32_t)((r >> 8) & (dim - 1u));
         uint32_t i = (uint32_t)((r >> 20) & (dim - 1u));

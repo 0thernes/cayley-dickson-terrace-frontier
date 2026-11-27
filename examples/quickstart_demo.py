@@ -43,7 +43,7 @@ def main() -> None:
         f"{h_fl8.get(0, 0) + h_fl8.get(8, 0)}; invariant midpoint H(4) = {h_fl8[4]}"
     )
 
-    print("\nPillar 3 — Dimension-64 Hurwitz-Radon Bott Rupture:")
+    print("\nPillar 3 — Dimension-64 Euclidean Coordinate Right-Multiplier Rupture vs. rho(2^n):")
     for n in range(3, 9):
         omega = len(cd_max_clique(n))
         rho = hurwitz_radon(n)

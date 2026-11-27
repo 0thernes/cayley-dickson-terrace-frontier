@@ -1,13 +1,13 @@
 # Explicit Epistemic Boundaries & Limitations (`LIMITATIONS.md`)
 
-This project separates machine-checked theorems (`[LEAN-6K]`), exact computational certificates (`[EXACT-COMP]`), and open mathematical frontiers (`[OPEN]`). The following problems and extensions are **not claimed solved or formally proved** by `v2.0.0`:
+This project separates machine-checked theorems (`[LEAN-6K]`), exact computational certificates (`[EXACT-COMP]`), and open mathematical frontiers (`[OPEN]`). The following problems and extensions are **not claimed solved or formally proved** by `v2.1.0`:
 
 1. **General Sums-of-Squares Beyond Coordinate Subspaces (`ALG-035`, `[OPEN]`):**
    - Theorems `T3b`–`T3c` (Euclidean coordinate breakaway $n + 5 < \rho(2^n)$ for $n \ge 6$) and `T4e` ($r_{\max}(\mathrm{CD}_5) = 14$ with strict $7+7$ rigidity) govern *coordinate subsets* under native Euclidean Cayley–Dickson multiplication. They do **not** resolve the general real or field-dependent Hurwitz sums-of-squares problem $[r, s, N]$ (cf. Yiu 1990; Zhang–Zhu 2026), nor do they rule out non-coordinate linear subspaces of $\mathrm{CD}_n$ exceeding coordinate bounds.
 2. **Higher-Blade ($k \ge 3$) Zero-Divisor Varieties (`ALG-039`, `[OPEN]`):**
    - Pillars 1 and 2 classify basis *2-blades* $e_i + e_j$ (Pillar 1 and `T2f` across all $2^n$ signatures; `T2a`–`T2e` for Euclidean $\mathrm{CD}_n$). By `T2b`, the attained 2-blade ceiling $2^{n-1}-4$ lies strictly below the Biss–Dugger–Isaksen bound $2^n - 4n + 4$ for every $n \ge 5$ ($12 < 16$ at $n = 5$). Full stratification of $k$-blades ($k \ge 3$) and general zero divisors remains open.
 3. **Exact Symmetric Coordinate Subspace Ceiling $r_{\max}(\mathrm{CD}_n)$ for $n \ge 6$ (`COMB-040`, `[OPEN]`):**
-   - In `v2.0.0`, $r_{\max}(\mathrm{CD}_3) = 8$, $r_{\max}(\mathrm{CD}_4) = 10$ (`T4a`), $r_{\max}(\mathrm{CD}_5) = 14$ with strict $7+7$ rigidity (`T4e`), and the lower bound $r_{\max}(\mathrm{CD}_6) \ge 16$ (`T4d`) are all proved in Lean `[LEAN-6K]`. Determining exact $r_{\max}(\mathrm{CD}_n)$ for $n \ge 6$ and lifting the exact 280-subspace census `C2` into Lean remain open.
+   - In `v2.1.0`, $r_{\max}(\mathrm{CD}_3) = 8$, $r_{\max}(\mathrm{CD}_4) = 10$ (`T4a`), $r_{\max}(\mathrm{CD}_5) = 14$ with strict $7+7$ rigidity (`T4e`), and the lower bound $r_{\max}(\mathrm{CD}_6) \ge 16$ (`T4d`) are all proved in Lean `[LEAN-6K]`. Determining exact $r_{\max}(\mathrm{CD}_n)$ for $n \ge 6$ and lifting the exact 280-subspace census `C2` into Lean remain open.
 4. **All-$n$ Asymptotic Split-Phase Count & Spectral-Gap Classification (`[OPEN]`):**
    - Distinct split-phase counts $4, 8, 16, 32, 64 = 2^{n-2}$ and interior spectral-gap phase counts $0, 0, 2, 6, 14$ are certified for $n = 4, 5$ (`T4c`, `[LEAN-6K]`) and $n = 6, 7, 8$ (`C1`, `[EXACT-COMP]`), with the first interior spectral gap $\mathrm{CD}_6(56)$ ($H_6^{56}(20) = 0$) proved in Lean (`T4f`, `[LEAN-6K]`). Proving the phase count $2^{n-2}$ and classifying all interior spectral-gap signatures for arbitrary $n \ge 6$ remain open.
 5. **Classical External Theorems Referenced But Not Formalized in Lean:**

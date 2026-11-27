@@ -64,7 +64,7 @@ public section
 @[expose] def doubledRightWitness (n : Nat) : List Nat :=
   cdMaxClique (n - 1) ++ (cdMaxClique (n - 1)).map (· + 2 ^ (n - 1))
 
-/-! ### Theorem T3a: Exact Equivalence Between $G_n^{\mathrm{comp}}$ and $\nu_n^{\mathrm{std}} = 0$ -/
+/-! ### Graph-Nullity Unification (Supporting Theorem T3a) -/
 
 theorem rightCompatCheck_iff (n j x : Nat) :
     ∀ lim, rightCompatCheck n j x lim = true ↔
@@ -200,7 +200,7 @@ theorem rightCompat_pointwise_iff_delta (n j x i : Nat)
     rcases cdSign_val_pm1 n x (i ^^^ (j ^^^ x)) with h4 | h4 <;>
     simp [h1, h2, h3, h4]
 
-/-- **Theorem T3a (Exact Graph-Nullity Unification):**
+/-- **Graph-Nullity Unification (Supporting Theorem T3a):**
     For EVERY $n \ge 1$ and all distinct imaginary basis indices $1 \le j \neq x < 2^n$,
     $j$ and $x$ are adjacent in the $[2^n, s, 2^n]$ right-multiplier compatibility graph
     $G_n^{\mathrm{comp}}$ IF AND ONLY IF $\nu_n^{\mathrm{std}}(j, x) = 0$. -/
@@ -245,7 +245,7 @@ theorem rightCompat_iff_nullity_zero (n j x : Nat)
     refine ⟨hne, fun i hi => ?_⟩
     exact (rightCompat_pointwise_iff_delta n j x i hj0 hx0 hj hx hne hi).mpr (hall_iff.mpr hnu i hi)
 
-/-! ### Theorem T3b: Universal Doubling Law for $G_n^{\mathrm{comp}}$ & Exact Universal Multipliers -/
+/-! ### Theorem T3a: Universal Doubling Law for $G_n^{\mathrm{comp}}$ & Exact Universal Multipliers -/
 
 theorem rightCompat_doubling_lower (n a b : Nat) (ha : a < 2 ^ n) (hb : b < 2 ^ n) :
     rightCompat (n + 1) a b = rightCompat n a b := by
@@ -352,7 +352,7 @@ theorem rightCompat_doubling_cross (n a b : Nat) (hn : 3 ≤ n) (ha : a < 2 ^ n)
             (by omega) (by omega) (by omega) (by omega) (by omega)).mp hrc
           omega
 
-/-- **Theorem T3b (Exact Universal Right-Multipliers of $\mathrm{CD}_n$ for ALL $n \ge 4$):**
+/-- **Theorem T3a (Exact Universal Right-Multipliers of $\mathrm{CD}_n$ for ALL $n \ge 4$):**
     A basis index $j < 2^n$ is right-compatible with EVERY other basis element of $\mathrm{CD}_n$
     IF AND ONLY IF $j = 0$ or $j = 2^{n-1}$. -/
 theorem universal_right_multipliers_all_n (n j : Nat) (hn : 4 ≤ n) (hj : j < 2 ^ n) :
@@ -409,7 +409,7 @@ theorem universal_right_multipliers_all_n (n j : Nat) (hn : 4 ≤ n) (hj : j < 2
         rw [h0eq, hbx, rightCompat_doubling_upper m 0 b (Nat.two_pow_pos m) hblt]
         exact rightCompat_zero_universal m b (by omega) hblt
 
-/-! ### Theorem T3c: Exact Clique Number $\omega(G_n^{\mathrm{comp}}) = n + 5$ for ALL $n \ge 3$ -/
+/-! ### Theorem T3b: Exact Clique Number $\omega(G_n^{\mathrm{comp}}) = n + 5$ for ALL $n \ge 3$ -/
 
 theorem list_length_filter_partition {α : Type} (p : α → Bool) (L : List α) :
     (L.filter p).length + (L.filter (fun x => !(p x))).length = L.length := by
@@ -546,7 +546,7 @@ theorem list_nodup_lt_bound : ∀ (m : Nat) (L : List Nat), L.Nodup → (∀ x �
     change L1.length + L2.length = L.length at hpart
     omega
 
-/-- **Theorem T3c-1 (Universal Upper Bound $\omega(G_n^{\mathrm{comp}}) \le n + 5$ for ALL $n \ge 3$):** -/
+/-- **Theorem T3b-1 (Universal Upper Bound $\omega(G_n^{\mathrm{comp}}) \le n + 5$ for ALL $n \ge 3$):** -/
 theorem compat_clique_le_all_n :
     ∀ n, 3 ≤ n → ∀ S, isCompatClique n S → S.length ≤ n + 5 := by
   intro n hn
@@ -657,7 +657,7 @@ theorem compat_clique_le_all_n :
           change S0.length + S1raw.length = S.length at hpart
           omega
 
-/-- **Theorem T3c-2 (Constructive $(n + 5)$-Clique Witness for ALL $n \ge 3$):** -/
+/-- **Theorem T3b-2 (Constructive $(n + 5)$-Clique Witness for ALL $n \ge 3$):** -/
 theorem cdMaxClique_valid :
     ∀ n, 3 ≤ n → isCompatClique n (cdMaxClique n) ∧ (cdMaxClique n).length = n + 5 := by
   intro n hn
@@ -708,17 +708,18 @@ theorem cdMaxClique_valid :
           exact hadj x hx' y hy' hne
       · simp [hlen]
 
-/-! ### Theorem T3d: Exact Saturation for $n \in \{3, 4, 5\}$ & Permanent Bott Rupture for ALL $n \ge 6$ -/
+/-! ### Theorem T3c: Arithmetic Saturation for $n \in \{3, 4, 5\}$ & Dim-64 Coordinate Breakaway vs. $\rho(2^n)$ for ALL $n \ge 6$ -/
 
 theorem hurwitz_radon_saturation_345 :
     (3 + 5 = hurwitzRadon 3) ∧ (4 + 5 = hurwitzRadon 4) ∧ (5 + 5 = hurwitzRadon 5) := by
   decide
 
-/-- **Theorem T3d (Dimension-64 Hurwitz-Radon Bott-Periodicity Rupture):**
-    For EVERY $n \ge 6$ ($\dim = 2^n \ge 64$), the Cayley-Dickson maximum right-composition
-    dimension $n + 5$ is STRICTLY LESS than the classical Hurwitz-Radon ceiling $\rho(2^n)$,
-    with permanent linear gap $\rho(2^n) - (n + 5) \ge n - 5$ (attaining $11 < 12$ at dim 64,
-    $12 < 16$ at dim 128, $13 < 17$ at dim 256, ...). -/
+/-- **Theorem T3c (Arithmetic Comparison vs. $\rho(2^n)$ — Dim-64 Coordinate Breakaway):**
+    For EVERY $n \ge 6$ ($\dim = 2^n \ge 64$), the Euclidean Cayley-Dickson maximum coordinate
+    right-multiplier dimension $n + 5$ is STRICTLY LESS than the classical Hurwitz-Radon formula
+    $\rho(2^n) = 8\lfloor n/4\rfloor + 2^{n \bmod 4}$, with permanent linear deficit
+    $\rho(2^n) - (n + 5) \ge n - 5$ (attaining $11 < 12$ at dim 64, $12 < 16$ at dim 128,
+    $13 < 17$ at dim 256, ...). -/
 theorem hurwitz_radon_rupture_all_ge6 (n : Nat) (hn : 6 ≤ n) :
     n + 5 < hurwitzRadon n ∧ n - 5 ≤ hurwitzRadon n - (n + 5) := by
   unfold hurwitzRadon
@@ -726,7 +727,7 @@ theorem hurwitz_radon_rupture_all_ge6 (n : Nat) (hn : 6 ≤ n) :
   have hdm : n = 4 * (n / 4) + n % 4 := by omega
   rcases hmod with h | h | h | h <;> rw [h] <;> omega
 
-/-! ### Theorem T3e: Universal All-$n$ Asymmetric Composition Tower $[2^{n-1}, 2(n+4), 2^n]$ -/
+/-! ### Theorem T3d: Universal All-$n$ Asymmetric Composition Tower $[2^{n-1}, 2(n+4), 2^n]$ -/
 
 theorem compatClique_implies_full_normMult (n : Nat) (SR : List Nat)
     (hcliq : isCompatClique n SR) :
@@ -741,7 +742,7 @@ theorem compatClique_implies_full_normMult (n : Nat) (SR : List Nat)
   rw [hkeq]
   exact hrc.2 i hilt
 
-/-- **Theorem T3e (Universal All-$n$ Asymmetric Doubling Tower $[2^{n-1}, 2(n+4), 2^n]$):**
+/-- **Theorem T3d (Universal All-$n$ Asymmetric Doubling Tower $[2^{n-1}, 2(n+4), 2^n]$):**
     For EVERY $n \ge 4$, the half-algebra $\mathrm{CD}_{n-1}$ ($\dim = 2^{n-1}$) and the doubled
     right-multiplier subspace `doubledRightWitness n` ($\dim = 2(n + 4)$) form an EXACT integer
     sum-of-squares composition of type $[2^{n-1}, 2(n+4), 2^n]$ inside $\mathrm{CD}_n$!

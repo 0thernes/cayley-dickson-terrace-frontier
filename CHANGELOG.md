@@ -2,6 +2,23 @@
 
 All notable changes to `cayley-dickson-terrace-frontier` are documented here following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and Semantic Versioning.
 
+## [2.1.0] - 2026-11-27
+
+### Added
+- **Automated Documentation-to-Lean & Schema Integrity Suite (`tests/test_all.py`):** Strict `jsonschema.validate` against `repo-standard.schema.json`, automated Lean-symbol existence checker verifying every code-formatted Lean identifier in `paper/main.tex` and `docs/statement-fidelity.md` exists in `lean/**/*.lean`, exact 30-key BibTeX/LaTeX/`literature-search-log.md` bijection test, exact 22-theorem (`T1a`–`T4f`) + `ALL` bijection test across `Challenge.lean` / `comparator.json` / `formalization.yaml` / `statement-fidelity.md` / `blueprint.html`, stale-formula regression guards, first-principles `T1f` explicit 2-sparse $\mathbb{Z}$-basis annihilation & spanning test in both Python and Rust, and strict ISO C11 CLI differential check.
+- **Programmatic Live Citation Log (`scripts/check_citations.py --live --write-log`):** Regenerated `docs/literature-search-log.md` 100% programmatically from live Crossref/arXiv API responses (eliminating 5 non-existent keys and restoring 12 omitted keys).
+- **Build Standard A26 `1280x640` PNG Social Preview (`docs/media/social-preview.png`):** Crisp vector-rendered 1280×640 PNG (< 150 KB) alongside `social-preview.svg`, verified automatically for exact dimensions and size.
+- **Playbook v1.3 Archival & Palomar Artifacts:** Enriched `lean/formalization.yaml` with full Palomar metadata (`authorship`, `origin`, `sources`, `automation`, `human_role`, `limitations`, `review_status`); added transparent 43-item `docs/gold-standard-checklist.md` and `.zenodo.json`.
+- **WCAG 2.2 AA Keyboard Assessor Navigation & Responsive Resize (`docs/site/index.html`):** Added Prev/Next Assessor keyboard buttons on the 3D Canvas Box-Kite panel and responsive `resize` redraw on Panels 2 and 3.
+
+### Changed & Fixed (Resolving 34/34 Cycle 1–3 Forensic Hardening Findings)
+- **Strict Schema Compliance (`repo.yaml`):** Removed 6 disallowed top-level keys and mapped `stack` to schema enum `[python, rust, c-cpp, other]`, achieving 0 `jsonschema` validation errors; pinned `jsonschema==4.26.0` and `PyYAML==6.0.4` in `requirements.lock.txt`.
+- **Manuscript & Statement-Fidelity Precision (`paper/main.tex`, `docs/statement-fidelity.md`):** Rewrote `docs/statement-fidelity.md` to cover all 22 headline theorems (`T1a`–`T4f`) + `ALL` with exact Lean formulas; fixed 4 non-existent Lean symbol names in prose (`hasCrossEdgeFast` -> `hasCrossEdgeVtx`, `checkPathionLoChunk_0..15` -> `checkPathionOddChunk_0..15`, removed `leftMulTwoBladeCoord`/`isBoxKiteAssessor`); moved the $K_{2,2,2}$ adjacency eigenvalue spectrum cleanly out of the `[LEAN-6K]` `T4b` theorem block into an immediate corollary paragraph; unified `\texttt{Txx}` theorem headers and cross-referenced all 15 previously unused labels.
+- **Residual Lean Docstrings & Figure 3 Alignment:** Aligned remaining shifted `T2a`–`T2f` and `T3a`–`T3d` docstrings in `TerraceLaw.lean` and `HurwitzRupture.lean`; removed all residual v1.0.0 "Bott Rupture" labels from Figure 3 (`generate_figures.py`), `hurwitz_rupture_table.json`, `docs/site/index.html`, and `examples/quickstart_demo.py`.
+- **Engine & Tooling Hardening:** Added upper-bound index validation (`0 <= i, j < 2^n`) in `src/cd_terrace/core.py`; expanded `c/tests/fuzz_cd_terrace.c` to fuzz `CD_1..CD_7` as documented; switched `rust/src/main.rs` to `env!("CARGO_PKG_VERSION")`, `c/src/cd_terrace.c` to `CD_TERRACE_VERSION`, and scripts to dynamic `VERSION` loading; replaced dead `pass` in `scripts/stamp_timestamps.py` with full OpenSSL `Message data:` hex-imprint & UTC timestamp parsing; upgraded `scripts/generate_data.py` to pure 16-coordinate box-kite vanishing product (zero XOR pre-filtering); removed silent `pytest.skip` on timestamps.
+- **Node-24 GitHub Actions Workflows (`.github/workflows/{ci,pages}.yml`):** Upgraded all GitHub Actions references (`checkout@v6`, `setup-python@v6`, `configure-pages@v6`, `upload-pages-artifact@v5`, `deploy-pages@v5`, `attest-build-provenance@v4`) eliminating Node 20 deprecation warnings.
+- **Governance & Metadata Alignment:** Unified canonical title across `paper/main.tex`, `CITATION.cff`, `lean/formalization.yaml`, `docs/submission-packet.md`, and `.zenodo.json`; aligned MSC 2020 (`17A75`); corrected historical C11 stride (`sig_step = 8`); updated `AGENTS.md`, `docs/operations.md` (honest Software Heritage Anubis PoW status), `docs/architecture.md`, `docs/glossary.md`, `justfile` rollback default, and added inline SPDX headers to `docs/site/*.html`, `REUSE.toml`, and `.cursor/rules/build-standard.mdc`.
+
 ## [2.0.0] - 2026-11-26
 
 ### Added

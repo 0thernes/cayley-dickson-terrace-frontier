@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- Copyright (c) 2026 Alexander Stephen Donahue -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
-  <title>Cayley-Dickson Terrace Frontier v2.0.0 — Interactive 3D Canvas Box-Kite &amp; Mirror-Conservation Observatory</title>
+  <title>Cayley-Dickson Terrace Frontier v2.1.0 — Interactive 3D Canvas Box-Kite &amp; Mirror-Conservation Observatory</title>
   <style>
     :root {
       --bg: #090d1a;
@@ -161,7 +163,7 @@
         and Dimension-64 Euclidean Coordinate Rupture.
       </p>
       <div class="nav-row">
-        <span class="pill">0TH-2026-019 &middot; v2.0.0 &middot; Lean 4.35.0 (6 Kernels, 23 Targets)</span>
+        <span class="pill">0TH-2026-019 &middot; v2.1.0 &middot; Lean 4.35.0 (6 Kernels, 23 Targets)</span>
         <a href="blueprint.html">Proof Blueprint DAG &rarr;</a>
         <a href="https://github.com/0thernes/cayley-dickson-terrace-frontier">GitHub Repo</a>
         <a href="https://orcid.org/0009-0006-8168-9648">ORCID 0009-0006-8168-9648</a>
@@ -182,6 +184,8 @@
       <div class="controls">
         <button class="act" id="bk-orbit" type="button">Pause Auto-Orbit</button>
         <button class="act" id="bk-reset" type="button">Reset View</button>
+        <button class="act" id="bk-prev" type="button" aria-label="Select previous box-kite assessor">&larr; Prev Assessor</button>
+        <button class="act" id="bk-next" type="button" aria-label="Select next box-kite assessor">Next Assessor &rarr;</button>
         <label for="bk-cluster">Highlight Box-Kite XOR Signature:</label>
         <select id="bk-cluster">
           <option value="all">All 7 Box-Kites (42 Assessors, 84 Edges)</option>
@@ -267,10 +271,10 @@
             <h2>Dimension-64 Euclidean Coordinate Rupture (Lean T3b &amp; T3c)</h2>
             <p style="margin:0 0 0.5rem;font-size:0.9rem;color:var(--muted);">
               For n &isin; {3, 4, 5}, the Euclidean Cayley-Dickson coordinate right-multiplier clique number
-              &omega;(G&#8345;&#x1D9C;&#x1D52;&#x1D50;&#x1D56;) = n + 5 saturates the classical Hurwitz-Radon number &rho;(2&#8319;).
-              At <strong>n = 6 (dim 64)</strong>, Bott periodicity accelerates &rho;(2&#8319;) linearly as 2n while
+              &omega;(G&#8345;&#x1D9C;&#x1D52;&#x1D50;&#x1D56;) = n + 5 matches the classical Hurwitz-Radon formula &rho;(2&#8319;) = 8&lfloor;n/4&rfloor; + 2&#8319;&#x207E;&#x1D50;&#x1D52;&#x1D48; &#x2074;.
+              At <strong>n = 6 (dim 64)</strong>, &rho;(2&#8319;) grows linearly at slope ~2n while
               &omega;(G&#8345;&#x1D9C;&#x1D52;&#x1D50;&#x1D56;) grows only as n + 5 (permanent linear deficit &ge; n - 5).
-              (Scope: arithmetic on the classical formula &rho;(2&#8319;) for Euclidean CD&#8345; coordinate right-multiplier families; nothing is claimed about non-coordinate subspaces.)
+              (Scope: arithmetic comparison against the classical formula &rho;(2&#8319;) for Euclidean CD&#8345; coordinate right-multiplier families; nothing is claimed about non-coordinate subspaces.)
             </p>
             <table>
               <thead><tr><th>n</th><th>Dim</th><th>&omega;(G&#8345;&#x1D9C;&#x1D52;&#x1D50;&#x1D56;)</th><th>&rho;(2&#8319;)</th><th>Gap</th><th>Asym Tower</th></tr></thead>
@@ -554,6 +558,18 @@ orbitBtn.addEventListener("click", e => {
   e.target.textContent = autoOrbit ? "Pause Auto-Orbit" : "Resume Auto-Orbit";
 });
 document.getElementById("bk-reset").addEventListener("click", () => { rotY = 0.45; rotX = 0.38; });
+document.getElementById("bk-prev").addEventListener("click", () => {
+  selectedIdx = (selectedIdx - 1 + assessors.length) % assessors.length;
+  showAssessorInfo(selectedIdx);
+});
+document.getElementById("bk-next").addEventListener("click", () => {
+  selectedIdx = (selectedIdx + 1) % assessors.length;
+  showAssessorInfo(selectedIdx);
+});
+window.addEventListener("resize", () => {
+  if (document.getElementById("panel-mirror").classList.contains("active")) renderMirror();
+  if (document.getElementById("panel-hr").classList.contains("active")) renderHR();
+});
 requestAnimationFrame(drawBK);
 
 /* ===== MODULE 2: LIVE TERRACE & SPLIT-SIGNATURE MIRROR LAB ===== */
@@ -701,7 +717,7 @@ document.getElementById("sig-gap").addEventListener("click", () => {
 });
 buildSigButtons();
 
-/* ===== MODULE 3: HURWITZ-RADON BOTT RUPTURE ===== */
+/* ===== MODULE 3: DIMENSION-64 EUCLIDEAN COORDINATE RIGHT-MULTIPLIER RUPTURE ===== */
 function renderHR() {
   const tbody = document.getElementById("hr-tbody");
   tbody.innerHTML = "";

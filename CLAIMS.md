@@ -1,14 +1,14 @@
 # Claims & Verification Ledger (`CLAIMS.md`)
 
-Every mathematical and computational claim in `cayley-dickson-terrace-frontier` (`0TH-2026-019`, **`v2.0.0`**) is indexed below with its epistemic tag, machine-checked declaration or computational witness, and independent falsification check.
+Every mathematical and computational claim in `cayley-dickson-terrace-frontier` (`0TH-2026-019`, **`v2.1.0`**) is indexed below with its epistemic tag, machine-checked declaration or computational witness, and independent falsification check.
 
 - **`[LEAN-6K]`**: Proved in zero-Mathlib Lean 4.35.0, audited via `VerifyAxioms.lean` strictly within `{propext, Classical.choice, Quot.sound}` (35/35 declarations), kernel-checked by `lake build`, `leanchecker --fresh`, and `leanchecker-paranoid --fresh`, and replayed in CI on 6 independent kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`) via `lake check --paranoid` and `lake comparator --config comparator.json --paranoid`.
 - **`[EXACT-COMP]`**: Verified with exact integer/rational arithmetic across independent implementations (Rust `#![forbid(unsafe_code)]`, ISO C11 `-Werror`, Python exact $\mathbb{Q}$ oracle) with frozen SHA-256 JSON artifacts in `data/` and RFC 3161 + Bitcoin OpenTimestamps proofs. Not proved in Lean.
 - **`[OPEN]`**: Not claimed solved (see [`LIMITATIONS.md`](LIMITATIONS.md)).
 
-**Scope of the `[LEAN-6K]` claims (`v2.0.0`).** `CDTerrace.Basic` defines the literal bilinear product `cdMulCoordGamma`, and Theorem `T1f` (`twoblade_left_annihilator_basis_exact`) formally proves in Lean that `twobladeNullityGamma` equals the exact cardinality of an explicit 2-sparse linearly independent spanning $\mathbb{Z}$-basis of $\ker L_{e_i + e_j}$ for every $n \ge 1$ and every signature $\gamma \in \{\pm 1\}^n$. Pillar 1 (`T1a`–`T1f`), `T2f`, `T4c`, and `T4f` concern generalized signatures $\gamma$; `T2a`–`T2e`, Pillar 3 (`T3a`–`T3d`), and `T4a`/`T4b`/`T4d`/`T4e` concern Euclidean $\mathrm{CD}_n$ coordinate subsets.
+**Scope of the `[LEAN-6K]` claims (`v2.1.0`).** `CDTerrace.Basic` defines the literal bilinear product `cdMulCoordGamma`, and Theorem `T1f` (`twoblade_left_annihilator_basis_exact`) formally proves in Lean that `twobladeNullityGamma` equals the exact cardinality of an explicit 2-sparse linearly independent spanning $\mathbb{Z}$-basis of $\ker L_{e_i + e_j}$ for every $n \ge 1$ and every signature $\gamma \in \{\pm 1\}^n$. Pillar 1 (`T1a`–`T1f`), `T2f`, `T4c`, and `T4f` concern generalized signatures $\gamma$; `T2a`–`T2e`, Pillar 3 (`T3a`–`T3d`), and `T4a`/`T4b`/`T4d`/`T4e` concern Euclidean $\mathrm{CD}_n$ coordinate subsets.
 
-## Claim Matrix (`v2.0.0`)
+## Claim Matrix (`v2.1.0`)
 
 | ID | Claim Summary | Status | Primary Proof / Artifact | Independent Check |
 | --- | --- | --- | --- | --- |

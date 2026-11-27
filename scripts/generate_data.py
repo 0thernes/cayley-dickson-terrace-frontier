@@ -272,16 +272,24 @@ def build_sedenion_and_witnesses_dataset() -> dict:
     assert len(subspaces_10) == 42
 
     assessors = [[i, j] for i in range(1, 8) for j in range(9, 16) if i != j - 8]
+
+    def blade_annihilates_4(i: int, j: int, k: int, l_idx: int) -> bool:
+        for s in (1, -1):
+            prod = [0] * 16
+            prod[i ^ k] += cd_sign(4, i, k)
+            prod[i ^ l_idx] += s * cd_sign(4, i, l_idx)
+            prod[j ^ k] += cd_sign(4, j, k)
+            prod[j ^ l_idx] += s * cd_sign(4, j, l_idx)
+            if all(v == 0 for v in prod):
+                return True
+        return False
+
     edges = []
     for u, (i, j) in enumerate(assessors):
         for v in range(u + 1, len(assessors)):
             k, l_idx = assessors[v]
-            if (
-                (i ^ j) == (k ^ l_idx)
-                and i != k
-                and j != l_idx
-                and cd_sign(4, i, k) * cd_sign(4, j, l_idx) == cd_sign(4, i, l_idx) * cd_sign(4, j, k)
-            ):
+            if blade_annihilates_4(i, j, k, l_idx):
+                assert (i ^ j) == (k ^ l_idx), "unexpected cross-XOR box-kite edge"
                 edges.append([u, v])
     assert len(assessors) == 42 and len(edges) == 84
 
@@ -344,7 +352,7 @@ def build_hurwitz_table_dataset() -> dict:
         )
     return {
         "schema_version": "1.0",
-        "description": "Dimension-64 Hurwitz-Radon Bott Rupture & Asymmetric Doubling Tower table (CD_3..CD_12).",
+        "description": "Dimension-64 Euclidean Coordinate Right-Multiplier Rupture & Asymmetric Doubling Tower table (CD_3..CD_12).",
         "rows": rows,
     }
 

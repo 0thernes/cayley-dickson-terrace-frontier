@@ -75,7 +75,10 @@ fn main() {
         println!("  }}");
         println!("}}");
     } else {
-        println!("=== Cayley-Dickson Terrace Frontier v2.0.0 — Exact Rust Audit (CD_3..CD_8) ===");
+        println!(
+            "=== Cayley-Dickson Terrace Frontier v{} — Exact Rust Audit (CD_3..CD_8) ===",
+            env!("CARGO_PKG_VERSION")
+        );
         println!("Pillar 1: Verified {} triples of CD_5(gamma) cocycle factorization", summary.cocycle_checked_dim5);
         for (n, classes, _, mid, gap) in &summary.split_phase_counts {
             println!(

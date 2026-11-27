@@ -1,19 +1,22 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Alexander Stephen Donahue
 """Comprehensive falsifiable, property-based, metamorphic, negative, surgical-mutation,
-governance/accessibility/CSP, timestamp, and cross-language differential verification suite
-for Cayley-Dickson Terrace Frontier v2.0.0.
+schema, Lean-symbol bijection, governance/accessibility/CSP, timestamp, and cross-language
+differential verification suite for Cayley-Dickson Terrace Frontier v2.1.0.
 """
 
 from __future__ import annotations
 
 import json
 import re
+import struct
 import subprocess
 import sys
 from pathlib import Path
 
+import jsonschema
 import pytest
+import yaml  # type: ignore[import-untyped]
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
@@ -24,6 +27,7 @@ sys.path.insert(0, str(ROOT))
 from cd_terrace import (
     CHINGON_WITNESS_16,
     PATHION_WITNESS_14,
+    block_delta,
     cd_max_clique,
     cd_sign,
     cd_sign_gamma_direct,
@@ -66,6 +70,45 @@ def test_pillar1_naive_oracle_vs_cocycle_and_mirror_law() -> None:
             nu_q = naive_twoblade_nullity(4, fl, i, j)
             nu_mirror = twoblade_nullity_gamma(4, fl, i, j)
             assert nu_q == nu_mirror
+
+
+def test_t1f_explicit_z_basis_annihilates_and_spans_kernel() -> None:
+    """First-principles check of Theorem T1f across all 16 sedenion signatures:
+    explicit 2-sparse Z-basis vectors w_k = e_k - sigma^gamma(i,k)*sigma^gamma(j,k')*e_{k'}
+    are pairwise disjoint on their lower representative k, lie strictly in ker L_{e_i + e_j}
+    under full recursive cd_mul_vec, and have exact cardinality equal to both twoblade_nullity_gamma
+    and exact Q Gaussian elimination rank."""
+    test_pairs = [(1, 9), (1, 10), (2, 12), (3, 14), (5, 13), (7, 15)]
+    for fl in range(16):
+        gammas = flip_to_gammas(4, fl)
+        for i, j in test_pairs:
+            d = i ^ j
+            blade = [1 if t in (i, j) else 0 for t in range(16)]
+            reps: list[int] = []
+            basis_vecs: list[list[int]] = []
+            for k in range(16):
+                kp = k ^ d
+                if k < kp:
+                    delta = (
+                        cd_sign_gamma_direct(4, fl, i, k)
+                        * cd_sign_gamma_direct(4, fl, i, kp)
+                        * cd_sign_gamma_direct(4, fl, j, k)
+                        * cd_sign_gamma_direct(4, fl, j, kp)
+                    )
+                    if delta == 1:
+                        reps.append(k)
+                        w = [0] * 16
+                        w[k] = 1
+                        w[kp] = -(cd_sign_gamma_direct(4, fl, i, k) * cd_sign_gamma_direct(4, fl, j, kp))
+                        basis_vecs.append(w)
+            assert len(reps) == twoblade_nullity_gamma(4, fl, i, j)
+            assert len(reps) == naive_twoblade_nullity(4, fl, i, j)
+            # Every w_k must annihilate (e_i + e_j) on the right across all 16 coordinates
+            for idx, w in enumerate(basis_vecs):
+                assert cd_mul_vec(blade, w, gammas) == [0] * 16
+                # Disjoint lower-rep unit diagonal guarantees Z-linear independence
+                for other_idx, k_other in enumerate(reps):
+                    assert w[k_other] == (1 if idx == other_idx else 0)
 
 
 def test_pillar1_mirror_conservation_and_split_phases_cd4_to_cd6() -> None:
@@ -165,7 +208,7 @@ def test_pillar4_witnesses_exact_vector_norm_multiplicativity() -> None:
 
 
 def test_negative_boundaries_and_error_handling() -> None:
-    """Verify sharp negative boundaries and clean invalid-input rejections."""
+    """Verify sharp negative boundaries and clean invalid-input rejections (including upper bounds >= 2^n)."""
     assert not right_compat(4, 1, 10)
     assert not right_compat(4, 5, 5)
     assert not right_compat(4, -1, 2)
@@ -173,6 +216,22 @@ def test_negative_boundaries_and_error_handling() -> None:
     assert not is_norm_mult_pair(4, [0, 16], [0, 1])
     with pytest.raises(ValueError):
         cd_sign(-1, 0, 0)
+    with pytest.raises(ValueError):
+        cd_sign(4, 16, 0)
+    with pytest.raises(ValueError):
+        cd_sign(4, 0, 16)
+    with pytest.raises(ValueError):
+        cd_sign_gamma_direct(4, 0, 16, 1)
+    with pytest.raises(ValueError):
+        cd_sign_gamma_factored(4, 0, 1, 16)
+    with pytest.raises(ValueError):
+        block_delta(4, 1, 2, 16)
+    with pytest.raises(ValueError):
+        twoblade_nullity_direct(4, 1, 16)
+    with pytest.raises(ValueError):
+        twoblade_nullity_fast(4, 1, 16)
+    with pytest.raises(ValueError):
+        twoblade_nullity_gamma(4, 0, 16, 1)
     with pytest.raises(ValueError):
         non_zd_formula(2)
     with pytest.raises(ValueError):
@@ -305,32 +364,182 @@ def test_surgical_mutation_suite_kills_8_mutants() -> None:
     assert not is_norm_mult_pair(5, unbalanced_14, unbalanced_14)
 
 
+def test_repo_yaml_validates_against_schema_and_social_preview_png() -> None:
+    """Enforce strict JSON Schema validation of repo.yaml against repo-standard.schema.json
+    and Build Standard A26 1280x640 PNG social preview."""
+    schema = json.loads((ROOT / "repo-standard.schema.json").read_text(encoding="utf-8"))
+    manifest = yaml.safe_load((ROOT / "repo.yaml").read_text(encoding="utf-8"))
+    jsonschema.validate(instance=manifest, schema=schema)
+
+    png_path = ROOT / "docs" / "media" / "social-preview.png"
+    assert png_path.exists(), "Missing docs/media/social-preview.png (Build Standard A26)"
+    raw = png_path.read_bytes()
+    assert raw[:8] == b"\x89PNG\r\n\x1a\n"
+    w, h = struct.unpack(">II", raw[16:24])
+    assert (w, h) == (1280, 640), f"social-preview.png must be 1280x640, got {w}x{h}"
+    assert len(raw) < 1024 * 1024, f"social-preview.png must be < 1 MiB, got {len(raw)} bytes"
+
+
+def test_documentation_bijections_lean_symbols_and_no_stale_prose() -> None:
+    """Anti-drift regression guard locking:
+    1. Every Lean identifier referenced in docs/statement-fidelity.md and paper/main.tex exists in lean/**/*.lean.
+    2. 100% 30-key bijection across paper/references.bib, paper/main.tex, and docs/literature-search-log.md.
+    3. 100% 23-target bijection (T1a..T4f + ALL) across Challenge.lean, comparator.json, formalization.yaml,
+       docs/statement-fidelity.md, and docs/site/blueprint.html.
+    4. Canonical title consistency and absence of previously caught stale formulas or Bott-Rupture labels.
+    """
+    # 1. Extract all declared Lean identifiers (including @[expose] / @[inline] attributed defs)
+    lean_decls: set[str] = set()
+    decl_re = re.compile(
+        r"^\s*(?:@\[[^\]]+\]\s*)*(?:(?:public|private|protected|noncomputable|unsafe|partial)\s+)*"
+        r"(?:theorem|lemma|def|abbrev|inductive|structure|class|axiom)\s+([A-Za-z_][A-Za-z0-9_']*)",
+        re.MULTILINE,
+    )
+    for lean_file in (ROOT / "lean").rglob("*.lean"):
+        if ".lake" in lean_file.parts:
+            continue
+        lean_decls.update(decl_re.findall(lean_file.read_text(encoding="utf-8")))
+    lean_modules = {
+        "Basic", "MirrorConservation", "TerraceLaw", "HurwitzRupture",
+        "FiniteCertificates", "PathionRupture", "NonVacuity", "AdversarialTests",
+    }
+
+    # Check every CDTerrace.<sym> and known Lean identifier in docs/statement-fidelity.md
+    sf_text = (ROOT / "docs" / "statement-fidelity.md").read_text(encoding="utf-8")
+    for sym in re.findall(r"`CDTerrace\.([A-Za-z_][A-Za-z0-9_']*)`", sf_text):
+        if sym in lean_modules:
+            continue
+        assert sym in lean_decls, f"Non-existent Lean symbol CDTerrace.{sym} in docs/statement-fidelity.md"
+    for sym in ("leftMulTwoBladeCoord", "isBoxKiteAssessor", "hasCrossEdgeFast", "checkPathionLoChunk_0"):
+        assert sym not in sf_text, f"Stale non-existent Lean symbol {sym} in docs/statement-fidelity.md"
+
+    tex_text = (ROOT / "paper" / "main.tex").read_text(encoding="utf-8")
+    for sym in ("leftMulTwoBladeCoord", "isBoxKiteAssessor", "hasCrossEdgeFast", "checkPathionLoChunk_0"):
+        assert sym not in tex_text, f"Stale non-existent Lean symbol {sym} in paper/main.tex"
+    # Verify every identifier-like \code{...} token in paper/main.tex that matches camelCase/snake_case Lean names
+    ignore_code_tokens = {
+        "ERRATA.md", "Solution.lean", "PalomarChallenge.lean", "Challenge.lean", "PalomarSolution.lean",
+        "VerifyAxioms.lean", "FiniteCertificates.lean", "PathionRupture.lean", "comparator.json",
+        "check_readme_axioms.py", "data/MANIFEST.sha256", "MANIFEST.sha256", "data/MANIFEST.sha256.tsr",
+        "data/MANIFEST.sha256.ots", "propext", "Classical.choice", "Quot.sound", "native_decide", "rfl",
+        "Nat.bitwise", "CDTerrace.Basic", "CDTerrace.MirrorConservation", "CDTerrace.TerraceLaw",
+        "CDTerrace.HurwitzRupture", "CDTerrace.FiniteCertificates", "CDTerrace.NonVacuity",
+        "CDTerrace.AdversarialTests", "lean/CDTerrace/*.lean", "rightCompat_doubling_*",
+        "ALG-035", "ALG-039", "COMB-040", "T1f", "T4e", "T4f", "15",
+    }
+    for tok in re.findall(r"\\code\{([^}]+)\}", tex_text):
+        if (
+            tok in ignore_code_tokens
+            or "/" in tok
+            or "[" in tok
+            or " " in tok
+            or ("." in tok and tok.endswith((".lean", ".py", ".md", ".json", ".tsr", ".ots", ".sha256")))
+        ):
+            continue
+        base = tok.split(".")[-1]
+        if base in {"lower", "upper", "axis", "cross", "odd", "15"} or re.fullmatch(r"T[1-4][a-f]", base):
+            continue
+        assert base in lean_decls, f"paper/main.tex \\code{{{tok}}} references undeclared Lean symbol {base!r}"
+
+    # 2. Exact 30-key BibTeX / LaTeX / docs/literature-search-log.md bijection
+    bib_keys = set(re.findall(r"@\w+\s*\{\s*([^,\s]+)\s*,", (ROOT / "paper" / "references.bib").read_text(encoding="utf-8")))
+    tex_cites: set[str] = set()
+    for m in re.findall(r"\\cite(?:\[[^\]]*\])*\{([^}]+)\}", tex_text):
+        tex_cites.update(k.strip() for k in m.split(",") if k.strip())
+    log_text = (ROOT / "docs" / "literature-search-log.md").read_text(encoding="utf-8")
+    log_keys = set(re.findall(r"^\|\s*`([^`]+)`\s*\|", log_text, re.MULTILINE))
+    assert len(bib_keys) == 30
+    assert bib_keys == tex_cites, f"BibTeX vs main.tex mismatch: {bib_keys ^ tex_cites}"
+    assert bib_keys == log_keys, f"BibTeX vs literature-search-log.md mismatch: {bib_keys ^ log_keys}"
+
+    # 3. Exact 22-theorem + ALL bijection across Lean, formalization.yaml, statement-fidelity.md, blueprint.html
+    expected_ids = [
+        "T1a", "T1b", "T1c", "T1d", "T1e", "T1f",
+        "T2a", "T2b", "T2c", "T2d", "T2e", "T2f",
+        "T3a", "T3b", "T3c", "T3d",
+        "T4a", "T4b", "T4c", "T4d", "T4e", "T4f",
+    ]
+    ch_text = (ROOT / "lean" / "Challenge.lean").read_text(encoding="utf-8")
+    comp = json.loads((ROOT / "lean" / "comparator.json").read_text(encoding="utf-8"))
+    fy = yaml.safe_load((ROOT / "lean" / "formalization.yaml").read_text(encoding="utf-8"))
+    bp_text = (ROOT / "docs" / "site" / "blueprint.html").read_text(encoding="utf-8")
+
+    assert len(comp["theorem_names"]) == 23
+    assert [t["id"] for t in fy["theorems"]] == expected_ids
+    for tid in expected_ids:
+        assert f"abbrev {tid}Stmt" in ch_text, f"Missing {tid}Stmt in Challenge.lean"
+        assert f"| `{tid}` |" in sf_text, f"Missing {tid} row in docs/statement-fidelity.md"
+        assert f'data-id="{tid}"' in bp_text, f"Missing {tid} node in blueprint.html"
+    assert "| `ALL` |" in sf_text and 'data-id="ALL"' in bp_text
+
+    # 4. Canonical title consistency & zero stale wrong formulas / Bott-Rupture / LLC regressions
+    canonical_title = (
+        "The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, "
+        "and Coordinate Norm-Multiplicativity Ruptures Across Cayley-Dickson Algebras"
+    )
+    cff = yaml.safe_load((ROOT / "CITATION.cff").read_text(encoding="utf-8"))
+    zen = json.loads((ROOT / ".zenodo.json").read_text(encoding="utf-8"))
+    sub_text = (ROOT / "docs" / "submission-packet.md").read_text(encoding="utf-8")
+    assert cff["title"] == canonical_title
+    assert fy["title"] == canonical_title
+    assert zen["title"] == canonical_title
+    assert canonical_title.replace("Cayley-Dickson", "Cayley--Dickson") in sub_text
+
+    # Required Palomar fields in formalization.yaml
+    for field in ("authorship", "origin", "sources", "automation", "limitations", "review_status"):
+        assert field in fy, f"Missing Palomar field {field!r} in lean/formalization.yaml"
+
+    # Guard against regression of previously fixed wrong formulas or Bott-Rupture / 0thernes LLC strings
+    for bad_formula in ("2^{n-2}(2^{n-1}-1)(2^{n-2}-1)", "4^n + 3\\cdot 2^n - 4"):
+        assert bad_formula not in sf_text
+        assert bad_formula not in tex_text
+    for rel in (
+        "docs/site/index.html",
+        "data/hurwitz_rupture_table.json",
+        "scripts/generate_figures.py",
+        "examples/quickstart_demo.py",
+        "lean/CDTerrace/HurwitzRupture.lean",
+    ):
+        txt = (ROOT / rel).read_text(encoding="utf-8")
+        assert "Bott" not in txt, f"Stale 'Bott' overstatement found in {rel}"
+    for rel in ("README.md", "CITATION.cff", ".zenodo.json", "lean/formalization.yaml", "paper/main.tex"):
+        assert "0thernes LLC" not in (ROOT / rel).read_text(encoding="utf-8")
+
+    # Verify C11 fuzzer genuinely fuzzes CD_1..CD_7 as documented
+    fuzz_c = (ROOT / "c" / "tests" / "fuzz_cd_terrace.c").read_text(encoding="utf-8")
+    assert "(r % 7u)" in fuzz_c, "fuzz_cd_terrace.c must fuzz CD_1..CD_7 (% 7u)"
+
+
 def test_version_governance_accessibility_and_csp() -> None:
-    """Verify single version source consistency, honest repo.yaml flags, WCAG 2.2 AA & CSP in web UI,
-    and zero raw LaTeX leaks or WebGL misrepresentations."""
+    """Verify single version source consistency, honest repo.yaml flags, inline SPDX headers,
+    WCAG 2.2 AA & CSP in web UI, and zero raw LaTeX leaks or WebGL misrepresentations."""
     ver = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     assert re.match(r"^\d+\.\d+\.\d+$", ver)
     for rel, pattern in (
         ("pyproject.toml", rf'^version\s*=\s*"{re.escape(ver)}"'),
         ("rust/Cargo.toml", rf'^version\s*=\s*"{re.escape(ver)}"'),
+        ("c/include/cd_terrace.h", rf'^#define CD_TERRACE_VERSION "{re.escape(ver)}"'),
         ("lean/lakefile.toml", rf'^version\s*=\s*"{re.escape(ver)}"'),
         ("lean/formalization.yaml", rf'^version:\s*"{re.escape(ver)}"'),
         ("CITATION.cff", rf'^version:\s*"{re.escape(ver)}"'),
-        ("repo.yaml", rf'^version:\s*"{re.escape(ver)}"'),
+        (".zenodo.json", rf'"version":\s*"{re.escape(ver)}"'),
         ("CHANGELOG.md", rf"^## \[?v?{re.escape(ver)}\]?"),
     ):
         txt = (ROOT / rel).read_text(encoding="utf-8")
         assert re.search(pattern, txt, re.MULTILINE), f"Version {ver} missing/mismatched in {rel}"
 
-    # Verify CITATION.cff ORCID and license
+    # Verify CITATION.cff ORCID
     cff = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
     assert "0009-0006-8168-9648" in cff
-    assert "0thernes LLC" not in cff
 
     # Verify honest repo.yaml flags (no hiding visual/ui/deployed!)
     ry = (ROOT / "repo.yaml").read_text(encoding="utf-8")
     for flag in ("public: true", "visual: true", "ui: true", "deployed: true", "formal: true"):
         assert flag in ry, f"Expected honest flag {flag!r} in repo.yaml"
+
+    # Verify inline SPDX headers on HTML, REUSE.toml, and Cursor rule
+    for rel in ("docs/site/index.html", "docs/site/blueprint.html", "REUSE.toml", ".cursor/rules/build-standard.mdc"):
+        assert "SPDX-License-Identifier:" in (ROOT / rel).read_text(encoding="utf-8"), f"Missing SPDX in {rel}"
 
     # Verify WCAG 2.2 AA & strict CSP in docs/site/index.html & blueprint.html
     for html_rel in ("docs/site/index.html", "docs/site/blueprint.html"):
@@ -343,19 +552,21 @@ def test_version_governance_accessibility_and_csp() -> None:
     idx_h = (ROOT / "docs/site/index.html").read_text(encoding="utf-8")
     assert "prefers-reduced-motion" in idx_h
     assert "ArrowRight" in idx_h and "ArrowLeft" in idx_h
+    assert 'id="bk-prev"' in idx_h and 'id="bk-next"' in idx_h
+    assert 'addEventListener("resize"' in idx_h
 
-    # Verify blueprint.html includes all new v2.0.0 nodes (T1f, T4e, T4f, A1-A8, NV1-NV4)
+    # Verify blueprint.html T2b node specifically states n >= 5 (not n >= 6)
     bp_h = (ROOT / "docs/site/blueprint.html").read_text(encoding="utf-8")
-    for nid in ("T1f", "T2b", "T4e", "T4f", "NV1-NV4", "A1-A8", "ALL"):
-        assert f'data-id="{nid}"' in bp_h, f"Missing blueprint node {nid}"
-    assert "n ≥ 6" not in bp_h or "∀ n ≥ 6" in bp_h  # BDI separation must say n ≥ 5, not n ≥ 6
+    t2b_match = re.search(r'<article[^>]*data-id="T2b"[^>]*>.*?</article>', bp_h, re.DOTALL)
+    assert t2b_match is not None, "Missing T2b node in blueprint.html"
+    assert "n ≥ 5" in t2b_match.group(0) and "n ≥ 6" not in t2b_match.group(0)
 
 
 def test_cryptographic_timestamps_verify_and_reject_tamper() -> None:
-    """Verify RFC 3161 (.tsr) and 3-calendar Bitcoin OTS (.ots) proofs match data/MANIFEST.sha256
-    and reject a 1-byte tampered copy."""
-    if not (ROOT / "data" / "MANIFEST.sha256.tsr").exists():
-        pytest.skip("Timestamps not yet stamped (run scripts/stamp_timestamps.py --stamp)")
+    """Unconditionally verify RFC 3161 (.tsr) and 3-calendar Bitcoin OTS (.ots) proofs match
+    data/MANIFEST.sha256 and reject a 1-byte tampered copy (no silent skip)."""
+    assert (ROOT / "data" / "MANIFEST.sha256.tsr").exists(), "Missing data/MANIFEST.sha256.tsr"
+    assert (ROOT / "data" / "MANIFEST.sha256.ots").exists(), "Missing data/MANIFEST.sha256.ots"
     proc = subprocess.run(
         [sys.executable, str(ROOT / "scripts" / "stamp_timestamps.py"), "--verify", "--negative-test"],
         capture_output=True,

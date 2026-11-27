@@ -862,4 +862,45 @@ mod tests {
         let nz: i128 = z.iter().map(|&v| (v as i128) * (v as i128)).sum();
         assert_eq!(nz, nx * ny);
     }
+
+    #[test]
+    fn test_t1f_explicit_z_basis_annihilates_kernel() {
+        // Directly verify Theorem T1f across all 16 split/Euclidean sedenion signatures:
+        // singular orbit representatives yield an explicit 2-sparse linearly independent Z-basis
+        // of ker L_{e_i + e_j} of exact cardinality twoblade_nullity_gamma(4, flip, i, j).
+        let pairs = [(1usize, 9usize), (1, 10), (3, 12), (5, 14), (7, 15)];
+        for flip in 0..16usize {
+            for &(i, j) in &pairs {
+                let d = i ^ j;
+                let mut reps = Vec::new();
+                for k in 0..16usize {
+                    let kp = k ^ d;
+                    if k < kp {
+                        let delta = cd_sign_gamma_direct(4, flip, i, k) as i32
+                            * cd_sign_gamma_direct(4, flip, i, kp) as i32
+                            * cd_sign_gamma_direct(4, flip, j, k) as i32
+                            * cd_sign_gamma_direct(4, flip, j, kp) as i32;
+                        if delta == 1 {
+                            reps.push(k);
+                        }
+                    }
+                }
+                assert_eq!(reps.len(), twoblade_nullity_gamma(4, flip, i, j));
+                for &k in &reps {
+                    let kp = k ^ d;
+                    let coeff_kp = -(cd_sign_gamma_direct(4, flip, i, k) as i32
+                        * cd_sign_gamma_direct(4, flip, j, kp) as i32);
+                    let mut prod = [0i32; 16];
+                    prod[i ^ k] += cd_sign_gamma_direct(4, flip, i, k) as i32;
+                    prod[i ^ kp] += coeff_kp * cd_sign_gamma_direct(4, flip, i, kp) as i32;
+                    prod[j ^ k] += cd_sign_gamma_direct(4, flip, j, k) as i32;
+                    prod[j ^ kp] += coeff_kp * cd_sign_gamma_direct(4, flip, j, kp) as i32;
+                    assert!(
+                        prod.iter().all(|&v| v == 0),
+                        "T1f kernel basis vector failed annihilation for flip={flip}, ({i},{j}), k={k}"
+                    );
+                }
+            }
+        }
+    }
 }

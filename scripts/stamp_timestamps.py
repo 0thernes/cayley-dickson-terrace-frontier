@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import re
 import shutil
 import subprocess
 import sys
@@ -19,6 +20,9 @@ ROOT = Path(__file__).resolve().parents[1]
 TARGET_FILE = ROOT / "data" / "MANIFEST.sha256"
 TSR_PATH = ROOT / "data" / "MANIFEST.sha256.tsr"
 OTS_PATH = ROOT / "data" / "MANIFEST.sha256.ots"
+VERSION_PATH = ROOT / "VERSION"
+REPO_VERSION = VERSION_PATH.read_text(encoding="utf-8").strip() if VERSION_PATH.exists() else "2.1.0"
+USER_AGENT = f"cayley-dickson-terrace-frontier/{REPO_VERSION}"
 
 DIGICERT_TSA_URL = "http://timestamp.digicert.com"
 OTS_MAGIC = b"\x00OpenTimestamps\x00\x00Proof\x00\xbf\x89\xe2\xe8\x84\xe8\x92\x94"
@@ -63,7 +67,7 @@ def stamp_rfc3161(target: Path, out_tsr: Path) -> None:
             data=tmp_tsq.read_bytes(),
             headers={
                 "Content-Type": "application/timestamp-query",
-                "User-Agent": "cayley-dickson-terrace-frontier/2.0",
+                "User-Agent": USER_AGENT,
             },
             method="POST",
         )
@@ -85,7 +89,7 @@ def stamp_ots(target: Path, out_ots: Path) -> None:
             headers={
                 "Accept": "application/vnd.opentimestamps.v1",
                 "Content-Type": "application/x-www-form-urlencoded",
-                "User-Agent": "cayley-dickson-terrace-frontier/2.0",
+                "User-Agent": USER_AGENT,
             },
             method="POST",
         )
@@ -128,6 +132,7 @@ def verify_tsr(target: Path, tsr_path: Path) -> tuple[bool, str]:
     if needle not in raw:
         return False, f"TSR digest mismatch (expected SHA-256 {digest.hex()})"
     # Additional OpenSSL text inspection if available
+    granted_utc = ""
     openssl = find_openssl()
     if openssl:
         with tempfile.TemporaryDirectory() as td:
@@ -143,10 +148,24 @@ def verify_tsr(target: Path, tsr_path: Path) -> tuple[bool, str]:
                 return False, f"openssl ts -reply failed: {proc.stderr.strip()}"
             if "Status: Granted" not in proc.stdout:
                 return False, "TSR status is not Granted"
-            if digest.hex().lower() not in proc.stdout.replace(":", "").replace(" ", "").replace("\n", "").lower():
-                # OpenSSL formats message imprint as hex dump; DER needle already guaranteed exact byte match
-                pass
-    return True, f"TSR OK (SHA-256 {digest.hex()[:16]}..., {len(raw)} bytes)"
+            if "Hash Algorithm: sha256" not in proc.stdout.lower().replace("hash algorithm: sha256", "Hash Algorithm: sha256"):
+                return False, "TSR OpenSSL output missing sha256 Hash Algorithm"
+            # Parse OpenSSL hexdump lines under "Message data:" -> 32-byte SHA-256 imprint
+            msg_match = re.search(r"Message data:\s*\n((?:\s+[0-9a-fA-F]{4}\s+-\s+.*\n)+)", proc.stdout)
+            if not msg_match:
+                return False, "TSR OpenSSL output missing Message data block"
+            hex_bytes: list[str] = []
+            for line in msg_match.group(1).splitlines():
+                m_row = re.match(r"^\s+[0-9a-fA-F]{4}\s+-\s+([0-9a-fA-F\s-]{1,48})", line)
+                if m_row:
+                    hex_bytes.extend(re.findall(r"[0-9a-fA-F]{2}", m_row.group(1)))
+            imprint_hex = "".join(hex_bytes).lower()
+            if imprint_hex != digest.hex().lower():
+                return False, f"TSR OpenSSL imprint mismatch ({imprint_hex[:16]}... != {digest.hex()[:16]}...)"
+            ts_match = re.search(r"Time stamp:\s*(.+)", proc.stdout)
+            if ts_match:
+                granted_utc = f", granted {ts_match.group(1).strip()}"
+    return True, f"TSR OK (SHA-256 {digest.hex()[:16]}...{granted_utc}, {len(raw)} bytes)"
 
 
 def verify_ots(target: Path, ots_path: Path) -> tuple[bool, str]:

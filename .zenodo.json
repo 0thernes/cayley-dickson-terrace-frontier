@@ -1,0 +1,41 @@
+{
+  "title": "The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and Coordinate Norm-Multiplicativity Ruptures Across Cayley-Dickson Algebras",
+  "description": "Zero-Mathlib Lean 4.35.0 six-kernel formalization (22 headline theorems T1a-T4f, 23 Palomar Comparator targets, 35 axiom-audited declarations), tri-language Rust/ISO C11/Python differential verifiers across all 496 generalized algebras CD_4(gamma)-CD_8(gamma), interactive 3D Canvas observatory, cryptographic RFC 3161 and Bitcoin OpenTimestamps proofs, and 21-page AMS-LaTeX preprint (0TH-2026-019).",
+  "upload_type": "software",
+  "version": "2.1.0",
+  "publication_date": "2026-11-27",
+  "creators": [
+    {
+      "name": "Donahue, Alexander Stephen",
+      "affiliation": "Independent Researcher, Spokane, WA, USA",
+      "orcid": "0009-0006-8168-9648"
+    }
+  ],
+  "license": "Apache-2.0",
+  "access_right": "open",
+  "keywords": [
+    "Cayley-Dickson algebras",
+    "sedenions",
+    "pathions",
+    "zero divisors",
+    "Hurwitz-Radon numbers",
+    "sums of squares",
+    "box-kites",
+    "Lean 4",
+    "formal verification",
+    "Palomar Comparator"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/0thernes/cayley-dickson-terrace-frontier",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/0thernes/0thernes-research-archive",
+      "relation": "isPartOf",
+      "scheme": "url"
+    }
+  ],
+  "notes": "Code is licensed under Apache-2.0; white paper, figures, datasets, and documentation are licensed under CC-BY-4.0 (see REUSE.toml). Independent preprint not yet submitted to external journal peer review; AI-assisted proof engineering and drafting disclosed transparently in paper/main.tex and lean/formalization.yaml."
+}

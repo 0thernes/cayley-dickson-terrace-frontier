@@ -5,20 +5,20 @@
 [![License: Apache-2.0 / CC-BY-4.0](https://img.shields.io/badge/License-Apache--2.0%20%2F%20CC--BY--4.0-009E73)](REUSE.toml)
 [![Interactive 3D Canvas Observatory](https://img.shields.io/badge/3D%20Canvas%20Observatory-GitHub%20Pages-D55E00)](https://0thernes.github.io/cayley-dickson-terrace-frontier/)
 
-**The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and Coordinate Norm-Multiplicativity Ruptures Across Cayley–Dickson Algebras (`v2.0.0`)**
+**The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and Coordinate Norm-Multiplicativity Ruptures Across Cayley–Dickson Algebras (`v2.1.0`)**
 
 *Author:* **Alexander Stephen Donahue** (Independent Researcher, Spokane, WA, USA · ORCID [`0009-0006-8168-9648`](https://orcid.org/0009-0006-8168-9648) · `0_0@0thernes.art`)  
-*Maintenance status:* **Active (`v2.0.0`)** — resolves every manuscript, formal Lean, and tooling entry logged in [`ERRATA.md`](ERRATA.md) against `v1.0.0`, formalizes the exact $2 \times 2$ block linear-algebra kernel-basis isomorphism (`T1f`), proves the Pathion ceiling $r_{\max}(\mathrm{CD}_5) = 14$ with strict $7 + 7$ half-balance rigidity in pure Lean across all $2^{32}$ subsets retiring external MILP solvers (`T4e`), and certifies the dimension-64 split interior spectral gap $H_6^{56}(20) = 0$ in pure Lean (`T4f`).
+*Maintenance status:* **Active (`v2.1.0`)** — resolves every v1.0.0 statement-audit item in [`ERRATA.md`](ERRATA.md) and all 34 Cycle 1–3 forensic hardening findings (`repo.yaml` strict schema validation, programmatic live citation log, automated Lean-symbol & statement-fidelity bijection tests, `T1f` explicit 2-sparse $\mathbb{Z}$-basis tests across Python/Rust, Node-24 CI workflows, and 1280×640 PNG social preview).
 
-![Cayley–Dickson Terrace Frontier v2.0.0 Visual Overview](docs/media/social-preview.svg)
+![Cayley–Dickson Terrace Frontier v2.1.0 Visual Overview](docs/media/social-preview.png)
 
 ---
 
 ## Summary
 
-This repository contains a **zero-Mathlib Lean 4.35.0 formalization** (**22 headline theorems `T1a`–`T4f`**, **23 Palomar Comparator targets**, **4 non-vacuity witnesses**, **8 adversarial boundary refutations**, and **35 axiom-audited declarations**), independent differential checkers in **Rust** (`#![forbid(unsafe_code)]`), **strict ISO C11** (`-Werror -Wconversion -Wshadow`, ASan/UBSan, 100k + libFuzzer fuzzing across all 496 algebras with zero stride), and **Python** (naive recursive $\mathbb{Q}$ Gaussian elimination oracle, Hypothesis property tests, and surgical mutation suite), a zero-CDN WCAG 2.2 AA **interactive 3D Canvas observatory** and **Proof Dependency Blueprint**, cryptographic **DigiCert RFC 3161 (`.tsr`)** and **Bitcoin OpenTimestamps (`.ots`)** proofs, and a 21-page zero-warning AMS-LaTeX white paper.
+This repository contains a **zero-Mathlib Lean 4.35.0 formalization** (**22 headline theorems `T1a`–`T4f`**, **23 Palomar Comparator targets**, **4 non-vacuity witnesses**, **8 adversarial boundary refutations**, and **35 axiom-audited declarations**), independent differential checkers in **Rust** (`#![forbid(unsafe_code)]`), **strict ISO C11** (`-Werror -Wconversion -Wshadow`, ASan/UBSan, 100k fuzzing across $\mathrm{CD}_1$–$\mathrm{CD}_7$ and zero-stride verification across all 496 algebras), and **Python** (naive recursive $\mathbb{Q}$ Gaussian elimination oracle, Hypothesis property tests, and surgical mutation suite), a zero-CDN WCAG 2.2 AA **interactive 3D Canvas observatory** and **Proof Dependency Blueprint**, cryptographic **DigiCert RFC 3161 (`.tsr`)** and **Bitcoin OpenTimestamps (`.ots`)** proofs, and a 21-page zero-warning AMS-LaTeX white paper.
 
-### Scope of the Lean Statements (`v2.0.0`)
+### Scope of the Lean Statements (`v2.1.0`)
 
 - **Literal Bilinear Algebra Inside Lean (`T1c`, `T1f`):** `CDTerrace.Basic` defines the literal bilinear Cayley–Dickson product `cdMulCoordGamma`. Theorem `T1c` proves both cross-term cancellation $\sigma_n^\gamma(i,j) + \sigma_n^\gamma(j,i) = 0$ and full coordinate-wise nilpotency $((e_i+e_j)^2)_t = 0$. Theorem `T1f` (`twoblade_left_annihilator_basis_exact`) formally proves in Lean that the block-count nullity `twobladeNullityGamma` equals the exact cardinality of an explicit 2-sparse linearly independent spanning $\mathbb{Z}$-basis of $\ker L_{e_i + e_j}$ across all $n \ge 1$ and all $2^n$ signatures $\gamma$.
 - **Signature & Subspace Scope:** Pillar 1 (`T1a`–`T1f`), the midpoint law (`T2f`), and the split-phase theorems (`T4c`, `T4f`) hold for generalized signatures $\gamma \in \{\pm 1\}^n$. Theorems `T2a`–`T2e`, Pillar 3 (`T3a`–`T3d`), and `T4a`, `T4b`, `T4d`, `T4e` concern **Euclidean $\mathrm{CD}_n$ coordinate subsets**. Nothing is claimed about non-coordinate subspaces or general real sums-of-squares formulas.
@@ -142,12 +142,12 @@ Every one of the 23 Palomar Comparator headline targets (`T1a`–`T4f` + master 
 | --- | --- |
 | [`lean/`](lean/) | Zero-Mathlib Lean 4.35.0 proof suite (8 modules including `PathionRupture.lean`, 23 Palomar targets, 35 audited decls) |
 | [`rust/`](rust/) | Zero-dependency `#![forbid(unsafe_code)]` Rust engine auditing all 496 algebras $\mathrm{CD}_4$–$\mathrm{CD}_8$ + exact 280 Pathion 14D subspaces |
-| [`c/`](c/) | Strict ISO C11 (`-Wall -Wextra -Wpedantic -Werror -Wshadow -Wconversion`) verifier, ASan/UBSan, 100k + libFuzzer, all 496 algebras zero-stride |
+| [`c/`](c/) | Strict ISO C11 (`-Wall -Wextra -Wpedantic -Werror -Wshadow -Wconversion`) verifier, ASan/UBSan, 100k $\mathrm{CD}_1$–$\mathrm{CD}_7$ fuzzing, all 496 algebras zero-stride |
 | [`src/cd_terrace/`](src/cd_terrace/) & [`reference/`](reference/) | Exact Python engine + independent naive recursive / exact $\mathbb{Q}$ Gaussian elimination oracle |
-| [`paper/`](paper/) & [`dist/`](dist/) | 21-page zero-warning AMS-LaTeX white paper (`v2.0.0`), 5 Okabe-Ito vector figures, 30 BibTeX entries (28/30 live Crossref/arXiv title+author+year+retraction verified + 2 print-only classics), frozen PDF & clean-room `arxiv_submission.tar.gz` |
+| [`paper/`](paper/) & [`dist/`](dist/) | 21-page zero-warning AMS-LaTeX white paper (`v2.1.0`), 5 Okabe-Ito vector figures, 30 BibTeX entries (28/30 live Crossref/arXiv title+author+year+retraction verified + 2 print-only classics), frozen PDF & clean-room `arxiv_submission.tar.gz` |
 | [`docs/site/`](docs/site/) | Zero-CDN WCAG 2.2 AA interactive 3D Canvas Observatory (`index.html`) + synchronized 26-node Proof Blueprint (`blueprint.html`) |
 | [`data/`](data/) & [`results/`](results/) | Frozen JSON certificates, `data/MANIFEST.sha256`, DigiCert RFC 3161 `.tsr`, Bitcoin `.ots`, and `results/lean_axioms.txt` |
-| [`CLAIMS.md`](CLAIMS.md), [`LIMITATIONS.md`](LIMITATIONS.md), [`ERRATA.md`](ERRATA.md) | Granular claim ledger, explicit epistemic boundaries, and full resolution log of all 23 v1.0.0 errata |
+| [`CLAIMS.md`](CLAIMS.md), [`LIMITATIONS.md`](LIMITATIONS.md), [`ERRATA.md`](ERRATA.md), [`docs/gold-standard-checklist.md`](docs/gold-standard-checklist.md) | Granular claim ledger, explicit epistemic boundaries, errata log, and 43-item Playbook v1.3 Gold Standard Release Checklist |
 
 ---
 

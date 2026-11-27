@@ -29,11 +29,19 @@ CHINGON_WITNESS_16: tuple[int, ...] = (
 )
 
 
+def _validate_indices(n: int, *indices: int) -> None:
+    if n < 0:
+        raise ValueError(f"n must be non-negative, got {n}")
+    dim = 1 << n
+    for idx in indices:
+        if idx < 0 or idx >= dim:
+            raise ValueError(f"basis index {idx} out of range [0, {dim}) for CD_{n}")
+
+
 @cache
 def cd_sign(n: int, i: int, j: int) -> int:
     """Standard Euclidean Cayley-Dickson multiplication sign sigma_n(i, j) in {-1, +1}."""
-    if n < 0 or i < 0 or j < 0:
-        raise ValueError("n, i, j must be non-negative integers")
+    _validate_indices(n, i, j)
     if n == 0:
         return 1
     h = 1 << (n - 1)
@@ -54,6 +62,7 @@ def cd_sign(n: int, i: int, j: int) -> int:
 
 def cd_sign_gamma_direct(n: int, flip_mask: int, i: int, j: int) -> int:
     """Direct recursive generalized Cayley-Dickson sign sigma_n^gamma(i, j)."""
+    _validate_indices(n, i, j)
     if n == 0:
         return 1
     h = 1 << (n - 1)
@@ -78,6 +87,7 @@ def cd_sign_gamma_direct(n: int, flip_mask: int, i: int, j: int) -> int:
 
 def cd_sign_gamma_factored(n: int, flip_mask: int, i: int, j: int) -> int:
     """Pillar 1 sign-cocycle factorization: sigma_n^std(i, j) * (-1)^popcount(i & j & flip)."""
+    _validate_indices(n, i, j)
     mask = (1 << n) - 1
     parity = ((i & j & flip_mask & mask).bit_count() & 1) == 1
     s = cd_sign(n, i, j)
@@ -86,6 +96,7 @@ def cd_sign_gamma_factored(n: int, flip_mask: int, i: int, j: int) -> int:
 
 def block_delta(n: int, i: int, j: int, k: int) -> int:
     """Exact 2x2 block determinant sign delta_n^std(i, j, k) in {-1, +1}."""
+    _validate_indices(n, i, j, k)
     d = i ^ j
     kp = k ^ d
     return cd_sign(n, i, k) * cd_sign(n, i, kp) * cd_sign(n, j, k) * cd_sign(n, j, kp)
@@ -93,6 +104,7 @@ def block_delta(n: int, i: int, j: int, k: int) -> int:
 
 def twoblade_nullity_direct(n: int, i: int, j: int) -> int:
     """Direct standard 2-blade nullity via counting singular 2x2 blocks."""
+    _validate_indices(n, i, j)
     dim = 1 << n
     sing = sum(1 for k in range(dim) if block_delta(n, i, j, k) == 1)
     return sing // 2
@@ -100,6 +112,7 @@ def twoblade_nullity_direct(n: int, i: int, j: int) -> int:
 
 def twoblade_nullity_fast(n: int, i: int, j: int) -> int:
     """O(n) exact standard 2-blade nullity via the proved 4-case doubling recurrence."""
+    _validate_indices(n, i, j)
     if n <= 3:
         return 0
     a, b = (i, j) if i < j else (j, i)
@@ -120,6 +133,9 @@ def twoblade_nullity_fast(n: int, i: int, j: int) -> int:
 
 def twoblade_nullity_gamma(n: int, flip_mask: int, i: int, j: int) -> int:
     """Generalized 2-blade nullity via the proved Nilpotent Mirror Law."""
+    _validate_indices(n, i, j)
+    if n == 0:
+        return 0
     nu = twoblade_nullity_fast(n, i, j)
     mask = (1 << n) - 1
     nilp = (((i ^ j) & flip_mask & mask).bit_count() & 1) == 1

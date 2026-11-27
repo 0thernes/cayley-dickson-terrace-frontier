@@ -1,6 +1,6 @@
 # Clean-Clone Replication Guide (`REPLICATION.md`)
 
-Every theorem, dataset, figure, PDF page, cryptographic timestamp, and SHA-256 checksum in `cayley-dickson-terrace-frontier` (`v2.0.0`) can be independently reproduced from a fresh clone without hidden dependencies or external databases.
+Every theorem, dataset, figure, PDF page, cryptographic timestamp, and SHA-256 checksum in `cayley-dickson-terrace-frontier` (`v2.1.0`) can be independently reproduced from a fresh clone without hidden dependencies or external databases.
 
 ## Prerequisites
 - **Lean 4.35.0** via `elan` (`lean/lean-toolchain` pins `leanprover/lean4:v4.35.0`; zero Mathlib downloads required).
@@ -67,5 +67,6 @@ Or run `just reproduce` via [`justfile`](justfile).
 
 | Date (UTC) | Environment | Scope Verified | Outcome |
 | --- | --- | --- | --- |
-| 2026-11-26 | Windows 11 (ReFS Dev Drive), Lean 4.35.0, Rust 1.94.1, GCC (WinLibs C11), Python 3.12, Tectonic 0.17.0, OpenSSL 3.5.9 | Clean-clone cold reproduction of `v2.0.0`: `lake build` + `VerifyAxioms.lean` (35/35 strict) + `leanchecker --fresh` + `leanchecker-paranoid --fresh` + Rust 496-algebra & 280-subspace audit + C11 `-Werror -Wconversion -Wshadow` 496-algebra audit + Python exact $\mathbb{Q}$ oracle/Hypothesis/mutations/differential + live 28/30 citations + RFC 3161/OTS negative tamper tests + 0-warning 21-page PDF + clean-room arXiv tarball + Build Standard 100% | **PASS (100%)** |
-| 2026-11-26 | GitHub Actions Ubuntu / macOS / Windows CI (`ci.yml`) | 6 independent Lean 4.35.0 kernels (23 Palomar targets + real tamper-injecting negative comparator gate), strict ISO C11 (`-Werror`, ASan/UBSan, 100k fuzz), 3-OS Rust & Python matrices, Tectonic + clean-room arXiv + RFC 3161/OTS + SLSA attestation | **Verified on GitHub Actions CI** |
+| 2026-11-27 | Windows 11 (ReFS Dev Drive), Lean 4.35.0, Rust 1.94.1, GCC 16.1.0 (WinLibs C11), Python 3.12, Tectonic 0.17.0, OpenSSL 3.5.9 | Clean-clone cold reproduction of `v2.1.0`: `lake build` + `VerifyAxioms.lean` (35/35 exact) + `leanchecker --fresh` (262.75s) + `leanchecker-paranoid --fresh` (357.69s) + Rust 4/4 tests & 496-algebra/280-subspace audit + C11 `-Werror -Wconversion -Wshadow` 496-algebra audit & 100k `CD_1..CD_7` fuzz + Python 15/15 `pytest` (schema, Lean-symbol bijection, `T1f`, 8 mutants, timestamps) + `ruff`/`mypy` + live 28/30 citations + fresh DigiCert RFC 3161/Bitcoin OTS + 0-warning 21-page PDF & clean-room arXiv tarball + Build Standard 100.0% | **PASS (100%)** |
+| 2026-11-26 | Windows 11 (ReFS Dev Drive), Lean 4.35.0, Rust 1.94.1, GCC (WinLibs C11), Python 3.12, Tectonic 0.17.0, OpenSSL 3.5.9 | Clean-clone cold reproduction of `v2.0.0` (all 23 v1.0.0 errata resolved) | **PASS (100%)** |
+| 2026-11-26 | GitHub Actions Ubuntu / macOS / Windows CI (`ci.yml`) | 6 independent Lean 4.35.0 kernels (23 Palomar targets + real tamper-injecting negative comparator gate), strict ISO C11 (`-Werror`, ASan/UBSan, 100k fuzz), 3-OS Rust & Python matrices, Tectonic + clean-room arXiv + RFC 3161/OTS + SLSA attestation | **PASS (10/10 GREEN)** |

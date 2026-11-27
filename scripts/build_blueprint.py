@@ -11,6 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT_PATH = ROOT / "docs" / "site" / "blueprint.html"
+REPO_VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip() if (ROOT / "VERSION").exists() else "2.1.0"
 
 # (id, pillar, module, title, description, depends_on, badge)
 NODES: list[tuple[str, str, str, str, str, list[str], str]] = [
@@ -115,12 +116,14 @@ def build_html() -> str:
 
     deps_json = json.dumps(deps_map)
     return f"""<!DOCTYPE html>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- Copyright (c) 2026 Alexander Stephen Donahue -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
-  <title>Proof Blueprint v2.0.0 — Cayley-Dickson Terrace Frontier (Lean 4.35.0, 6 Kernels)</title>
+  <title>Proof Blueprint v{html.escape(REPO_VERSION)} — Cayley-Dickson Terrace Frontier (Lean 4.35.0, 6 Kernels)</title>
   <style>
     :root {{
       --bg: #0b1020;
@@ -251,7 +254,7 @@ def build_html() -> str:
   <a class="skip-link" href="#blueprint-main">Skip to proof blueprint graph</a>
   <header>
     <div class="wrap">
-      <h1>Lean 4.35.0 Six-Kernel Proof Blueprint (v2.0.0)</h1>
+      <h1>Lean 4.35.0 Six-Kernel Proof Blueprint (v{html.escape(REPO_VERSION)})</h1>
       <p class="sub">Cayley-Dickson Terrace Frontier (0TH-2026-019) &mdash; Zero-Mathlib, Zero-MILP Constructive Dependency Graph</p>
       <nav aria-label="Primary navigation">
         <a href="index.html">&larr; Interactive 3D Canvas Observatory</a>

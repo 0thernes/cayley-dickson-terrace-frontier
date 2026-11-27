@@ -22,7 +22,7 @@ jobs:
     # plus the tamper-injecting negative comparator gate.
     timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install bubblewrap for paranoid kernel sandboxing
         run: |
@@ -97,7 +97,7 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy
@@ -112,7 +112,7 @@ jobs:
     name: ISO C11 (-Werror, ASan+UBSan, Fuzz)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Build strict C11, run unit tests, sanitizers & 100k fuzz iterations
         working-directory: c
         run: |
@@ -131,8 +131,8 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install pinned test dependencies
@@ -155,7 +155,7 @@ jobs:
     name: AMS-LaTeX, Clean-Room arXiv & SLSA Provenance
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install Tectonic
         run: |
           curl --proto '=https' --tlsv1.2 -fsSL https://drop-sh.fullyjustified.net | sh
@@ -180,7 +180,7 @@ jobs:
           cat SHA256SUMS
       - name: Generate SLSA build provenance attestation
         if: github.event_name == 'push'
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: |
             dist/Donahue_2026_cayley_dickson_terrace_frontier.pdf
@@ -194,8 +194,8 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - run: pip install -r requirements.lock.txt

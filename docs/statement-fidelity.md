@@ -1,63 +1,66 @@
 # Statement Fidelity Audit (`docs/statement-fidelity.md`)
 
-This document maps every mathematical definition and theorem in the white paper (`paper/main.tex`, `v2.0.0`) directly to its formal Lean 4.35.0 specification in `lean/Challenge.lean` and `lean/PalomarChallenge.lean`. All seven statement-fidelity gaps logged by the 2026-11-26 audit (see [`ERRATA.md`](../ERRATA.md)) are closed in `v2.0.0`, and every scope restriction is stated identically in the manuscript and the Lean signatures.
+This document maps every mathematical definition and all **22 headline theorems (`T1a`–`T4f`) plus their master conjunction (`ALL`, 23 Palomar Comparator targets)** in the white paper (`paper/main.tex`, `v2.1.0`) directly to their exact formal Lean 4.35.0 specifications in `lean/Challenge.lean` and `lean/PalomarChallenge.lean`. All seven statement-fidelity gaps logged by the 2026-11-26 audit (see [`ERRATA.md`](../ERRATA.md)) are closed, and `tests/test_all.py` enforces automated symbol-existence and bijection checks so this table can never drift from `lean/Challenge.lean`.
 
 ## Core Definition Alignment
 
-| Paper Symbol | Mathematical Meaning | Lean 4.35.0 Definition | Module |
+| Paper Symbol | Mathematical Meaning | Exact Lean 4.35.0 Declaration | Module |
 | --- | --- | --- | --- |
-| $\sigma_n^{\mathrm{std}}(i, j)$ | Euclidean Cayley--Dickson basis sign cocycle | `CDTerrace.cdSign` | `CDTerrace.Basic` |
+| $\sigma_n^{\mathrm{std}}(i, j)$ | Euclidean Cayley–Dickson basis sign cocycle | `CDTerrace.cdSign` | `CDTerrace.Basic` |
 | $\sigma_n^{\gamma}(i, j)$ | Generalized sign cocycle for flip mask `flipMask` | `CDTerrace.cdSignGamma` | `CDTerrace.Basic` |
-| $(x \cdot y)_k$ in $\mathrm{CD}_n(\gamma)$ | Exact bilinear coordinate multiplication over $\mathbb{Z}$ | `CDTerrace.cdMulCoordGamma` | `CDTerrace.Basic` |
-| $L_{e_i + e_j}(x)$ | Left-multiplication operator by the 2-blade $e_i + e_j$ | `CDTerrace.leftMulTwoBladeCoord` | `CDTerrace.Basic` |
+| $(u \cdot v)_t$ in $\mathrm{CD}_n(\gamma)$ | Literal bilinear coordinate multiplication over $\mathbb{Z}$ | `CDTerrace.cdMulCoordGamma` | `CDTerrace.Basic` |
+| $R$, $w_k$ (for $\ker L_{e_i+e_j}$) | Singular orbit lower reps & explicit 2-sparse $\mathbb{Z}$-basis vectors | `CDTerrace.singularOrbitRepsGamma`, `CDTerrace.twobladeKernelBasisVec` | `CDTerrace.Basic` |
 | $\delta_n^{\gamma}(i, j, k)$ | $2\times 2$ block determinant sign | `CDTerrace.blockDeltaGamma` | `CDTerrace.Basic` |
-| $\nu_n^{\gamma}(i, j)$ | Exact annihilator dimension $\dim \ker L_{e_i + e_j}$ (proved equal to block count via explicit $\mathbb{Z}$-basis isomorphism in `T1f`) | `CDTerrace.twobladeNullityGamma` | `CDTerrace.Basic` |
-| $H_n^{\gamma}(v)$ | Count of $1 \le i < j < 2^n$ with $\nu_n^{\gamma}(i,j) = v$ | `CDTerrace.nullityHistGamma` | `CDTerrace.Basic` |
+| $\nu_n^{\gamma}(i, j)$ | Block-count 2-blade nullity (proved equal to $\dim_{\mathbb{Z}} \ker L_{e_i+e_j}$ via explicit $\mathbb{Z}$-basis isomorphism in `T1f`) | `CDTerrace.twobladeNullityGamma`, `CDTerrace.twobladeNullity` | `CDTerrace.Basic` |
+| $H_n^{\gamma}(v)$, $H_n^{\mathrm{std}}(v)$ | Count of $1 \le i < j < 2^n$ with $\nu_n^{\gamma}(i,j) = v$ | `CDTerrace.nullityHistGamma`, `CDTerrace.nullityHist` | `CDTerrace.Basic` |
 | $M_n$ | Total Euclidean 2-blade nullity mass | `CDTerrace.totalNullityMass` | `CDTerrace.Basic` |
-| $G_n^{\mathrm{comp}}$ | Basis right-compatibility graph (Euclidean coordinate subsets) | `CDTerrace.rightCompat`, `isCompatClique` | `Basic`, `HurwitzRupture` |
-| $\rho(2^n)$ | Closed Hurwitz--Radon formula $8\lfloor n/4\rfloor + 2^{n \bmod 4}$ (identification with maximal real $[2^n, r, 2^n]$ composition dimension cited from Hurwitz 1922 / Radon 1922) | `CDTerrace.hurwitzRadon` | `CDTerrace.Basic` |
-| $[|S_L|, |S_R|, 2^n]$ | Coordinate norm-multiplicative pair in Euclidean $\mathrm{CD}_n$ | `CDTerrace.isNormMultPair`, `isNormMultMask` | `HurwitzRupture`, `FiniteCertificates` |
+| $G_n^{\mathrm{comp}}$ | Euclidean basis right-compatibility graph & cliques | `CDTerrace.rightCompat`, `CDTerrace.isCompatClique` | `Basic`, `HurwitzRupture` |
+| $\rho(2^n)$ | Closed Hurwitz–Radon formula $8\lfloor n/4\rfloor + 2^{n \bmod 4}$ (classical identification with maximal real $[2^n, r, 2^n]$ composition dimension cited from Hurwitz 1922 / Radon 1922 / Adams 1962) | `CDTerrace.hurwitzRadon` | `CDTerrace.Basic` |
+| $[|S_L|, |S_R|, 2^n]$ | Coordinate norm-multiplicative pair / bitmask in Euclidean $\mathrm{CD}_n$ | `CDTerrace.isNormMultPair`, `CDTerrace.isNormMultMask`, `CDTerrace.isNormMultList` | `HurwitzRupture`, `FiniteCertificates` |
+| Box-kite vanishing product | Pure algebraic $(e_i+e_j)(e_k \pm e_l) = 0$ across all 16 coordinates | `CDTerrace.bladeProdCoord4`, `CDTerrace.boxKiteAdj` | `CDTerrace.FiniteCertificates` |
 
 ## Complete Theorem Fidelity Map (22 Headline Theorems, 23 Palomar Targets)
 
-| ID | Paper Theorem | Lean Target (`PalomarChallenge` / `Challenge`) | Scope & Fidelity Notes |
+| ID | Paper Theorem | Palomar Target / Statement Abbrev | Underlying Lean Theorem(s) & Exact Formula / Scope |
 | --- | --- | --- | --- |
-| `T1a` | Generalized Sign Factorization | `prove_t1a` / `T1aStmt` | Exact $\forall n, f, i, j < 2^n$ identity |
-| `T1b` | $k$-Independent Block-Sign Flip Law | `prove_t1b` / `T1bStmt` | Exact $\forall n, f, i, j, k < 2^n$ identity |
-| `T1c` | Split-Signature Involution (Full Bilinear Square) | `prove_t1c` / `T1cStmt` | States full scalar part AND cross-term vanishing of $(e_i+e_j)^2$ |
-| `T1d` | Universal Annihilator-Mirror Dichotomy | `prove_t1d` / `T1dStmt` | Exact $\forall n, f, i, j$ trichotomy ($0$, $\nu^{\mathrm{std}}$, $2^{n-1}-\nu^{\mathrm{std}}$) |
-| `T1e` | Nilpotent Mirror Conservation & Midpoint-$42$ Invariance | `prove_t1e` / `T1eStmt` | Exact mirror-pair sum invariance across all $2^n$ signatures |
-| `T1f` | Exact 2-Blade Left-Annihilator $\mathbb{Z}$-Basis Isomorphism | `prove_t1f` / `T1fStmt` | Full bilinear product `cdMulCoordGamma`: explicit $\mathbb{Z}$-basis of $\ker L_{e_i+e_j}$ of exact cardinality `twobladeNullityGamma` |
-| `T2a` | Exact Euclidean 2-Blade Nullity Formula | `prove_t2a` / `T2aStmt` | All $n \ge 1$, $1 \le i < j < 2^n$ |
-| `T2b` | Dyadic-Palindromic Terrace Law & Sharp BDI Separation | `prove_t2b` / `T2bStmt` | Exact histogram recursion, $4 \mid \nu$, exact ceiling $2^{n-1}-4$, strict separation `< bdiMaxAnnihilator n` for all $n \ge 5$, AND uniqueness of equality at $n = 4$ among $n \ge 4$ |
-| `T2c` | Closed-Form Total 2-Blade Nullity Mass | `prove_t2c` / `T2cStmt` | Exact $M_n = 2^{n-2}(2^{n-1}-1)(2^{n-2}-1)$ for all $n \ge 2$ |
-| `T2d` | Non-Zero-Divisor 2-Blade Count | `prove_t2d` / `T2dStmt` | Exact $H_n^{\mathrm{std}}(0) = \frac{1}{3}(4^n + 3\cdot 2^n - 4)$ for all $n \ge 1$ |
-| `T3a` | Universal Right-Compatibility Classification | `prove_t3a` / `T3aStmt` | Exact Euclidean classification of all right-compatible basis pairs |
-| `T3b` | Exact Compatibility-Graph Clique Number | `prove_t3b` / `T3bStmt` | Exact $\omega(G_n^{\mathrm{comp}}) = n + 5$ for all $n \ge 3$ |
-| `T3c` | Dimension-64 Hurwitz--Radon Coordinate Rupture | `prove_t3c` / `T3cStmt` | Explicitly scoped to Euclidean coordinate families vs. closed formula `hurwitzRadon n`: equality on $n \in \{3,4,5\}$ and strict deficit $\ge n-5$ for all $n \ge 6$ |
-| `T3d` | Asymmetric Doubling Tower | `prove_t3d` / `T3dStmt` | Constructive $[2^{n-1}, 2(n+4), 2^n]$ Euclidean coordinate pairs for all $n \ge 4$ |
-| `T4a` | Sedenion 42-Subspace Fano Duality & $2+2$ Bad-Plane Splitting | `prove_t4a` / `T4aStmt` | All $2^{16}$ masks: exact 42 10D subspaces, 0 at $\ge 11$D, 7/28/7 split, AND every bad sedenion affine 2-plane splits $2+2$ across $\{0..7\}$ and $\{8..15\}$ |
-| `T4b` | Sedenion Box-Kite Structural Classification | `prove_t4b` / `T4bStmt` | 42 assessors, 7 disjoint $K_{2,2,2}$ struts derived directly from `isBoxKiteAssessor` without circularity |
-| `T4c` | Constructive High-Dimensional Symmetric Coordinate Witnesses | `prove_t4c` / `T4cStmt` | Verified $[14,14,32]$ Pathion and $[16,16,64]$ Chingon Euclidean coordinate witnesses |
-| `T4d` | Real/Complex Norm-Multiplicativity vs. Complexification Rigidity | `prove_t4d` / `T4dStmt` | Derives $(c-1)(c+1)=0$ directly from $c^2=1$ in $\mathbb{Z}[i]$ (no pre-factored hypothesis) |
-| `T4e` | Pathion Exact Ceiling $r_{\max}(\mathrm{CD}_5)=14$ & $7+7$ Rigidity | `prove_t4e` / `T4eStmt` | Pure-kernel exhaustion over all $2^{32}$ masks and all duplicate-free lists `isNormMultPair 5 S S`: $|S| \le 14$, and $|S|=14 \implies (|S_{\mathrm{lo}}|=7 \land |S_{\mathrm{hi}}|=7)$ |
-| `T4f` | Dimension-64 Split-Signature Interior Spectral Gap | `prove_t4f` / `T4fStmt` | Complete 9-bin histogram at $\mathrm{CD}_6(\mathrm{flip}=56)$ proving $H_6^{56}(20) = 0$ and mirror conservation $H_6^{56}(12)+H_6^{56}(20) = 336$ |
-| `ALL` | Unified 22-Theorem Master Bundle | `prove_all_terrace_theorems` | Conjunction of all 22 headline theorems (23rd Palomar target) |
+| `T1a` | Multiplicative Cocycle Factorization | `prove_t1a` / `T1aStmt` | `cdSignGamma_factorization`: $\forall n, f, i, j < 2^n$, $\sigma_n^f(i,j) = \sigma_n^{\mathrm{std}}(i,j)\cdot \chi_n(i \,\&\, j \,\&\, f)$ |
+| `T1b` | $k$-Independent Block-Sign Flip Law | `prove_t1b` / `T1bStmt` | `blockDeltaGamma_eq`: $\forall n, f, i, j, k < 2^n$, $\delta_n^f(i,j,k) = \chi_n((i\oplus j)\,\&\,f)\cdot \delta_n^{\mathrm{std}}(i,j,k)$ |
+| `T1c` | Full 2-Blade Nilpotency Criterion | `prove_t1c` / `T1cStmt` | `cdSignGamma_anticomm` & `twoblade_nilpotent_full_iff`: cross-term cancellation $\sigma_n^f(i,j)+\sigma_n^f(j,i)=0$ AND $((e_i+e_j)^2)_t = 0\;\forall t < 2^n \iff \mathrm{parity}_n((i\oplus j)\,\&\,f) = 1$ |
+| `T1d` | Universal Nilpotent Mirror-Inversion Law | `prove_t1d` / `T1dStmt` | `nilpotent_mirror_law`: $\forall n \ge 1, f, 1 \le i \ne j < 2^n$, $\nu_n^f = \nu_n^{\mathrm{std}}$ (non-nilpotent) and $\nu_n^f + \nu_n^{\mathrm{std}} = 2^{n-1}$ (nilpotent) |
+| `T1e` | Mirror-Pair Conservation & Midpoint Invariance | `prove_t1e` / `T1eStmt` | `mirror_sum_conservation` & `midpoint_stratum_invariance`: $H_n^f(v) + H_n^f(2^{n-1}-v) = H_n^{\mathrm{std}}(v) + H_n^{\mathrm{std}}(2^{n-1}-v)$ ($\forall n \ge 1$) and $H_n^f(2^{n-2}) = H_n^{\mathrm{std}}(2^{n-2})$ ($\forall n \ge 2$) |
+| `T1f` | Exact $2\times 2$ Block Left-Annihilator Kernel-Basis Isomorphism | `prove_t1f` / `T1fStmt` | `twoblade_left_annihilator_basis_exact`: under `cdMulCoordGamma`, `singularOrbitRepsGamma` has cardinality `twobladeNullityGamma`, every `twobladeKernelBasisVec` lies in $\ker L_{e_i+e_j}$, spans every kernel vector over $\mathbb{Z}$, and is $\mathbb{Z}$-linearly independent |
+| `T2a` | Four-Branch Euclidean 2-Blade Nullity Doubling Recurrence | `prove_t2a` / `T2aStmt` | `nullity_doubling_lower`, `nullity_doubling_upper`, `nullity_doubling_axis`, `nullity_doubling_cross` ($\forall n \ge 1$; cross branch $\forall n \ge 2$) |
+| `T2b` | Mod-4 Quantization, Attained Ceiling & Sharp BDI Separation | `prove_t2b` / `T2bStmt` | `nullity_mod4_and_bound` ($4 \mid \nu_n^{\mathrm{std}}$, independent 2-blade proof of Moreno's theorem; $\nu_n^{\mathrm{std}} \le 2^{n-1}-4$), `twoblade_ceiling_attained` ($\nu_n^{\mathrm{std}}(1, 2+2^{n-1}) = 2^{n-1}-4$), `twoblade_strictly_below_bdi` ($\forall n \ge 5$, $2^{n-1}-4 < 2^n-4n+4$), `twoblade_bdi_eq_iff_four` ($\forall n \ge 4$, eq $\iff n = 4$) |
+| `T2c` | Total Nullity Mass & Nullity-Zero Count | `prove_t2c` / `T2cStmt` | `totalNullityMass_all_n` ($M_n = 8(2^{n-1}-1)(2^{n-2}-1)(2^{n-3}-1)$, $\forall n \ge 3$) & `nonZDCount_all_n` ($H_n^{\mathrm{std}}(0) = (6n-9)2^{n-2}+3$, $\forall n \ge 3$) |
+| `T2d` | Dyadic-Palindromic Terrace Law (Interleaving + Interior Palindrome) | `prove_t2d` / `T2dStmt` | `terrace_interleave_even` ($H_{n+1}(8m)=2H_n(4m)$), `terrace_interleave_odd` ($H_{n+1}(2^n-4-8m)=2H_n(4m)$), `terrace_palindrome_all_n` ($H_{n+1}(4k)=H_{n+1}(2^n-4-4k)$) for all $n \ge 3$ |
+| `T2e` | Exact Top Terrace Bin & Top-Bin Jump | `prove_t2e` / `T2eStmt` | `terrace_top_bin_all_n` ($H_{n+1}(2^n-4)=2H_n(0)$, $\forall n \ge 3$) & `terrace_top_jump_all_n` ($H_{n+1}(2^n-4)=H_{n+1}(4)+3(2^n-2)$, $\forall n \ge 4$) |
+| `T2f` | Universal All-Signature Midpoint 42 Law | `prove_t2f` / `T2fStmt` | `terrace_midpoint_std_all_n` & `universal_split_midpoint_42`: $\forall n \ge 4, \forall f$, $H_n^f(2^{n-2}) = 42 \cdot 2^{n-4}$ |
+| `T3a` | Doubling Law of $G_n^{\mathrm{comp}}$ & Unique Universal Multipliers | `prove_t3a` / `T3aStmt` | `rightCompat_doubling_lower`, `rightCompat_doubling_upper`, `rightCompat_doubling_cross`, `universal_right_multipliers_all_n` ($\{e_0, e_{2^{n-1}}\}$ unique for all $n \ge 4$, Euclidean $\mathrm{CD}_n$) |
+| `T3b` | Exact Euclidean Right-Compatibility Clique Number | `prove_t3b` / `T3bStmt` | `compat_clique_le_all_n` & `cdMaxClique_valid`: $\forall n \ge 3$, $\omega(G_n^{\mathrm{comp}}) = n + 5$ attained by `cdMaxClique n` |
+| `T3c` | Arithmetic Comparison Against $\rho(2^n)$: Dim-64 Coordinate Breakaway | `prove_t3c` / `T3cStmt` | `hurwitz_radon_saturation_345` ($n \in \{3,4,5\}$) & `hurwitz_radon_rupture_all_ge6` ($\forall n \ge 6$, $n+5 < \rho(2^n)$ and $\rho(2^n)-(n+5) \ge n-5$; arithmetic comparison on closed formula `hurwitzRadon`, scoped to Euclidean coordinate families) |
+| `T3d` | Full-Left $[2^n, n+5, 2^n]$ & Asymmetric Doubling Tower | `prove_t3d` / `T3dStmt` | `compatClique_implies_full_normMult` & `asymmetric_doubling_tower_all_n`: constructive $[2^{n-1}, 2(n+4), 2^n]$ Euclidean coordinate pairs via `doubledRightWitness n` for all $n \ge 4$ |
+| `T4a` | Sedenion Triple-42, Fano $7+28+7=42$ & Universal $2+2$ Split | `prove_t4a` / `T4aStmt` | `sedenion_42_fano_duality`, `sedenion_no_11d_coord_subspace`, `sedenion_bad_planes_split_2_2`: over all $2^{16}$ masks, 42 bad planes (all strictly $2+2$ across $\{1..7\}\times\{9..15\}$), 42 maximal 10D subsets ($7+28+7$), zero of size $\ge 11$ |
+| `T4b` | Non-Circular Re-Verification of de Marrais's 7 Box-Kites & 9D $\mathbb{O}\oplus\mathbb{R}e_8$ | `prove_t4b` / `T4bStmt` | `bladeProdCoord4_eq_cdMul` & `sedenion_box_kites_7x6`: pure vanishing-product adjacency `boxKiteAdj` (zero XOR pre-filtering) yields 42 assessors, 84 edges, 4-regular $7 \times K_{2,2,2}$ with zero cross-XOR edges, plus 9D `isNormMultMask 4 511 = true` |
+| `T4c` | Split-Phase Classifications of $\mathrm{CD}_4(\gamma)$ & $\mathrm{CD}_5(\gamma)$ | `prove_t4c` / `T4cStmt` | `split_sedenion_4_phases` (16 signatures $\to 1{:}1{:}7{:}7$) & `split_pathion_8_phases` (32 signatures $\to 4{\times}1 + 4{\times}7$) |
+| `T4d` | Pathion/Chingon Witnesses & Ring-Axiom Unit-Square Lemma | `prove_t4d` / `T4dStmt` | `pathion_14_and_chingon_16_witnesses` ($[14,14,32]$ & $[16,16,64]$), `domain_sq_eq_one_imp`, `int_sq_eq_one_iff`, `gaussInt_sq_eq_one_iff` (derived from commutative-domain ring axioms, zero pre-factored hypothesis) |
+| `T4e` | Pure-Kernel Pathion Ceiling $r_{\max}(\mathrm{CD}_5)=14$ & Strict $7+7$ Rigidity | `prove_t4e` / `T4eStmt` | `pathion_exact_ceiling_14_and_7_7_rigidity`: over ALL $2^{32}$ masks and all duplicate-free lists `isNormMultPair 5 S S`, $|S| \le 14$ and $|S|=14 \implies |S_{\mathrm{lo}}|=7 \land |S_{\mathrm{hi}}|=7$ (retiring external MILP solvers) |
+| `T4f` | Dimension-64 Split-Signature Interior Spectral Gap | `prove_t4f` / `T4fStmt` | `cd6_split56_interior_spectral_gap`: complete 9-bin histogram `(257, 422, 364, 336, 168, 0, 56, 172, 178)` at $\mathrm{CD}_6(\mathrm{flip}=56)$, proving interior gap $H_6^{56}(20) = 0$ |
+| `ALL` | Unified 22-Theorem Master Bundle | `prove_all_terrace_theorems` / `AllTerraceTheoremsStmt` | Conjunction of `T1aStmt`–`T4fStmt` (23rd Palomar Comparator target) |
 
 ## Resolution of All 7 Audit Findings from 2026-11-26
 
-1. **Full algebra & linear map kernel (`T1f`):** Added `cdMulCoordGamma`, `leftMulTwoBladeCoord`, and `twoblade_left_annihilator_basis_exact` proving an explicit $\mathbb{Z}$-basis isomorphism between $\ker L_{e_i+e_j}$ and the singular $2 \times 2$ blocks counted by `twobladeNullityGamma`.
-2. **Cross term of $(e_i+e_j)^2$ (`T1c`):** Upgraded `T1cStmt` to assert both the scalar part and explicit cross-term cancellation $e_i e_j + e_j e_i = 0$ under `cdMulCoordGamma`.
-3. **Uniqueness of BDI equality at $n=4$ (`T2b`):** Added the explicit uniqueness conjunct `∀ n, 4 ≤ n → (twobladeMaxNullity n = bdiMaxAnnihilator n ↔ n = 4)` directly into `T2bStmt`.
-4. **Hurwitz--Radon scope alignment (`T3c`):** Manuscript and Lean both explicitly distinguish the algebraic coordinate-clique bound $\omega(G_n^{\mathrm{comp}}) = n + 5$ (`T3b`), the arithmetic comparison against the closed formula $\rho(2^n)$ (`T3c`), and Hurwitz/Radon's classical identification of $\rho(2^n)$ with maximal real composition dimensions.
-5. **Sedenion $2+2$ bad-plane splitting (`T4a`):** Proved directly in `FiniteCertificates.lean` and included in `T4aStmt`.
-6. **Non-circular box-kite inter-strut disjointness (`T4b`):** Proved directly from zero-divisor product orthogonality (`isBoxKiteAssessor`) rather than by syntactic definition of `boxKiteAdj`.
-7. **Unfactored $\mathbb{Z}[i]$ square root of unity (`T4d`):** Proved `c * c = 1 → c = 1 ∨ c = -1` directly from Gaussian integer multiplication without assuming `(c - 1) * (c + 1) = 0`.
+1. **Full algebra & linear-map kernel (`T1f`):** Added `cdMulCoordGamma`, `singularOrbitRepsGamma`, `twobladeKernelBasisVec`, and `twoblade_left_annihilator_basis_exact` proving an explicit 2-sparse $\mathbb{Z}$-basis isomorphism between $\ker L_{e_i+e_j}$ and the singular $2\times 2$ blocks counted by `twobladeNullityGamma`.
+2. **Cross term of $(e_i+e_j)^2$ (`T1c`):** Upgraded `T1cStmt` to assert both `cdSignGamma_anticomm` and full coordinate-wise vanishing under `cdMulCoordGamma` (`twoblade_nilpotent_full_iff`).
+3. **Uniqueness of BDI equality at $n=4$ (`T2b`):** Added `twoblade_ceiling_attained` and `twoblade_bdi_eq_iff_four` ($\forall n \ge 4$, equality $\iff n = 4$) directly into `T2bStmt`.
+4. **Hurwitz–Radon scope alignment (`T3c`):** Manuscript and Lean both explicitly distinguish the algebraic coordinate-clique bound $\omega(G_n^{\mathrm{comp}}) = n + 5$ (`T3b`), the arithmetic comparison against `hurwitzRadon n` (`T3c`), and Hurwitz/Radon/Adams's classical theorem.
+5. **Sedenion $2+2$ bad-plane splitting (`T4a`):** Proved directly in `sedenion_bad_planes_split_2_2` (`FiniteCertificates.lean`) and included in `T4aStmt`.
+6. **Non-circular box-kite inter-strut disjointness (`T4b`):** Defined `boxKiteAdj` via pure 16-coordinate vanishing product `bladeProdCoord4` (proved equal to `cdMulCoordGamma` in `bladeProdCoord4_eq_cdMul`) with zero XOR pre-filtering.
+7. **Unfactored unit-square lemma (`T4d`):** Derived `domain_sq_eq_one_imp` directly from the commutative integral-domain ring axioms (`gaussInt_sq_eq_one_iff`, `int_sq_eq_one_iff`) without pre-factoring $(c-1)(c+1)=0$.
 
 ## Palomar Comparator Contract (`lean/comparator.json`)
 - **Challenge module:** `PalomarChallenge` (imports `Challenge.lean`, states all 23 targets `CDTerrace.Palomar.prove_t1a` .. `prove_t4f` and `prove_all_terrace_theorems` with intentional `sorry`; excluded from `defaultTargets`).
 - **Solution module:** `PalomarSolution` (discharges all 23 targets from `Solution.lean` with zero `sorry` and strictly standard axioms).
-- **Comparator enforcement:** `lake comparator --config comparator.json --paranoid` verifies definitional equivalence of all 23 theorem types between `PalomarChallenge` and `PalomarSolution` across all 6 independent kernels and enforces `permitted_axioms = ["propext", "Quot.sound", "Classical.choice"]`. CI also runs a real tamper-injecting negative test on `PalomarSolution` verifying that both comparator and axiom gates reject injected axioms.
+- **Comparator enforcement:** `lake comparator --config comparator.json --paranoid` verifies definitional equivalence of all 23 theorem types between `PalomarChallenge` and `PalomarSolution` across all 6 independent kernels and enforces `permitted_axioms = ["propext", "Quot.sound", "Classical.choice"]`. CI also runs a real tamper-injecting negative test on `PalomarSolution` verifying that both comparator and axiom gates reject injected `sorry` and custom axioms.
 
 ## Non-Vacuity & Boundary Sharpness Guardrails
 - `CDTerrace.NonVacuity` instantiates 4 concrete non-vacuous witnesses covering all four pillars (`n = 4, 5, 6`, `flipMask = 8` and `56`, `cdMaxClique 6`, `doubledRightWitness 6`, `1023`, `pathionWitness14`, `chingonWitness16`, `GaussInt ⟨0, 1⟩`).

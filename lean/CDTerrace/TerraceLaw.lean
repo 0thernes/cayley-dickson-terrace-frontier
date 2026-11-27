@@ -159,7 +159,7 @@ theorem blockDelta_special_nonsing (n i j k : Nat)
     rw [Nat.zero_xor] at this
     rw [this, h0]
 
-/-! ### Theorem T2a: The Six Pointwise Block-Sign Doubling Identities -/
+/-! ### Pointwise Block-Sign Doubling Lemmas (Supporting Theorem T2a) -/
 
 theorem blockDelta_doubling_lower_lo (n i j k : Nat)
     (hi : i < 2 ^ n) (hj : j < 2 ^ n) (hk : k < 2 ^ n) :
@@ -468,7 +468,7 @@ theorem blockDelta_doubling_cross_lo (n i b k : Nat)
         cdSign_anticomm n (k ^^^ (i ^^^ b)) b (by omega) hb0 hkp_lt hb hkpb]
     simp only [Int.mul_neg, Int.neg_mul, Int.neg_neg]
 
-/-! ### Theorem T2b: Universal All-$n$ 2-Blade Nullity Doubling Recurrence -/
+/-! ### Theorem T2a: Universal All-$n$ 2-Blade Nullity Doubling Recurrence -/
 
 theorem countSingularIdx_split (n i j : Nat) :
     countSingularIdx (n + 1) i j (2 ^ (n + 1)) =
@@ -685,7 +685,7 @@ theorem octonion_nonZD_21 : nullityHist 3 0 = 21 := by decide
 theorem octonion_mass_zero : totalNullityMass 3 = 0 := by decide
 theorem sedenion_hist_42 : nullityHist 4 4 = 42 := by decide
 
-/-! ### Theorem T2c: Universal Divisibility by 4, $2^{n-1} - 4$ Ceiling & BDI Separation -/
+/-! ### Theorem T2b: Universal Divisibility by 4, $2^{n-1} - 4$ Ceiling & BDI Separation -/
 
 theorem nullity_mod4_and_bound :
     ∀ n, 3 ≤ n → ∀ i j, 0 < i → 0 < j → i < 2 ^ n → j < 2 ^ n → i ≠ j →
@@ -1213,7 +1213,7 @@ theorem sumUnordered_nullity_doubling (n : Nat) (hn : 3 ≤ n) (F : Nat → Nat)
        2 * A + 3 * (2 ^ n - 1) * F 0 + B
   omega
 
-/-! ### Theorem T2d: Exact All-$n$ Total 2-Blade Nullity Mass (via $+4M_n - 4M_n$ Cancellation!) -/
+/-! ### Theorem T2c-1: Exact All-$n$ Total 2-Blade Nullity Mass (via $+4M_n - 4M_n$ Cancellation!) -/
 
 theorem count_unordered_pairs_formula (h : Nat) (hge : 1 ≤ h) :
     2 * sumUnordered (fun _ _ => 1) h = (h - 1) * (h - 2) := by
@@ -1268,7 +1268,7 @@ theorem count_unordered_pairs_formula (h : Nat) (hge : 1 ≤ h) :
   rw [hsub] at this
   exact this
 
-/-- **Theorem T2d (Exact All-$n$ Total 2-Blade Nullity Mass via $+4M_n - 4M_n$ Cancellation):**
+/-- **Theorem T2c-1 (Exact All-$n$ Total 2-Blade Nullity Mass via $+4M_n - 4M_n$ Cancellation):**
     For EVERY $n \ge 3$,
     $M_n = \sum_{1 \le i < j < 2^n} \nu_n^{\mathrm{std}}(i, j) = 8(2^{n-1} - 1)(2^{n-2} - 1)(2^{n-3} - 1)$. -/
 theorem totalNullityMass_all_n (n : Nat) (hn : 3 ≤ n) :
@@ -1366,9 +1366,9 @@ theorem totalNullityMass_all_n (n : Nat) (hn : 3 ≤ n) :
     have h8 : (8 : Nat) = 4 * 2 := rfl
     rw [h8]; ac_rfl
 
-/-! ### Theorems T2e & T2f: Exact Non-ZD Count, Interleaving, Palindrome, Top Jump & Midpoint 42 -/
+/-! ### Theorems T2c–T2f: Exact Non-ZD Count, Interleaving, Palindrome, Top Jump & Midpoint 42 -/
 
-/-- **Theorem T2e (Exact All-$n$ Zero-Divisor-Free 2-Blade Count):**
+/-- **Theorem T2c-2 (Exact All-$n$ Zero-Divisor-Free 2-Blade Count):**
     For EVERY $n \ge 3$, $H_n^{\mathrm{std}}(0) = (6n - 9) 2^{n-2} + 3$. -/
 theorem nonZDCount_all_n : ∀ n, 3 ≤ n → nullityHist n 0 = nonZDCountFormula n := by
   intro n hn
@@ -1427,7 +1427,7 @@ theorem nonZDCount_all_n : ∀ n, 3 ≤ n → nullityHist n 0 = nonZDCountFormul
         rw [hA, hB]
       rw [hdist]; omega
 
-/-- **Theorem T2f-1 (Exact Interleaving — Even Bins):**
+/-- **Theorem T2d-1 (Exact Interleaving — Even Bins):**
     For EVERY $n \ge 3$ and EVERY $m \ge 1$, $H_{n+1}^{\mathrm{std}}(8m) = 2\,H_n^{\mathrm{std}}(4m)$. -/
 theorem terrace_interleave_even (n m : Nat) (hn : 3 ≤ n) (hm : 1 ≤ m) :
     nullityHist (n + 1) (8 * m) = 2 * nullityHist n (4 * m) := by
@@ -1457,7 +1457,7 @@ theorem terrace_interleave_even (n m : Nat) (hn : 3 ≤ n) (hm : 1 ≤ m) :
   have h0ne : (0 : Nat) ≠ 8 * m := by omega
   rw [h1, h2]; simp [h0ne]
 
-/-- **Theorem T2f-2 (Exact Interleaving — Odd Bins):**
+/-- **Theorem T2d-2 (Exact Interleaving — Odd Bins):**
     For EVERY $n \ge 3$ and EVERY $m$ with $8m < 2^n - 4$,
     $H_{n+1}^{\mathrm{std}}(2^n - 4 - 8m) = 2\,H_n^{\mathrm{std}}(4m)$. -/
 theorem terrace_interleave_odd (n m : Nat) (hn : 3 ≤ n) (hm : 8 * m < 2 ^ n - 4) :
@@ -1497,7 +1497,7 @@ theorem terrace_interleave_odd (n m : Nat) (hn : 3 ≤ n) (hm : 8 * m < 2 ^ n - 
   have h0ne : (0 : Nat) ≠ 2 ^ n - 4 - 8 * m := by omega
   rw [h1, h2]; simp [h0ne]
 
-/-- **Theorem T2f-3 (Universal Exact Palindrome of the Interior Terrace):**
+/-- **Theorem T2d-3 (Universal Exact Palindrome of the Interior Terrace):**
     For EVERY $n \ge 3$ and EVERY $k \ge 1$ with $4k < 2^n - 4$:
     $H_{n+1}^{\mathrm{std}}(4k) = H_{n+1}^{\mathrm{std}}(2^n - 4 - 4k)$. -/
 theorem terrace_palindrome_all_n (n k : Nat) (hn : 3 ≤ n) (hk1 : 1 ≤ k) (hk2 : 4 * k < 2 ^ n - 4) :
@@ -1512,7 +1512,7 @@ theorem terrace_palindrome_all_n (n k : Nat) (hn : 3 ≤ n) (hk1 : 1 ≤ k) (hk2
     have h4k : 4 * k = 2 ^ n - 4 - 8 * m := by omega
     rw [← h8m, h4k, terrace_interleave_odd n m hn (by omega), terrace_interleave_even n m hn (by omega)]
 
-/-- **Theorem T2f-4 (Universal Exact Top-Bin Formula & Top-Bin Jump):**
+/-- **Theorem T2e (Universal Exact Top-Bin Formula & Top-Bin Jump):**
     For EVERY $n \ge 3$, $H_{n+1}^{\mathrm{std}}(2^n - 4) = 2\,H_n^{\mathrm{std}}(0)$,
     and for EVERY $n \ge 4$, $H_{n+1}^{\mathrm{std}}(2^n - 4) = H_{n+1}^{\mathrm{std}}(4) + 3(2^n - 2)$. -/
 theorem terrace_top_bin_all_n (n : Nat) (hn : 3 ≤ n) :
@@ -1566,7 +1566,7 @@ theorem terrace_top_jump_all_n (n : Nat) (hn : 4 ≤ n) :
     rw [hA, hB]
   rw [hdist]; omega
 
-/-- **Theorem T2f-5 (Crowning Pillar 1 + Pillar 2 Synthesis — Universal Split Midpoint 42 Law):**
+/-- **Theorem T2f (Crowning Pillar 1 + Pillar 2 Synthesis — Universal Split Midpoint 42 Law):**
     For EVERY $n \ge 4$ and EVERY signature $\gamma \in \{\pm 1\}^n$ (`flipMask`),
     $H_n^\gamma(2^{n-2}) = 42 \cdot 2^{n-4}$. -/
 theorem terrace_midpoint_std_all_n :

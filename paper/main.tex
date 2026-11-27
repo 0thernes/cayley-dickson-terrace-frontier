@@ -77,7 +77,7 @@
 \author{Alexander Stephen Donahue}
 \address{Independent Researcher, Spokane, WA, USA}
 \email{0\_0@0thernes.art}
-\thanks{Version~2.0.0. ORCID: \href{https://orcid.org/0009-0006-8168-9648}{0009-0006-8168-9648}.
+\thanks{Version~2.1.0. ORCID: \href{https://orcid.org/0009-0006-8168-9648}{0009-0006-8168-9648}.
 Code, six-kernel Lean~4.35.0 proofs, Rust/C11/Python engines, and 3D~Canvas observatory:
 \url{https://github.com/0thernes/cayley-dickson-terrace-frontier}.
 Archive ID: \texttt{0TH-2026-019}.}
@@ -159,7 +159,7 @@ algebras $\CD_4(\gamma)$--$\CD_8(\gamma)$.
 \noindent\fcolorbox{oiRule}{oiBg}{%
 \begin{minipage}{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}
 \small
-\textbf{Epistemic Scope \& Verification Discipline (v2.0.0).}
+\textbf{Epistemic Scope \& Verification Discipline (v2.1.0).}
 Every mathematical claim in this paper carries an explicit verification tag:
 \tagLean{} denotes a theorem machine-checked in zero-Mathlib Lean~4.35.0 across six
 independent kernels (\texttt{lean}, \texttt{leanchecker-paranoid}, \texttt{lean4lean},
@@ -169,9 +169,10 @@ contract with zero \texttt{sorry}, zero \texttt{admit}, zero \texttt{native\_dec
 \tagComp{} denotes an exact-arithmetic computational certificate (Rust/C11/Python differential
 enumeration) outside Lean;
 \tagOpen{} denotes an open mathematical frontier explicitly \emph{not} claimed solved.
-Version~2.0.0 resolves every manuscript, formal, and tooling item logged in \code{ERRATA.md}
-against v1.0.0, adds kernel proofs \code{T1f}, \code{T4e}, and \code{T4f}, and removes external
-MILP solvers from the proof trust base for $r_{\max}(\CD_5) = 14$.
+Versions~2.0.0--2.1.0 resolve every manuscript, formal, and tooling item logged in \code{ERRATA.md},
+add kernel proofs \code{T1f}, \code{T4e}, and \code{T4f}, retire external MILP solvers from the
+proof trust base for $r_{\max}(\CD_5) = 14$, and lock automated statement-symbol and schema
+consistency checks across the entire archive.
 \end{minipage}}
 
 \tableofcontents
@@ -245,10 +246,11 @@ Motivated by these lines of inquiry, we pose and investigate four structural que
     structure at dimension~$64$?
 \end{itemize}
 
-This work addresses these four questions through four formally verified algebraic pillars backed
+This work addresses these four questions through four formally verified algebraic pillars
+(Sections~\ref{sec:setup}--\ref{sec:pillar4}) backed
 by a zero-Mathlib six-kernel Lean~4.35.0 suite and tri-language differential checks across all
-$496$ generalized algebras $\CD_4(\gamma)$--$\CD_8(\gamma)$; Section~\ref{sec:boundaries} states
-explicitly what remains open. Relative to the prior work of Moreno~\cite{moreno1998,moreno2004},
+$496$ generalized algebras $\CD_4(\gamma)$--$\CD_8(\gamma)$ (Section~\ref{sec:verification});
+Section~\ref{sec:boundaries} states explicitly what remains open. Relative to the prior work of Moreno~\cite{moreno1998,moreno2004},
 de~Marrais~\cite{demarrais2000,demarrais2002}, Albuquerque--Majid~\cite{albuquerque1999},
 Morier-Genoud--Ovsienko~\cite{moriergenoud2011}, and Zhilina~\cite{zhilina2021i,zhilina2021ii},
 the principal new contributions established and machine-checked here are: (i)~the universal
@@ -503,6 +505,8 @@ For every $n \ge 1$, flip mask $f$, and distinct $i, j < 2^n$:
 \end{theorem}
 
 \begin{proof}
+By Theorem~\ref{thm:t1c}, the non-nilpotent and nilpotent cases partition the unordered basis pairs
+via $\parbit_n((i \oplus j) \,\&\, f) \in \{0, 1\}$.
 In Case~(1), Theorem~\ref{thm:t1b} gives $\delta_n^{f}(i, j, k) = \delta_n^{\std}(i, j, k)$ for
 all $k < 2^n$, so singular counts coincide identically.
 In Case~(2), $\delta_n^{f}(i, j, k) = -\delta_n^{\std}(i, j, k)$ for all $k < 2^n$. Since
@@ -725,7 +729,7 @@ Setting $F(x) = x$ in \eqref{eq:master_sum} for $m = n - 1 \ge 3$ cancels $4M_m$
           &= (2^m - 4)(2^m - 1)(2^m - 2)
            = 8(2^m - 1)(2^{m-1} - 1)(2^{m-2} - 1),
 \end{align*}
-and at $n = 3$ both sides vanish. Setting $F(x) = \mathbf{1}[x = 0]$ in \eqref{eq:master_sum},
+and at $n = 3$ both sides of \eqref{eq:mass} vanish. Setting $F(x) = \mathbf{1}[x = 0]$ in \eqref{eq:master_sum},
 the cross term vanishes for all $n \ge 3$ because $2\nu_n^{\std}(i, b) \le 2^n - 8 < 2^n - 4$,
 leaving $H_{n+1}^{\std}(0) = 2H_n^{\std}(0) + 3(2^n - 1)$ with $H_3^{\std}(0) = \binom{7}{2} = 21$,
 whose unique solution is \eqref{eq:nonzd}.
@@ -775,6 +779,11 @@ applying Theorem~\ref{thm:t2de}(1) gives
 $H_{n+1}^{\std}(2^{n-1}) = 2 H_n^{\std}(2^{n-2}) = 42 \cdot 2^{(n+1)-4}$, and
 Theorem~\ref{thm:t1e} transfers this invariant to every split signature $f$.
 \end{proof}
+
+Figure~\ref{fig:terrace_cathedral} and Table~\ref{tab:terrace_values} summarize the resulting
+Euclidean $2$-blade spectral invariants across $\CD_3$--$\CD_8$ (Theorems~\ref{thm:t2c}--\ref{thm:t2f}),
+illustrating the interleaved palindromic strata, top-bin jumps, and pinned midpoint spine
+$42 \cdot 2^{n-4}$.
 
 \begin{figure}[htbp]
   \centering
@@ -892,7 +901,7 @@ and $b_0 \in S_1'$ force $S_0 \subseteq \{0, b_0\}$ and $S_1' \subseteq \{0, a_0
 $|S| \le 4 < (n+1)+5$. Conversely, $C_{n+1} = C_n \cup \{2^n\}$ is a valid $(n+6)$-clique.
 \end{proof}
 
-\begin{corollary}[Arithmetic Comparison Against $\rho(2^n)$: Coordinate Breakaway at Dimension~64, \code{T3c} \tagLean]
+\begin{corollary}[Arithmetic Comparison Against $\rho(2^n)$: Coordinate Breakaway at Dimension~64, \texttt{T3c} \tagLean]
 \label{thm:t3c}
 Comparing the proved Euclidean coordinate clique ceiling $\omega(G_n^{\comp}) = n + 5$
 (Theorem~\ref{thm:t3b}) against the closed formula $\rho(2^n) = 8\lfloor n/4\rfloor + 2^{n \bmod 4}$
@@ -1000,14 +1009,20 @@ discharge $(42, 0, 7, 28, 7)$ by pure kernel reduction (\code{rfl}).
 The $42$ sedenion box-kite assessors $\{(i, j) : 1 \le i \le 7,\; 9 \le j \le 15,\; j \neq i + 8\}$
 of de~Marrais~\cite{demarrais2000}, equipped with the \emph{pure algebraic vanishing-product}
 adjacency $(e_i + e_j)(e_k + e_l) = 0$ or $(e_i + e_j)(e_k - e_l) = 0$ evaluated across all $16$
-coordinates with \emph{zero} XOR pre-filtering (\code{boxKiteAdj}), form a $4$-regular graph
+coordinates with \emph{zero} XOR pre-filtering (\code{boxKiteAdj}, linked to \code{cdMulCoordGamma}
+by \code{bladeProdCoord4_eq_cdMul}), form a $4$-regular graph
 ($84$ edges) decomposing by XOR strut signature $s = i \oplus j \in \{9,\dots,15\}$ into
-$7$ disjoint octahedra $7 \times K_{2,2,2}$ with zero cross-class edges (spectrum
-$\{4^7, 0^{21}, (-2)^{14}\}$). Furthermore, the $9$-dimensional coordinate subspace
+$7$ disjoint octahedra $7 \times K_{2,2,2}$ with zero cross-class edges.
+Furthermore, the $9$-dimensional coordinate subspace
 $\OO \oplus \R e_8$ (mask $511$) is norm-multiplicative in $\SSed$.
 \end{theorem}
 
-Each of the $7$ Fano triples of $\OO$ generates $6$ bad $2+2$ affine $2$-planes (total $42$),
+As an immediate graph-theoretic corollary of the $7 \times K_{2,2,2}$ decomposition of
+Theorem~\ref{thm:t4b} (since each octahedron $K_{2,2,2}$ has adjacency spectrum $\{4^1, 0^3, (-2)^2\}$),
+the $42$-vertex box-kite adjacency matrix has exact spectrum $\{4^7, 0^{21}, (-2)^{14}\}$ and
+minimal polynomial $A^3 - 2A^2 - 8A = 0$ (verified directly in exact integer arithmetic in Rust
+and Python). Each of the $7$ Fano triples of $\OO$ generates $6$ bad $2+2$ affine $2$-planes (total $42$,
+Theorem~\ref{thm:t4a}),
 $6$ mutually annihilating box-kite assessors forming one octahedron $K_{2,2,2}$ (total $42$),
 and via the Fano-line involution on $\{1,\dots,7\} \leftrightarrow \{9,\dots,15\}$, the exact
 $7 + 28 + 7 = 42$ maximal $10$-dimensional norm-multiplicative coordinate subspaces
@@ -1026,7 +1041,7 @@ Yiu~\cite{lamyiu1987,shapiro2000} natively inside $\SSed$; Figure~\ref{fig:seden
   \label{fig:sedenion_triple_42}
 \end{figure}
 
-\begin{theorem}[Split-Phase Classifications of $\CD_4(\gamma)$ and $\CD_5(\gamma)$, \code{T4c} \tagLean]
+\begin{theorem}[Split-Phase Classifications of $\CD_4(\gamma)$ and $\CD_5(\gamma)$, \texttt{T4c} \tagLean]
 \label{thm:t4c}
 \hfill\par\noindent
 \begin{enumerate}[leftmargin=2em,topsep=2pt]
@@ -1051,7 +1066,7 @@ Yiu~\cite{lamyiu1987,shapiro2000} natively inside $\SSed$; Figure~\ref{fig:seden
 \end{enumerate}
 \end{theorem}
 
-\begin{theorem}[Pathion/Chingon Witnesses and Elementary Unit-Square Lemma, \code{T4d} \tagLean]
+\begin{theorem}[Pathion/Chingon Witnesses and Elementary Unit-Square Lemma, \texttt{T4d} \tagLean]
 \label{thm:t4d}
 \hfill\par\noindent
 \begin{enumerate}[leftmargin=2em,topsep=2pt]
@@ -1089,7 +1104,7 @@ norm-cancellation identity \eqref{eq:nm_pair} is invariant under simultaneously 
 four indices by $\oplus 2^n$ (\code{cdSign_halfSwap}, \code{pairingCancels_halfSwap}).
 \end{lemma}
 
-\begin{theorem}[Pure-Kernel Pathion Ceiling $r_{\max}(\CD_5) = 14$ and Strict $7+7$ Rigidity, \code{T4e} \tagLean]
+\begin{theorem}[Pure-Kernel Pathion Ceiling $r_{\max}(\CD_5) = 14$ and Strict $7+7$ Rigidity, \texttt{T4e} \tagLean]
 \label{thm:t4e}
 Across \emph{all} $2^{32} = 4{,}294{,}967{,}296$ coordinate subsets $S \subseteq \{0, \dots, 31\}$
 of Euclidean $\CD_5$ (equivalently every duplicate-free list $S$ satisfying \cmd{isNormMultPair 5 S S}):
@@ -1127,19 +1142,21 @@ an independent set in the induced cross-conflict graph $H(S_{\mathrm{lo}})$ on $
 By pigeonhole (\code{popcount16_le_clique_cover}), $|S_{\mathrm{hi}}| \le |\mathcal{C}|$ for any
 clique cover $\mathcal{C}$ of $H(S_{\mathrm{lo}})$. Executing deterministic descending
 ($15, 14, \dots, 1$, plus singleton $\{0\}$) greedy clique cover (\code{greedyCliques}) inside
-the Lean kernel via binary-tree dispatch (\code{hasCrossEdgeFast}) succeeds with
-$|S_{\mathrm{lo}}| + |\mathcal{C}| \le 13$ on \emph{all} $2{,}995$ cases ($0/2{,}995$ failures),
-discharged by pure kernel reduction (\code{rfl}) across 16 blocks (\code{checkPathionLoChunk_0}--\code{15})
-with zero DFS, zero backtracking, zero MILP, and zero \code{native_decide}.
+the Lean kernel via $O(1)$ constructor dispatch (\code{hasCrossEdgeVtx}, proved equivalent by
+\code{hasCrossEdgeVtx_eq}) and odd-byte symmetry (\code{popcount8_le_odd}, \code{checkPathionOdd_all})
+succeeds with $|S_{\mathrm{lo}}| + |\mathcal{C}| \le 13$ on \emph{all} $2{,}995$ cases
+($0/2{,}995$ failures), discharged by pure kernel reduction (\code{rfl}) across 16 odd-byte blocks
+(\code{checkPathionOddChunk_0}--\code{15}) with zero DFS, zero backtracking, zero MILP, and
+zero \code{native_decide}.
 \end{proof}
 
-\begin{proposition}[Exact Census of 14D Pathion Subspaces, \code{C2} \tagComp]
+\begin{proposition}[Exact Census of 14D Pathion Subspaces, \texttt{C2} \tagComp]
 \label{prop:pathion_census}
-Independent exhaustive branch-and-bound enumerations in Rust and Python (cross-checked against a
-zero-gap HiGHS MILP over all $630$ bad affine $2$-planes of $\CD_5$) show that $\CD_5$ contains
-exact count \textbf{280} of norm-multiplicative $14$-dimensional coordinate subspaces. Every one
-of these $280$ subspaces splits strictly $7 + 7$ (confirming Theorem~\ref{thm:t4e}) and contains
-both universal multipliers $e_0$ and $e_{16}$.
+Independent exhaustive branch-and-bound enumerations in Rust and Python (whose ceiling $14$ is
+independently cross-checked by a zero-gap HiGHS MILP over all $630$ bad affine $2$-planes of $\CD_5$)
+show that $\CD_5$ contains exact count \textbf{280} of norm-multiplicative $14$-dimensional
+coordinate subspaces. Every one of these $280$ subspaces splits strictly $7 + 7$ (confirming
+Theorem~\ref{thm:t4e}) and contains both universal multipliers $e_0$ and $e_{16}$.
 \end{proposition}
 
 \begin{remark}[Distinction from Yiu's {$[16, 16, 32]$} Integral Bilinear Form]
@@ -1152,7 +1169,7 @@ restriction of $\CD_5$ exists, so realizing $[16, 16, 32]$ requires non-Cayley--
 intercalate structure (Figure~\ref{fig:bdi_symmetric}, right).
 \end{remark}
 
-\begin{theorem}[Dimension-64 Split-Signature Interior Spectral Gap, \code{T4f} \tagLean]
+\begin{theorem}[Dimension-64 Split-Signature Interior Spectral Gap, \texttt{T4f} \tagLean]
 \label{thm:t4f}
 In the $64$-dimensional split Chingon algebra $\CD_6(\gamma)$ with flip mask $56$
 ($\gamma = (-1, -1, -1, +1, +1, +1)$), the complete $9$-bin $2$-blade nullity histogram is
@@ -1254,10 +1271,10 @@ eight refutations of natural false strengthenings are machine-checked in
 \subsection{Tri-Language Differential Verification and Cryptographic Provenance}
 Independent zero-dependency Rust (with \cmd{\#![forbid(unsafe\_code)]} in \cmd{rust/}), strict
 ISO~C11 compiled with \cmd{-Werror}, \cmd{-Wconversion}, and \cmd{-Wshadow}, ASan/UBSan,
-$10^5$-case plus libFuzzer fuzzing (auditing all $496$ generalized algebras
-$\CD_4(\gamma)$--$\CD_8(\gamma)$ with zero stride in \cmd{c/}), and Python with a naive recursive
-Cayley--Dickson oracle, exact $\Q$ Gaussian elimination, Hypothesis property tests, and surgical
-mutation tests (\cmd{src/}, \cmd{reference/}, \cmd{tests/}) agree bit-for-bit. Frozen JSON
+$10^5$-iteration deterministic fuzzing across $\CD_1$--$\CD_7$ (auditing all $496$ generalized
+algebras $\CD_4(\gamma)$--$\CD_8(\gamma)$ with zero stride in \cmd{c/}), and Python with a naive
+recursive Cayley--Dickson oracle, exact $\Q$ Gaussian elimination, Hypothesis property tests, and
+surgical mutation tests (\cmd{src/}, \cmd{reference/}, \cmd{tests/}) agree bit-for-bit. Frozen JSON
 datasets, deliverables, and manifests carry SHA-256 checksums (\code{data/MANIFEST.sha256} and
 \code{MANIFEST.sha256}), independent RFC~3161 TSA (\code{data/MANIFEST.sha256.tsr}) and
 Bitcoin-anchored OpenTimestamps (\code{data/MANIFEST.sha256.ots}) proofs, and GitHub SLSA build
@@ -1269,7 +1286,7 @@ provenance attestations.
 % ==============================================================================
 
 \begin{openproblem}[Higher-Blade Annihilator Spectra \tagOpen]
-Pillars~1 and~2 classify \emph{basis $2$-blades} $e_i + e_j$. By Theorem~\ref{thm:t2b}, $2$-blades
+Pillars~1 and~2 (Sections~\ref{sec:pillar1}--\ref{sec:pillar2}) classify \emph{basis $2$-blades} $e_i + e_j$. By Theorem~\ref{thm:t2b}, $2$-blades
 fall strictly short of $\mathrm{BDI}(n) = 2^n - 4n + 4$ for every $n \ge 5$. Classifying the
 annihilator stratification of $k$-blades ($k \ge 3$) and general elements of $\CD_n(\gamma)$
 remains open (adjacent to Mega-Atlas entry \code{ALG-039}).
@@ -1278,12 +1295,12 @@ remains open (adjacent to Mega-Atlas entry \code{ALG-039}).
 \begin{openproblem}[Exact Symmetric Coordinate Ceiling $r_{\max}(\CD_n)$ for $n \ge 6$ \tagOpen]
 We prove $r_{\max}(\CD_3) = 8$, $r_{\max}(\CD_4) = 10$ \tagLean{}, $r_{\max}(\CD_5) = 14$ with
 strict $7+7$ rigidity \tagLean{}, and $r_{\max}(\CD_6) \ge 16$ \tagLean{}. Determining exact
-$r_{\max}(\CD_n)$ for $n \ge 6$ (and lifting the $280$-subspace exact census \code{C2} into Lean)
-remains open (adjacent to \code{COMB-040}).
+$r_{\max}(\CD_n)$ for $n \ge 6$ (and lifting the $280$-subspace exact census of
+Proposition~\ref{prop:pathion_census} into Lean) remains open (adjacent to \code{COMB-040}).
 \end{openproblem}
 
 \begin{openproblem}[Sums-of-Squares Beyond Coordinate Subspaces \tagOpen]
-Theorems~\ref{thm:t3b}--\ref{thm:t3c} and~\ref{thm:t4e} govern coordinate subsets under native
+Theorems~\ref{thm:t3a}--\ref{thm:t3d} (Section~\ref{sec:pillar3}) and~\ref{thm:t4e} govern coordinate subsets under native
 Euclidean Cayley--Dickson multiplication; they do \emph{not} resolve the general real or
 field-dependent Hurwitz problem $[r, s, N]$ (adjacent to \code{ALG-035};
 cf.~\cite{yiu1990,zhangzhu2026hurwitz}), nor do they settle whether arbitrary real linear
@@ -1320,9 +1337,10 @@ under 15~CFR~734.8 with no controlled dual-use technologies or restricted data.
 
 \subsection*{Errata and Withdrawal Policy}
 This preprint has not undergone external journal peer review. All corrections discovered after
-release are logged transparently in \code{ERRATA.md} (Version~2.0.0 resolves all 23 v1.0.0 audit
-entries); should any mathematical error invalidate a headline result, a dated correction or
-withdrawal notice will be published promptly in \code{ERRATA.md} and the release archive.
+release are logged transparently in \code{ERRATA.md} (Versions~2.0.0--2.1.0 resolve every
+v1.0.0 statement-audit entry and every Cycle~1--3 hardening finding); should any mathematical
+error invalidate a headline result, a dated correction or withdrawal notice will be published
+promptly in \code{ERRATA.md} and the release archive.
 
 \subsection*{Transparent AI-Assistance Disclosure}
 In accordance with reproducible independent research standards, this project was conceived,

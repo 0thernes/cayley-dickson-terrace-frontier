@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Alexander Stephen Donahue
-"""Generate all 5 publication-grade Okabe-Ito figures (PDF + PNG) and social preview SVG."""
+"""Generate all 5 publication-grade Okabe-Ito figures (PDF + PNG) and 1280x640 social preview (SVG + PNG)."""
 
 from __future__ import annotations
 
@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 FIG_DIR = ROOT / "paper" / "figures"
 MEDIA_DIR = ROOT / "docs" / "media"
+REPO_VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip() if (ROOT / "VERSION").exists() else "2.1.0"
 
 # Okabe-Ito colorblind-safe palette (WCAG AA on white background)
 OI_BLUE = "#0072B2"
@@ -261,7 +262,7 @@ def make_fig2_mirror_conservation(split_data: dict[str, Any]) -> None:
 
 
 def make_fig3_hurwitz_rupture(hr_data: dict[str, Any]) -> None:
-    """Fig 3: Dimension-64 Hurwitz-Radon Bott Rupture & Asymmetric Doubling Tower."""
+    """Fig 3: Dimension-64 Euclidean Coordinate Right-Multiplier Rupture & Asymmetric Doubling Tower."""
     rows = hr_data["rows"]
     ns = [r["n"] for r in rows]
     omega = [r["cd_max_clique_omega"] for r in rows]
@@ -271,14 +272,14 @@ def make_fig3_hurwitz_rupture(hr_data: dict[str, Any]) -> None:
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.4, 4.5), gridspec_kw={"wspace": 0.25})
 
-    ax1.plot(ns, rho, marker="o", linewidth=2.1, color=OI_VERM, label=r"Hurwitz–Radon ceiling $\rho(2^n)$ (Bott 8-periodic)")
-    ax1.plot(ns, omega, marker="s", linewidth=2.1, color=OI_BLUE, label=r"$\mathrm{CD}_n$ clique ceiling $\omega(G_n^{\mathrm{comp}}) = n+5$")
+    ax1.plot(ns, rho, marker="o", linewidth=2.1, color=OI_VERM, label=r"Classical Hurwitz–Radon formula $\rho(2^n)$")
+    ax1.plot(ns, omega, marker="s", linewidth=2.1, color=OI_BLUE, label=r"Euclidean $\mathrm{CD}_n$ clique $\omega(G_n^{\mathrm{comp}}) = n+5$")
     ax1.plot(ns, doubled_r, marker="^", linestyle="--", linewidth=1.8, color=OI_GREEN, label=r"Asymmetric doubled right-dim $2(n+4)$ (on $\mathrm{CD}_{n-1}$)")
 
-    ax1.axvspan(2.75, 5.25, color=OI_SKY, alpha=0.14, label=r"Exact saturation ($n\in\{3,4,5\}$: $8,9,10$)")
+    ax1.axvspan(2.75, 5.25, color=OI_SKY, alpha=0.14, label=r"Exact match ($n\in\{3,4,5\}$: $8,9,10$)")
     ax1.axvline(5.5, color=OI_DARK, linestyle=":", linewidth=1.2)
     ax1.annotate(
-        r"Dimension-64 Rupture" "\n" r"$n=6$: $11 < 12 = \rho(64)$",
+        r"Dimension-64 Breakaway" "\n" r"$n=6$: $11 < 12 = \rho(64)$",
         xy=(6, 11),
         xytext=(7.3, 8.8),
         fontsize=8.4,
@@ -290,8 +291,8 @@ def make_fig3_hurwitz_rupture(hr_data: dict[str, Any]) -> None:
     ax1.set_xticks(ns)
     ax1.set_ylim(6.5, 34.5)
     ax1.set_xlabel(r"Cayley–Dickson level $n$ ($\dim = 2^n$)")
-    ax1.set_ylabel("Maximal norm-multiplicative right dimension")
-    ax1.set_title(r"Hurwitz–Radon Saturation vs. Bott Rupture ($n=3\ldots 12$)", fontweight="bold")
+    ax1.set_ylabel("Maximal coordinate right-multiplier dimension")
+    ax1.set_title(r"Euclidean Coordinate Capacity vs. $\rho(2^n)$ ($n=3\ldots 12$)", fontweight="bold")
     ax1.grid(True, color=OI_LIGHT, linewidth=0.7)
     ax1.legend(loc="upper left", fontsize=7.8, frameon=True, framealpha=0.95)
 
@@ -302,14 +303,14 @@ def make_fig3_hurwitz_rupture(hr_data: dict[str, Any]) -> None:
     ax2.plot(ns, lower_bnd, marker="d", linestyle="--", color=OI_DARK, linewidth=1.7, label=r"Certified linear lower bound $n-5$ ($n\geq 6$)", zorder=4)
     from matplotlib.patches import Patch
     handles_r, _labels_r = ax2.get_legend_handles_labels()
-    handles_r.append(Patch(facecolor=OI_VERM, label=r"Exact Bott deficit $\rho(2^n) - (n+5)$"))
+    handles_r.append(Patch(facecolor=OI_VERM, label=r"Exact coordinate deficit $\rho(2^n) - (n+5)$"))
     for n_val, d_val in zip(ns, deficit):
         ax2.text(n_val, d_val + 0.32, str(d_val), ha="center", va="bottom", fontsize=8.3, color=OI_DARK, fontweight="bold")
 
     ax2.set_xticks(ns)
     ax2.set_xlabel(r"Cayley–Dickson level $n$ ($\dim = 2^n$)")
     ax2.set_ylabel(r"Deficit $\rho(2^n) - \omega(G_n^{\mathrm{comp}})$")
-    ax2.set_title(r"Diverging Bott-Periodicity Deficit for All $n \geq 6$", fontweight="bold")
+    ax2.set_title(r"Diverging Coordinate Deficit for All $n \geq 6$", fontweight="bold")
     ax2.set_ylim(0, max(deficit) + 2.8)
     ax2.grid(axis="y", color=OI_LIGHT, linewidth=0.7, zorder=0)
     ax2.legend(handles=handles_r, loc="upper left", fontsize=8.2, frameon=True, framealpha=0.95)
@@ -459,7 +460,7 @@ def make_fig5_bdi_and_symmetric_rupture() -> None:
 
 def make_social_preview_svg() -> None:
     MEDIA_DIR.mkdir(parents=True, exist_ok=True)
-    svg = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640">
+    svg = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#0B1220"/>
@@ -482,7 +483,7 @@ def make_social_preview_svg() -> None:
     <line x1="880" y1="217" x2="1200" y2="402"/>
     <line x1="1200" y1="217" x2="880" y2="402"/>
   </g>
-  <text x="72" y="96" fill="#56B4E9" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" font-weight="700" letter-spacing="2">0TH-2026-019 · v2.0.0 · LEAN 4.35.0 (6 KERNELS) · RUST · ISO C11 · PYTHON</text>
+  <text x="72" y="96" fill="#56B4E9" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" font-weight="700" letter-spacing="2">0TH-2026-019 · v{REPO_VERSION} · LEAN 4.35.0 (6 KERNELS) · RUST · ISO C11 · PYTHON</text>
   <text x="72" y="182" fill="#F8FAFC" font-family="Georgia, serif" font-size="50" font-weight="700">Cayley–Dickson Terrace Frontier</text>
   <text x="72" y="242" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation,</text>
   <text x="72" y="278" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">Pathion r_max = 14 (7+7 Rigidity) &amp; Dim-64 Coordinate Rupture</text>
@@ -510,6 +511,81 @@ def make_social_preview_svg() -> None:
     (MEDIA_DIR / "social-preview.svg").write_text(svg, encoding="utf-8")
 
 
+def make_social_preview_png() -> None:
+    """Render an exact 1280x640 PNG GitHub Social Preview (< 1 MB, Build Standard A26)."""
+    from matplotlib.patches import Circle, FancyBboxPatch, Polygon, Rectangle
+
+    MEDIA_DIR.mkdir(parents=True, exist_ok=True)
+    fig = plt.figure(figsize=(12.8, 6.4), dpi=100, facecolor="#0B1220")
+    ax = fig.add_axes((0.0, 0.0, 1.0, 1.0), facecolor="#0B1220")
+    ax.set_xlim(0, 1280)
+    ax.set_ylim(0, 640)
+    ax.axis("off")
+
+    # Top Okabe-Ito gradient accent bar (3 segments)
+    ax.add_patch(Rectangle((0, 632), 427, 8, facecolor=OI_SKY, edgecolor="none"))
+    ax.add_patch(Rectangle((427, 632), 427, 8, facecolor=OI_ORANGE, edgecolor="none"))
+    ax.add_patch(Rectangle((854, 632), 426, 8, facecolor=OI_VERM, edgecolor="none"))
+
+    # Decorative K_{2,2,2} octahedral geometry on the right
+    cx, cy = 1045.0, 325.0
+    ax.add_patch(Circle((cx, cy), 178, fill=False, edgecolor=OI_SKY, alpha=0.18, linewidth=1.6))
+    ax.add_patch(Circle((cx, cy), 115, fill=False, edgecolor=OI_SKY, alpha=0.14, linewidth=1.2))
+    hex_pts = [(cx + 178 * math.cos(math.pi / 2 + k * math.pi / 3), cy + 178 * math.sin(math.pi / 2 + k * math.pi / 3)) for k in range(6)]
+    ax.add_patch(Polygon(hex_pts, closed=True, fill=False, edgecolor=OI_SKY, alpha=0.22, linewidth=1.4))
+    for a in range(6):
+        for b in range(a + 1, 6):
+            if (b - a) != 3:
+                ax.plot([hex_pts[a][0], hex_pts[b][0]], [hex_pts[a][1], hex_pts[b][1]], color=OI_SKY, alpha=0.16, linewidth=1.1)
+    for px, py in hex_pts:
+        ax.add_patch(Circle((px, py), 6.5, facecolor=OI_ORANGE, edgecolor="#0B1220", linewidth=1.2, alpha=0.55))
+
+    # Header badge & title
+    ax.text(
+        72, 548,
+        f"0TH-2026-019  ·  v{REPO_VERSION}  ·  LEAN 4.35.0 (6 KERNELS)  ·  RUST  ·  ISO C11  ·  PYTHON",
+        color=OI_SKY, fontsize=14.5, fontweight="bold", family="monospace",
+    )
+    ax.text(72, 466, "Cayley–Dickson Terrace Frontier", color="#F8FAFC", fontsize=37, fontweight="bold", family="serif")
+    ax.text(
+        72, 412,
+        "The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation,",
+        color="#CBD5E1", fontsize=18.5, family="sans-serif",
+    )
+    ax.text(
+        72, 378,
+        "Pathion r_max = 14 (7+7 Rigidity) & Dim-64 Coordinate Rupture",
+        color="#CBD5E1", fontsize=18.5, family="sans-serif",
+    )
+
+    # Three KPI cards (generous padding so every glyph stays cleanly inside its rounded card)
+    cards = [
+        (72, OI_SKY, "MIDPOINT 42 LAW", r"$42 \cdot 2^{n-4}$", r"Invariant across all $2^n$ signatures"),
+        (372, OI_VERM, "PATHION EXACT T4e", r"$r_{\max} = 14$ (7+7)", r"Zero-MILP pure-kernel over $2^{32}$"),
+        (672, OI_GREEN, "ZERO-MATHLIB LEAN", "23 / 23 Targets", "0 sorry · 6 independent kernels"),
+    ]
+    for x0, border_col, ktitle, kval, ksub in cards:
+        box = FancyBboxPatch(
+            (x0, 178), 278, 134,
+            boxstyle="round,pad=0.0,rounding_size=12",
+            facecolor="#16233D", edgecolor=border_col, linewidth=1.8,
+        )
+        ax.add_patch(box)
+        ax.text(x0 + 16, 282, ktitle, color=border_col, fontsize=11.0, fontweight="bold", family="monospace")
+        ax.text(x0 + 16, 234, kval, color="#FFFFFF", fontsize=19.5, fontweight="bold", family="serif")
+        ax.text(x0 + 16, 198, ksub, color="#94A3B8", fontsize=9.8, family="sans-serif")
+
+    # Footer
+    ax.text(
+        72, 78,
+        "Alexander Stephen Donahue  ·  ORCID 0009-0006-8168-9648  ·  github.com/0thernes/cayley-dickson-terrace-frontier",
+        color="#94A3B8", fontsize=14, family="sans-serif",
+    )
+
+    fig.savefig(MEDIA_DIR / "social-preview.png", dpi=100, facecolor="#0B1220", bbox_inches=None, pad_inches=0)
+    plt.close(fig)
+
+
 def main() -> None:
     setup_style()
     terraces = load_json("cd4_to_cd8_terraces.json")
@@ -523,7 +599,8 @@ def main() -> None:
     make_fig4_sedenion_triple_42(sedenion_data)
     make_fig5_bdi_and_symmetric_rupture()
     make_social_preview_svg()
-    print("Generated all 5 figures (PDF+PNG) and social-preview.svg successfully.")
+    make_social_preview_png()
+    print("Generated all 5 figures (PDF+PNG) and 1280x640 social-preview.{svg,png} successfully.")
 
 
 if __name__ == "__main__":

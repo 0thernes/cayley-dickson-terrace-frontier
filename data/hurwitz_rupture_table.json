@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "description": "Dimension-64 Hurwitz-Radon Bott Rupture & Asymmetric Doubling Tower table (CD_3..CD_12).",
+  "description": "Dimension-64 Euclidean Coordinate Right-Multiplier Rupture & Asymmetric Doubling Tower table (CD_3..CD_12).",
   "rows": [
     {
       "n": 3,

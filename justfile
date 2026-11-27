@@ -45,7 +45,7 @@ deploy:
     gh workflow run pages.yml
 
 # Roll back GitHub Pages deployment to a known-good git tag or commit SHA
-rollback tag="v1.0.0":
+rollback tag="v2.0.0":
     git rev-parse --verify "{{tag}}"
     git checkout "{{tag}}" -- docs/site/
     git status -s docs/site/

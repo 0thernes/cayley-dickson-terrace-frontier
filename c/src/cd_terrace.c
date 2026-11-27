@@ -468,7 +468,8 @@ int cd_run_full_audit(bool verbose) {
     }
 
     if (verbose) {
-        printf("ISO C11 cd_terrace v2.0.0 full audit: ALL CHECKS PASSED (all 496 algebras CD_4..CD_8, CD_5 r_max=14, CD_6(56) gap).\n");
+        printf("ISO C11 cd_terrace v%s full audit: ALL CHECKS PASSED (all 496 algebras CD_4..CD_8, CD_5 r_max=14, CD_6(56) gap).\n",
+               CD_TERRACE_VERSION);
     }
     return 0;
 }

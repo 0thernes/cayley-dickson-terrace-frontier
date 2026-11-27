@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cayley-dickson-terrace-frontier"
-version = "2.0.0"
+version = "2.1.0"
 description = "Zero-Mathlib Lean 4.35.0 six-kernel formalization (22 headline theorems, 23 Palomar targets) and tri-language verifiers for the Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and Coordinate Norm-Multiplicativity Ruptures across Cayley-Dickson algebras."
 readme = "README.md"
 license = {text = "Apache-2.0"}
@@ -20,6 +20,8 @@ dev = [
     "numpy>=2.0",
     "scipy>=1.14",
     "matplotlib>=3.9",
+    "jsonschema>=4.20",
+    "PyYAML>=6.0",
     "ruff>=0.6",
     "mypy>=1.11",
 ]

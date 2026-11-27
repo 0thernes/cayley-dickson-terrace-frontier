@@ -1,14 +1,39 @@
 # SPDX-License-Identifier: Apache-2.0
-schema_version: "1.0"
+schema_version: "1.1"
 id: "0TH-2026-019"
 repository: "https://github.com/0thernes/cayley-dickson-terrace-frontier"
-version: "2.0.0"
-title: "The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and the Dimension-64 Hurwitz-Radon Rupture Across Generalized Cayley-Dickson Algebras"
+version: "2.1.0"
+title: "The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and Coordinate Norm-Multiplicativity Ruptures Across Cayley-Dickson Algebras"
+authorship:
+  name: "Alexander Stephen Donahue"
+  orcid: "0009-0006-8168-9648"
+  affiliation: "Independent Researcher, Spokane, WA, USA"
+  email: "0_0@0thernes.art"
 author:
   name: "Alexander Stephen Donahue"
   orcid: "0009-0006-8168-9648"
   affiliation: "Independent Researcher, Spokane, WA, USA"
   email: "0_0@0thernes.art"
+origin: "Original independent research formalization authored from scratch in zero-Mathlib Lean 4.35.0; prior results formally re-verified (Moreno 1998 2-blade 4-divisibility, de Marrais 2000 7xK_{2,2,2} sedenion box-kites, and Lam-Yiu 1987 [10,10,16] ceiling) are explicitly credited."
+sources:
+  - "paper/main.tex (21-page AMS-LaTeX preprint, v2.1.0)"
+  - "paper/references.bib (30 entries: 28/30 live Crossref/arXiv verified + 2 print-only classics)"
+  - "lean/Challenge.lean & lean/PalomarChallenge.lean (23 Palomar Comparator targets)"
+automation:
+  ai_assisted: true
+  tools_and_models:
+    - "Antigravity agentic coding and formal-verification environment (Gemini-family LLM assistance)"
+    - "Lean 4.35.0 (leanprover/lean4:v4.35.0), zero Mathlib"
+    - "Six independent proof kernels: lean, leanchecker-paranoid, lean4lean, nanoda, con-leche, con-ron"
+    - "Tri-language exact arithmetic engines: Rust (#![forbid(unsafe_code)]), ISO C11 (-Werror), Python (fractions.Fraction oracle)"
+  human_role: "Alexander Stephen Donahue conceived the research program, directed the mathematical scope and statement contracts, reviewed all epistemic boundaries, audited all formal specifications against the manuscript, and takes full scholarly responsibility."
+  verification_basis: "Every [LEAN-6K] claim rests strictly on six-kernel machine checking with zero sorry, zero admit, zero native_decide, zero custom axioms, and zero trust in any AI model."
+review_status: "Preprint; not submitted to or reviewed by an external peer-reviewed journal. All 23 Palomar Comparator targets and 35 axiom-audited declarations are independently machine-checked across six Lean 4.35.0 kernels."
+limitations:
+  - "Pillars 2 (T2a-T2e), 3 (T3a-T3d), and 4 (T4a, T4b, T4d, T4e) govern Euclidean Cayley-Dickson coordinate subspaces; general non-coordinate real sums-of-squares formulas [r, s, N] are not claimed solved (ALG-035 open)."
+  - "Higher-blade (k >= 3) zero-divisor annihilator spectra beyond basis 2-blades remain open (ALG-039 open)."
+  - "Exact symmetric coordinate ceiling r_max(CD_n) for n >= 6 and lifting the 280-subspace census C2 into Lean remain open (COMB-040 open)."
+  - "Classical external theorems cited for context (Biss-Dugger-Isaksen 2^n - 4n + 4 bound; Hurwitz-Radon-Adams interpretation of rho(2^n)) are not formalized in Lean; Lean proves the Cayley-Dickson bounds and arithmetic comparisons against their closed formulas."
 license:
   code: "Apache-2.0"
   documentation: "CC-BY-4.0"
@@ -48,7 +73,7 @@ theorems:
     name: "blockDeltaGamma_eq"
     module: "CDTerrace.MirrorConservation"
   - id: "T1c"
-    name: "twoblade_nilpotent_full_iff"
+    name: "cdSignGamma_anticomm / twoblade_nilpotent_full_iff"
     module: "CDTerrace.MirrorConservation"
   - id: "T1d"
     name: "nilpotent_mirror_law"

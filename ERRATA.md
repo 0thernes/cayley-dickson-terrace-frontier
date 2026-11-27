@@ -1,6 +1,6 @@
 # Errata & Resolution Ledger (`ERRATA.md`)
 
-This file maintains the permanent public record of every error, overstatement, statement-fidelity gap, and tooling defect logged against **v1.0.0** (`0TH-2026-019`) and documents its exact resolution in **v2.0.0** (2026-11-26).
+This file maintains the permanent public record of every error, overstatement, statement-fidelity gap, and tooling defect logged against **v1.0.0** and **v2.0.0** (`0TH-2026-019`) and documents their exact resolutions through **v2.1.0** (2026-11-27).
 
 To report a new issue or mathematical discrepancy, open a structured finding report via GitHub Issues or contact `0_0@0thernes.art`.
 
@@ -8,9 +8,25 @@ To report a new issue or mathematical discrepancy, open a structured finding rep
 
 ## Summary Status
 
-- **v1.0.0 audit entries total:** 23 (13 manuscript, 8 formal Lean, 2 tooling).
-- **Resolved in v2.0.0:** **23 / 23 (100%)** — every item resolved directly in the Lean 4.35.0 proofs, manuscript (`paper/main.tex`, `paper/references.bib`, `dist/`), multi-language engines, and GitHub Actions CI.
-- **Open errata in v2.0.0:** **0**.
+- **v1.0.0 audit entries total:** 23 (13 manuscript, 8 formal Lean, 2 tooling) — **23 / 23 resolved in `v2.0.0`**.
+- **v2.0.0 Cycle 1–3 forensic hardening findings total:** 34 across all 10 Build Standard v1.2.0 classes — **34 / 34 resolved in `v2.1.0`** and locked by automated regression tests in `tests/test_all.py`.
+- **Open errata in `v2.1.0`:** **0**.
+
+---
+
+## Resolution of 2026-11-27 Cycle 1–3 Forensic Audit (`v2.0.0` -> `v2.1.0`)
+
+| Finding ID | Class | v2.0.0 Finding | Exact Resolution in `v2.1.0` |
+| --- | --- | --- | --- |
+| `F01` | `error` | Hand-written `docs/literature-search-log.md` listed 5 non-existent BibTeX keys (`biss2008ii`, `biss2009iii`, `flaass2019`, `koebisu2012`, `koebisu2013`) and omitted 12 real keys. | Added `--write-log` to `scripts/check_citations.py` generating `docs/literature-search-log.md` 100% programmatically from live Crossref/arXiv APIs; enforced exact 30-key bijection in `tests/test_all.py`. |
+| `F02` | `error` | `repo.yaml` failed `repo-standard.schema.json` (6 disallowed top-level keys + invalid `stack` enum values). | Brought `repo.yaml` into 100% strict compliance (`stack: [python, rust, c-cpp, other]`, zero `additionalProperties`), pinned `jsonschema` + `PyYAML` in `requirements.lock.txt`, and enforced `jsonschema.validate` in `tests/test_all.py`. |
+| `F03`–`F04` | `error` | `docs/statement-fidelity.md` omitted `T2e`/`T2f`, swapped `T4c`/`T4d`, and printed two wrong closed-form formulas for $M_n$ and $H_n^{\mathrm{std}}(0)$. | Rewrote `docs/statement-fidelity.md` covering all 22 headline theorems (`T1a`–`T4f`) + `ALL` with exact Lean formulas; added automated bijection & stale-formula guard tests in `tests/test_all.py`. |
+| `F05`–`F06` | `error` / `gap` | Canonical title drifted across `formalization.yaml` & `submission-packet.md`; `formalization.yaml` lacked Palomar `automation`/`origin`/`sources`/`limitations`/`review_status`; missing 43-item checklist & `.zenodo.json`. | Unified canonical title everywhere; enriched `lean/formalization.yaml` with full Palomar metadata; added `docs/gold-standard-checklist.md` (43 items) and `.zenodo.json`. |
+| `F07` | `gap` | Missing `1280x640` PNG social preview (Build Standard A26). | Rendered exact `1280x640` `docs/media/social-preview.png` (< 150 KB) in `scripts/generate_figures.py` and verified dimensions & size in `tests/test_all.py`. |
+| `F08`, `F22`, `F32` | `error` / `issue` | `paper/main.tex` placed the $K_{2,2,2}$ adjacency eigenvalue spectrum inside the `[LEAN-6K]` `T4b` theorem block, had inconsistent `\texttt`/`\code` theorem headers, and 15 unreferenced `\label`s. | Moved the eigenvalue spectrum cleanly to an immediate corollary paragraph after Theorem `T4b`, unified `\texttt{Txx}` headers, tightened `C2`/fuzzer wording, and cross-referenced every figure/table/proposition/theorem label. |
+| `F09`–`F14`, `F23` | `bug` / `hole` | `core.py` lacked upper-bound index validation (`i, j < 2^n`); `fuzz_cd_terrace.c` fuzzed `CD_1..CD_6` instead of `CD_1..CD_7`; `stamp_timestamps.py` had a dead `pass` branch; `tests/test_all.py` had silent `pytest.skip` and tautological `T2b` check; `generate_data.py` still XOR-prefiltered box-kites; HTML/REUSE/mdc lacked inline SPDX. | Fixed every item directly; added `T1f` explicit 2-sparse $\mathbb{Z}$-basis tests in both Python & Rust, `CD_TERRACE_VERSION` macro, `env!("CARGO_PKG_VERSION")`, dynamic `VERSION` reading in scripts, and strict OpenSSL hex-imprint & UTC timestamp parsing. |
+| `F20`–`F21`, `F27`–`F33` | `error` / `conflict` | 4 non-existent Lean symbols cited in `paper/main.tex` & docs (`hasCrossEdgeFast`, `checkPathionLoChunk_0..15`, `leftMulTwoBladeCoord`, `isBoxKiteAssessor`); residual `T2a`–`T2f`/`T3a`–`T3e` docstring drift & "Bott Rupture" labels in Lean, Figure 3, UI, and data; MSC 2020 mismatch (`17A30` vs `17A75`); historical C11 stride contradiction (`4` vs `8`); overstated Software Heritage archive status. | Fixed all docstrings, Figure 3, UI, data, `AGENTS.md`, `submission-packet.md`, `operations.md`, and `paper/main.tex`; added automated Lean-symbol existence & anti-drift regression tests in `tests/test_all.py`. |
+| `F25`, `F34` | `issue` / `gap` | CI/Pages workflows used Node-20 action tags (`checkout@v4`, etc.); 3D Canvas Box-Kite panel lacked keyboard assessor buttons and responsive resize redraw. | Upgraded workflows to Node-24 compatible major tags (`checkout@v6`, `setup-python@v6`, `configure-pages@v6`, `upload-pages-artifact@v5`, `deploy-pages@v5`, `attest-build-provenance@v4`); added Prev/Next Assessor keyboard buttons and `resize` redraw in `docs/site/index.html`. |
 
 ---
 

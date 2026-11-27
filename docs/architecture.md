@@ -2,7 +2,7 @@
 
 ## System Overview
 
-`cayley-dickson-terrace-frontier` (`v2.0.0`) integrates five orthogonal verification and preservation layers around a single canonical mathematical model of generalized Cayley--Dickson algebras $\mathrm{CD}_n(\gamma)$:
+`cayley-dickson-terrace-frontier` (`v2.1.0`) integrates five orthogonal verification and preservation layers around a single canonical mathematical model of generalized Cayley--Dickson algebras $\mathrm{CD}_n(\gamma)$:
 
 ```text
                 +----------------------------------------------------------+
@@ -18,8 +18,8 @@
 |  lean/CDTerrace/*.lean            |                       |  - rust/ (#![forbid(unsafe_code)]|
 |  - Basic.lean (cdMulCoordGamma)   |                       |    496 algebras + 280 Pathion 14)|
 |  - MirrorConservation.lean (T1a-f)|                       |  - c/ (ISO C11, ASan/UBSan,      |
-|  - TerraceLaw.lean (T2a-d)        |                       |    100k + libFuzzer, 496 zero-   |
-|  - HurwitzRupture.lean (T3a-d)    |                       |    stride algebras)              |
+|  - TerraceLaw.lean (T2a-f)        |                       |    100k CD_1..CD_7 fuzz, 496     |
+|  - HurwitzRupture.lean (T3a-d)    |                       |    zero-stride algebras)         |
 |  - FiniteCertificates.lean (T4a-d)|                       |  - src/ + reference/oracle       |
 |  - PathionRupture.lean (T4e, T4f) |                       |    (naive Q Gauss elim + 8 mut.) |
 |  - NonVacuity.lean (4 witnesses)  |                       +----------------+-----------------+
@@ -38,7 +38,7 @@
 ## Key Architectural Decisions
 
 1. **Zero-Mathlib Lean 4.35.0 Core (`ADR-0001`):** Zero external Lean dependencies minimize the trusted computing base and enable deterministic replay across all 6 independent kernels (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`).
-2. **Full Bilinear Linear Algebra in Zero-Mathlib Lean (`T1f`):** `Basic.lean` defines exact integer coordinate multiplication `cdMulCoordGamma` and left multiplication `leftMulTwoBladeCoord`; `MirrorConservation.lean` constructs an explicit $\mathbb{Z}$-basis isomorphism proving $\dim \ker L_{e_i+e_j} = \nu_n^\gamma(i,j)$ without importing a linear-algebra library.
+2. **Full Bilinear Linear Algebra in Zero-Mathlib Lean (`T1f`):** `Basic.lean` defines exact integer coordinate multiplication `cdMulCoordGamma`, singular orbit representatives `singularOrbitRepsGamma`, and 2-sparse kernel basis vectors `twobladeKernelBasisVec`; `MirrorConservation.lean` proves `twoblade_left_annihilator_basis_exact`, establishing $\dim_{\mathbb{Z}} \ker L_{e_i+e_j} = \nu_n^\gamma(i,j)$ without importing a linear-algebra library.
 3. **Pure-Kernel C-Primitive Exhaustion over $2^{16}$ and $2^{32}$ (`FiniteCertificates.lean`, `PathionRupture.lean`):**
    - Sedenion $2^{16}$ counts (`T4a`) and Pathion $2^{32}$ ceiling + $7+7$ rigidity (`T4e`) use provably sound C-primitive (`Nat.div`/`Nat.mod`/`Nat.add`) branch-and-bound + clique-cover pigeonhole bounds (`popcount16_le_clique_cover`) proved equal to the raw textbook predicate `isNormMultMask` and `isNormMultPair`, eliminating `native_decide`, `maxRecDepth`/`maxHeartbeats` overrides, and external MILP solvers from the proof trust base.
    - Dimension-64 split-signature interior spectral gap (`T4f`) computes the complete 9-bin histogram at $\mathrm{CD}_6(56)$ via depth-12 balanced binary-tree reduction (`cd6QuadTree56`) and exact algebraic mirror conservation (`cd6_std_mirror_sums`).
