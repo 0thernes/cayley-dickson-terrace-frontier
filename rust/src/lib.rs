@@ -16,6 +16,12 @@
 //!   algebraic vanishing product with spectrum `{4^7, 0^21, (-2)^14}`), exact exhaustive Pathion
 //!   `r_max(CD_5) = 14` with strict `7 + 7` balance and exact count `280` 14D subspaces,
 //!   `CD_6(flip=56)` interior spectral gap `H_6^{56}(20) = 0`, and Chingon `[16, 16, 64]` witness.
+//! - Pillar 5: Universal Binary Reflected Gray-Code Bit-Locking (`T5a`), exponential continuous
+//!   spectral band gaps of width `2^(n-3) - 1` at `flip = 2^n - 8` (`T5b`), and the exact all-n,
+//!   all-signature iff spectral-gap dichotomy counting `2^(n-3) - 4` gapped masks (`T5c`).
+//! - Pillar 6: Universal mod-2 twisted-group-algebra Frobenius involution (`T6a`), odd-parity
+//!   zero-divisor exclusion via fraction-free odd-pivot integral matrix inversion (`T6b`), and
+//!   non-singularity of all signed odd-support unit blades (`T6c`) vs sharp 4-blade ZD witness.
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -290,6 +296,51 @@ pub fn doubled_right_witness(n: u32) -> Vec<usize> {
     out
 }
 
+/// Pillar 5 Binary Reflected Gray-Code locking bit `g(d, m)`.
+#[inline]
+pub const fn gray_lock_bit(d: u32, m: usize) -> bool {
+    if d == 0 {
+        (m & 1) == 1
+    } else {
+        (((m >> (d - 1)) ^ (m >> d)) & 1) == 1
+    }
+}
+
+/// Pillar 5 exact all-n, all-signature spectral-gap criterion (T5c) for `n >= 6`:
+/// `8 | flip_mask` and `flip_mask not in {0, 8, 2^(n-1), 2^(n-1) + 8}`.
+#[inline]
+pub const fn is_gapped_mask(n: u32, flip_mask: usize) -> bool {
+    if n < 6 {
+        return false;
+    }
+    let half = 1usize << (n - 1);
+    (flip_mask & 7) == 0
+        && flip_mask != 0
+        && flip_mask != 8
+        && flip_mask != half
+        && flip_mask != half + 8
+}
+
+/// Exact integer bilinear multiplication in `CD_n(flip_mask)`.
+pub fn cd_mul_gamma_vec(n: u32, flip_mask: usize, x: &[i64], y: &[i64]) -> Vec<i64> {
+    let dim = 1usize << n;
+    assert_eq!(x.len(), dim);
+    assert_eq!(y.len(), dim);
+    let mut out = vec![0i64; dim];
+    for (a, &xa) in x.iter().enumerate() {
+        if xa == 0 {
+            continue;
+        }
+        for (b, &yb) in y.iter().enumerate() {
+            if yb == 0 {
+                continue;
+            }
+            out[a ^ b] += (cd_sign_gamma_factored(n, flip_mask, a, b) as i64) * xa * yb;
+        }
+    }
+    out
+}
+
 /// Exhaustive exact audit of `CD_5` symmetric coordinate subspaces:
 /// 1. Confirms all 630 bad affine 2-planes (`42 lo + 42 hi + 546 cross`).
 /// 2. Certifies via fixed-descending (`15..0`) greedy clique cover over all `2,995` valid
@@ -462,6 +513,10 @@ pub struct AuditSummary {
     pub pathion_all_14d_contain_0_16: bool,
     pub cd6_flip56_gap_bin20: usize,
     pub chingon_16_ok: bool,
+    pub pillar5_dichotomy_checked_masks: usize,
+    pub pillar5_gapped_counts: Vec<(u32, usize)>,
+    pub pillar6_odd_blade_checks_ok: bool,
+    pub pillar6_4blade_zd_ok: bool,
 }
 
 /// Exhaustive Sedenion Triple-42 & Box-Kite audit (including pure algebraic adjacency and exact spectrum).
@@ -628,9 +683,11 @@ pub fn run_full_audit() -> AuditSummary {
         }
     }
 
-    // 4. Exhaustive split-phase classification & mirror conservation across ALL 2^n signatures for CD_4..CD_8!
+    // 4. Exhaustive split-phase classification, mirror conservation & Pillar 5 dichotomy across ALL 496 algebras CD_4..CD_8!
     let mut split_phase_counts = Vec::new();
     let mut cd6_flip56_gap_bin20 = usize::MAX;
+    let mut pillar5_dichotomy_checked_masks = 0usize;
+    let mut pillar5_gapped_counts: Vec<(u32, usize)> = Vec::new();
     for n in 4..=8u32 {
         let num_sigs = 1usize << n;
         let std_h = nullity_histogram(n);
@@ -638,12 +695,26 @@ pub fn run_full_audit() -> AuditSummary {
         let mid = 1usize << (n - 2);
         let mut class_mults: BTreeMap<Vec<(usize, usize)>, usize> = BTreeMap::new();
         let mut has_spectral_gap = false;
+        let mut gapped_mask_count = 0usize;
 
         let dim = 1usize << n;
         let mut pairs: Vec<(usize, usize)> = Vec::with_capacity((dim - 1) * (dim - 2) / 2);
         for i in 1..dim {
             for j in (i + 1)..dim {
-                pairs.push((i ^ j, twoblade_nullity_fast(n, i, j)));
+                let d = i ^ j;
+                let nu_std = twoblade_nullity_fast(n, i, j);
+                // Pillar 5 (T5a): verify Binary Reflected Gray-Code Bit-Locking across all depths 0..=n-4
+                let m = nu_std / 4;
+                if nu_std >= 4 && nu_std <= half - 4 {
+                    assert_eq!(((d >> (n - 1)) & 1) == 1, gray_lock_bit(0, m));
+                }
+                for depth in 1..=(n - 4) {
+                    let lo_bound = 1usize << (depth + 1);
+                    if nu_std >= lo_bound && nu_std <= half - lo_bound - 4 {
+                        assert_eq!(((d >> (n - 1 - depth)) & 1) == 1, gray_lock_bit(depth, m));
+                    }
+                }
+                pairs.push((d, nu_std));
             }
         }
 
@@ -673,9 +744,28 @@ pub fn run_full_audit() -> AuditSummary {
                 assert_eq!(counts[v] + counts[half - v], std_sum);
             }
             let top = half - 4;
+            let mut mask_has_gap = false;
             for v in (4..=top).step_by(4) {
                 if counts[v] == 0 {
                     has_spectral_gap = true;
+                    mask_has_gap = true;
+                }
+            }
+            if n >= 6 {
+                pillar5_dichotomy_checked_masks += 1;
+                assert_eq!(mask_has_gap, is_gapped_mask(n, fl));
+                if mask_has_gap {
+                    gapped_mask_count += 1;
+                }
+                // T5b: exponential continuous spectral band gap at flip = 2^n - 8
+                if fl == dim - 8 {
+                    let lo_edge = 1usize << (n - 2);
+                    let hi_edge = 3 * (1usize << (n - 3));
+                    assert_eq!(counts[lo_edge], 42 * (1usize << (n - 4)));
+                    assert!(counts[hi_edge] > 0);
+                    for v in (lo_edge + 4..hi_edge).step_by(4) {
+                        assert_eq!(counts[v], 0);
+                    }
                 }
             }
             let key: Vec<(usize, usize)> = counts
@@ -686,6 +776,10 @@ pub fn run_full_audit() -> AuditSummary {
                 .collect();
             *class_mults.entry(key).or_insert(0) += 1;
         }
+        if n >= 6 {
+            assert_eq!(gapped_mask_count, (1usize << (n - 3)) - 4);
+            pillar5_gapped_counts.push((n, gapped_mask_count));
+        }
         let mut mults: Vec<usize> = class_mults.values().copied().collect();
         mults.sort_unstable();
         let expected_classes = 1usize << (n - 2);
@@ -693,6 +787,7 @@ pub fn run_full_audit() -> AuditSummary {
         split_phase_counts.push((n, class_mults.len(), mults, 42 * (1usize << (n - 4)), has_spectral_gap));
     }
     assert_eq!(cd6_flip56_gap_bin20, 0);
+    assert_eq!(pillar5_dichotomy_checked_masks, 64 + 128 + 256);
 
     // 5. Pillar 3: G_n^comp, shell degrees, Hurwitz-Radon rupture & asymmetric doubling tower for n = 3..8
     let mut hurwitz_table = Vec::new();
@@ -771,6 +866,36 @@ pub fn run_full_audit() -> AuditSummary {
     assert!(pathion_14_ok);
     assert!(chingon_16_ok);
 
+    // 7. Pillar 6: Universal mod-2 twisted Frobenius involution on odd-support unit blades &
+    // sharp even 4-blade zero divisor witness (e_1 + e_2 + e_9 - e_10)*(e_4 + e_15) = 0 in CD_4(0).
+    let mut pillar6_odd_blade_checks_ok = true;
+    for fl in 0..16usize {
+        let mut x3 = [0i64; 16];
+        x3[1] = 1;
+        x3[2] = 1;
+        x3[10] = 1;
+        let y: Vec<i64> = (0..16).map(|k| (k as i64) * 3 - 7).collect();
+        let l2 = cd_mul_gamma_vec(4, fl, &x3, &cd_mul_gamma_vec(4, fl, &x3, &y));
+        let r2 = cd_mul_gamma_vec(4, fl, &cd_mul_gamma_vec(4, fl, &y, &x3), &x3);
+        for t in 0..16 {
+            if (l2[t] - y[t]).rem_euclid(2) != 0 || (r2[t] - y[t]).rem_euclid(2) != 0 {
+                pillar6_odd_blade_checks_ok = false;
+            }
+        }
+    }
+    assert!(pillar6_odd_blade_checks_ok);
+    let mut x4 = [0i64; 16];
+    x4[1] = 1;
+    x4[2] = 1;
+    x4[9] = 1;
+    x4[10] = -1;
+    let mut y4 = [0i64; 16];
+    y4[4] = 1;
+    y4[15] = 1;
+    let prod4 = cd_mul_gamma_vec(4, 0, &x4, &y4);
+    let pillar6_4blade_zd_ok = x4.iter().sum::<i64>() == 2 && prod4.iter().all(|&v| v == 0);
+    assert!(pillar6_4blade_zd_ok);
+
     AuditSummary {
         cocycle_checked_dim5: cocycle_count,
         terrace_verified_up_to: 8,
@@ -789,6 +914,10 @@ pub fn run_full_audit() -> AuditSummary {
         pathion_all_14d_contain_0_16: p_u016,
         cd6_flip56_gap_bin20,
         chingon_16_ok,
+        pillar5_dichotomy_checked_masks,
+        pillar5_gapped_counts,
+        pillar6_odd_blade_checks_ok,
+        pillar6_4blade_zd_ok,
     }
 }
 
@@ -814,6 +943,10 @@ mod tests {
         assert!(s.pathion_all_14d_contain_0_16);
         assert_eq!(s.cd6_flip56_gap_bin20, 0);
         assert!(s.chingon_16_ok);
+        assert_eq!(s.pillar5_dichotomy_checked_masks, 448);
+        assert_eq!(s.pillar5_gapped_counts, vec![(6, 4), (7, 12), (8, 28)]);
+        assert!(s.pillar6_odd_blade_checks_ok);
+        assert!(s.pillar6_4blade_zd_ok);
     }
 
     #[test]

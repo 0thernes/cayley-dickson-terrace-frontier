@@ -1,6 +1,6 @@
 # Literature Search & Live Verification Log (`docs/literature-search-log.md`)
 
-*Generated programmatically by `scripts/check_citations.py --live --write-log` on 2026-11-27 17:57 UTC (version `v2.1.0`).*
+*Generated programmatically by `scripts/check_citations.py --live --write-log` on 2026-11-28 05:04 UTC (version `v3.0.0`).*
 
 ## Search Scope & Databases Queried
 - **Primary Databases:** Crossref REST API (`https://api.crossref.org/works/{doi}`), arXiv Export API (`https://export.arxiv.org/api/query`), and mathematical historical primary sources.

@@ -24,6 +24,12 @@
     "CDTerrace.Palomar.prove_t4d",
     "CDTerrace.Palomar.prove_t4e",
     "CDTerrace.Palomar.prove_t4f",
+    "CDTerrace.Palomar.prove_t5a",
+    "CDTerrace.Palomar.prove_t5b",
+    "CDTerrace.Palomar.prove_t5c",
+    "CDTerrace.Palomar.prove_t6a",
+    "CDTerrace.Palomar.prove_t6b",
+    "CDTerrace.Palomar.prove_t6c",
     "CDTerrace.Palomar.prove_all_terrace_theorems"
   ],
   "definition_names": [],

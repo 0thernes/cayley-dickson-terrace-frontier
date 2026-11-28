@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
-  <title>Cayley-Dickson Terrace Frontier v2.1.0 — Interactive 3D Canvas Box-Kite &amp; Mirror-Conservation Observatory</title>
+  <title>Cayley-Dickson Terrace Frontier v3.0.0 — Interactive 3D Canvas Box-Kite, Band-Gap &amp; Mirror-Conservation Observatory</title>
   <style>
     :root {
       --bg: #090d1a;
@@ -159,12 +159,13 @@
       <h1>Cayley-Dickson Terrace Frontier — Interactive 3D Canvas Observatory</h1>
       <p class="subtitle">
         Live exact-algebra exploration of the Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation,
-        Sedenion Triple-42 Box-Kites (7 &times; K&#8322;,&#8322;,&#8322;), Pathion r&#x2098;&#x2090;&#x2093;(CD&#8325;) = 14 (7+7 Rigidity),
+        Gray-Code Spectral Band Gaps (2&#8319;&#8315;&#179;&minus;4 Dichotomy), Odd-Parity Zero-Divisor Exclusion,
+        Sedenion Box-Kites (7 &times; K&#8322;,&#8322;,&#8322;), Pathion r&#x2098;&#x2090;&#x2093;(CD&#8325;) = 14,
         and Dimension-64 Euclidean Coordinate Rupture.
       </p>
       <div class="nav-row">
-        <span class="pill">0TH-2026-019 &middot; v2.1.0 &middot; Lean 4.35.0 (6 Kernels, 23 Targets)</span>
-        <a href="blueprint.html">Proof Blueprint DAG &rarr;</a>
+        <span class="pill">0TH-2026-019 &middot; v3.0.0 &middot; Lean 4.35.0 (6 Kernels, 29 Targets, 45 Audited)</span>
+        <a href="blueprint.html">32-Node Proof Blueprint DAG &rarr;</a>
         <a href="https://github.com/0thernes/cayley-dickson-terrace-frontier">GitHub Repo</a>
         <a href="https://orcid.org/0009-0006-8168-9648">ORCID 0009-0006-8168-9648</a>
       </div>
@@ -233,14 +234,14 @@
           <option value="8">CD&#8328; &mdash; Voudons (256D, 256 signatures)</option>
         </select>
         <button class="act" id="sig-euclid" type="button">Reset Euclidean (-,-,...,-)</button>
-        <button class="act" id="sig-gap" type="button">Load Lean T4f Gap Split (CD&#8326; flip=56)</button>
+        <button class="act" id="sig-gap" type="button">Load Pillar 5 Band Gap (flip = 2&#8319; &minus; 8)</button>
       </div>
       <div class="controls" id="sig-buttons" aria-label="Signature bits gamma_k"></div>
       <div class="split">
         <canvas id="canvas-mirror" role="img" aria-label="Live comparison of Euclidean and split-signature 2-blade nullity histograms"></canvas>
         <div>
           <div class="card">
-            <h2>Live Conservation Verification (Lean T1e, T2f, T4f)</h2>
+            <h2>Live Conservation &amp; Band-Gap Verification (Lean T1e, T2f, T5b, T5c)</h2>
             <div class="kpi-grid" aria-live="polite">
               <div class="kpi"><strong id="kpi-mid">84</strong><span>Invariant Midpoint H(2&#8319;&#8315;&#178;)</span></div>
               <div class="kpi"><strong id="kpi-cons" class="ok">VERIFIED</strong><span>All Mirror Sums H(v)+H(2&#8319;&#8315;&#185;-v)</span></div>
@@ -695,23 +696,8 @@ document.getElementById("sig-gap").addEventListener("click", () => {
   if (mirrorN < 6) {
     mirrorN = 6;
     document.getElementById("mirror-n").value = "6";
-    flipMask = 56; // Lean T4f certified spectral-gap signature H_6^{56}(20) = 0
-  } else if (mirrorN === 6) {
-    flipMask = 56;
-  } else {
-    const pairs = getPairsForN(mirrorN);
-    const half = 1 << (mirrorN - 1);
-    for (let fl = 1; fl < (1 << mirrorN); fl++) {
-      const cnt = new Map();
-      for (const [d, nu] of pairs) {
-        const ng = (popcount(d & fl) & 1) ? (half - nu) : nu;
-        cnt.set(ng, (cnt.get(ng) || 0) + 1);
-      }
-      let hasGap = false;
-      for (let v = 4; v <= half - 4; v += 4) if (!cnt.get(v)) hasGap = true;
-      if (hasGap) { flipMask = fl; break; }
-    }
   }
+  flipMask = (1 << mirrorN) - 8; // Lean T5b universal exponential band gap: width 2^(n-3) - 1 empty bins!
   buildSigButtons();
   renderMirror();
 });

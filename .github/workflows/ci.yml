@@ -18,7 +18,8 @@ jobs:
     name: Lean 4.35.0 (6 Independent Proof Kernels)
     runs-on: ubuntu-latest
     # Bound hung sandbox/kernel processes while leaving generous headroom for
-    # all 6 independent kernels on T1a-T4f (including Pathion 2^32 exhaustion)
+    # all 6 independent kernels on T1a-T6c (including Pathion 2^32 exhaustion,
+    # Gray-code spectral band-gap dichotomy, and odd-parity zero-divisor exclusion)
     # plus the tamper-injecting negative comparator gate.
     timeout-minutes: 120
     steps:
@@ -40,7 +41,7 @@ jobs:
           lake build
           lake build PalomarChallenge
 
-      - name: Audit axioms (35/35 strictly within propext, Classical.choice, Quot.sound)
+      - name: Audit axioms (45/45 strictly within propext, Classical.choice, Quot.sound)
         working-directory: lean
         run: |
           lake env lean VerifyAxioms.lean > ../results/ci_lean_axioms.txt
@@ -54,7 +55,7 @@ jobs:
           lake env leanchecker --fresh PalomarSolution
           lake env leanchecker-paranoid --fresh PalomarSolution
 
-      - name: Replay all 23 Palomar targets across all 6 independent kernels
+      - name: Replay all 29 Palomar targets across all 6 independent kernels
         working-directory: lean
         run: |
           lake check --paranoid

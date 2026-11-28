@@ -68,90 +68,72 @@
 \newcommand{\Ann}{\mathrm{Ann}}
 \DeclareMathOperator{\rk}{rank}
 
-\title[Cayley--Dickson Terrace Law, Mirror Conservation \& Coordinate Ruptures]{%
-  The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation,\\
-  and Coordinate Norm-Multiplicativity Ruptures Across\\
-  Cayley--Dickson Algebras%
+\title[Terrace Law, Gray-Code Band Gaps, Odd-Parity Exclusion \& Ruptures]{%
+  The Dyadic-Palindromic Terrace Law, Gray-Code Spectral Band Gaps,\\
+  Odd-Parity Zero-Divisor Exclusion, and Coordinate Norm-Multiplicativity\\
+  Ruptures Across Cayley--Dickson Algebras%
 }
 
 \author{Alexander Stephen Donahue}
 \address{Independent Researcher, Spokane, WA, USA}
 \email{0\_0@0thernes.art}
-\thanks{Version~2.1.0. ORCID: \href{https://orcid.org/0009-0006-8168-9648}{0009-0006-8168-9648}.
+\thanks{Version~3.0.0. ORCID: \href{https://orcid.org/0009-0006-8168-9648}{0009-0006-8168-9648}.
 Code, six-kernel Lean~4.35.0 proofs, Rust/C11/Python engines, and 3D~Canvas observatory:
 \url{https://github.com/0thernes/cayley-dickson-terrace-frontier}.
 Archive ID: \texttt{0TH-2026-019}.}
 
 \subjclass[2020]{Primary 17A35, 17A75, 11E25; Secondary 05C69, 68V20}
-\keywords{Cayley--Dickson algebras, sedenions, pathions, zero divisors, Hurwitz--Radon numbers,
-sums-of-squares composition, box-kites, Lean~4 formal verification}
+\keywords{Cayley--Dickson algebras, sedenions, pathions, zero divisors, Binary Reflected Gray Code,
+spectral band gap, odd-parity exclusion, Hurwitz--Radon numbers, sums-of-squares composition,
+box-kites, Lean~4 formal verification}
 
 \begin{document}
 
 \begin{abstract}
-We establish four interconnected families of machine-checked structural theorems governing
-$2$-blade left-annihilator spectra, signature deformations, and coordinate norm-multiplicative
-subspaces across Cayley--Dickson algebras $\CD_n(\gamma)$ of dimension $2^n$ ($n \ge 1$,
-$\gamma \in \{\pm 1\}^n$). Pillar~1, Theorem~\texttt{T2f}, and the split-phase classifications
-hold across all $2^n$ Euclidean and split signatures $\gamma$; the remaining theorems of
-Pillar~2, Pillar~3, and Pillar~4 concern Euclidean $\CD_n$ coordinate subspaces.
-
-\emph{First (Nilpotent Mirror Conservation and Exact Kernel Basis, \texttt{T1a}--\texttt{T1f})},
-we prove that the generalized basis sign cocycle factorizes universally as
-$\sigma_n^\gamma(i,j) = \sigma_n^{\std}(i,j)(-1)^{\pop(i\,\&\,j\,\&\,\flip(\gamma))}$,
-forcing every $2\times 2$ left-multiplication block determinant sign $\delta_n^\gamma(i,j,k)$ of
-a basis $2$-blade $e_i + e_j$ to flip by a factor independent of $k$. We formalize directly in
-Lean that the block-count nullity $\nu_n^\gamma(i,j)$ equals the exact cardinality of an explicit
-$2$-sparse linearly independent spanning $\Z$-basis of $\ker L_{e_i + e_j}$ under the full
-bilinear product of $\CD_n(\gamma)$, and that $(e_i+e_j)^2 = 0$ identically across all $2^n$
-coordinates iff $\parbit_n((i\oplus j)\,\&\,\flip(\gamma)) = 1$. Consequently, non-nilpotent
-$2$-blades preserve Euclidean nullity while nilpotent $2$-blades invert to
-$2^{n-1} - \nu_n^{\std}(i,j)$, conserving every mirror-pair histogram sum
-$H_n^\gamma(v) + H_n^\gamma(2^{n-1}-v)$ and pinning $H_n^\gamma(2^{n-2})$ across all $2^n$
-signatures.
-
-\emph{Second (The Dyadic-Palindromic Terrace Law, \texttt{T2a}--\texttt{T2f})}, we derive an exact
-four-branch doubling recurrence for Euclidean $2$-blade nullity, yielding closed forms for total
-nullity mass $M_n = 8(2^{n-1}-1)(2^{n-2}-1)(2^{n-3}-1)$, nullity-zero counts
-$H_n^{\std}(0) = (6n-9)2^{n-2}+3$, exact even/odd bin interleaving
-$H_{n+1}^{\std}(8m) = H_{n+1}^{\std}(2^n-4-8m) = 2H_n^{\std}(4m)$, interior palindromic
-symmetry, exact top-bin jump $3(2^n-2)$, an independent $2$-blade proof of Moreno's divisibility
-$4 \mid \nu_n^{\std}$ with attained ceiling $2^{n-1}-4$ (equal to the Biss--Dugger--Isaksen
-bound $2^n - 4n + 4$ among $n \ge 4$ only at $n = 4$, and strictly below it for every $n \ge 5$),
-and the all-signature midpoint law $H_n^\gamma(2^{n-2}) = 42 \cdot 2^{n-4}$ for all $n \ge 4$ and
-all $2^n$ signatures $\gamma$.
-
-\emph{Third (Coordinate Right-Multiplier Rupture at Dimension~64, \texttt{T3a}--\texttt{T3d})}, we
-determine the exact doubling law and clique number of the Euclidean basis right-compatibility
-graph $G_n^{\comp}$, proving $\omega(G_n^{\comp}) = n+5$ for every $n \ge 3$ and uniqueness of
-the two universal right-multipliers $\{e_0, e_{2^{n-1}}\}$ for all $n \ge 4$. Comparing against
-the classical Hurwitz--Radon formula $\rho(2^n) = 8\lfloor n/4\rfloor + 2^{n \bmod 4}$, Euclidean
-Cayley--Dickson coordinate right-multiplier families match $\rho(2^n)$ at dimensions $8, 16, 32$
-($8, 9, 10$), fall strictly short beginning at dimension~$64$ ($11 < 12 = \rho(64)$) with deficit
-$\rho(2^n) - (n+5) \ge n-5$ for all $n \ge 6$, and admit an explicit doubling tower realizing
-$[2^{n-1}, 2(n+4), 2^n]$ coordinate pairs for all $n \ge 4$.
-
-\emph{Fourth (Sedenion Triple-42 Duality, Pure-Kernel Pathion Ceiling $r_{\max}(\CD_5) = 14$ with
-$7+7$ Rigidity, and Dimension-64 Split Spectral Gap, \texttt{T4a}--\texttt{T4f})}, we classify
-all $2^{16}$ coordinate subspaces of $\SSed$ (42 bad $2+2$ affine $2$-planes, formal
-re-verification of de~Marrais's $7 \times K_{2,2,2}$ box-kites under pure vanishing-product
-adjacency, and 42 maximal $10$-dimensional norm-multiplicative subspaces with Fano split
-$7 + 28 + 7 = 42$ and zero subspaces of dimension $\ge 11$), classify all split phases of
-$\CD_4(\gamma)$ ($1{:}1{:}7{:}7$) and $\CD_5(\gamma)$ ($4{\times}1 + 4{\times}7$), certify the
-dimension-64 split interior spectral gap $H_6^{56}(16)=168, H_6^{56}(20)=0, H_6^{56}(24)=56$
-directly in the kernel, and prove in pure Lean over all $2^{32}$ subsets of $\CD_5$---using
-universal all-$n$ half-swap symmetry and a zero-backtracking greedy clique-cover certificate,
-retiring external MILP solvers from the proof trust base---that $r_{\max}(\CD_5) = 14$ and that
-every $14$-dimensional norm-multiplicative coordinate subset of $\CD_5$ splits strictly $7 + 7$
-across $\{0,\dots,15\}$ and $\{16,\dots,31\}$ (with exactly $280$ such subspaces verified
-exhaustively in Rust and Python).
-
-All 22 headline theorems and their master conjunction (23 Palomar Comparator targets, plus 4
-non-vacuity witnesses and 8 adversarial refutations; 35 axiom-audited declarations) are
-machine-checked from scratch in zero-Mathlib Lean~4.35.0 across six independent kernels using
-strictly standard axioms (\code{propext}, \code{Classical.choice}, \code{Quot.sound}), and
-cross-checked differentially across Rust, ISO~C11, and Python across all $496$ generalized
-algebras $\CD_4(\gamma)$--$\CD_8(\gamma)$.
+We establish six machine-checked families of structural theorems governing $2$-blade
+left-annihilator spectra, signature deformations, spectral band gaps, higher-blade zero-divisor
+exclusion, and coordinate norm-multiplicative subspaces across Cayley--Dickson algebras
+$\CD_n(\gamma)$ of dimension $2^n$ ($n \ge 1$, $\gamma \in \{\pm 1\}^n$).
+\emph{(1)~Nilpotent Mirror Conservation (\texttt{T1a}--\texttt{T1f}):} The generalized sign
+cocycle factorizes as $\sigma_n^\gamma(i,j) = \sigma_n^{\std}(i,j)(-1)^{\pop(i\,\&\,j\,\&\,\flip(\gamma))}$,
+inducing a $k$-independent $2\times 2$ block-sign flip; we prove directly in Lean that
+$\nu_n^\gamma(i,j)$ equals the exact cardinality of a $2$-sparse spanning $\Z$-basis of
+$\ker L_{e_i+e_j}$ under the literal bilinear product, that $(e_i+e_j)^2=0$ iff
+$\parbit_n((i\oplus j)\,\&\,\flip(\gamma))=1$, and that nilpotent $2$-blades invert to
+$2^{n-1}-\nu_n^{\std}$, conserving every mirror sum $H_n^\gamma(v)+H_n^\gamma(2^{n-1}-v)$ across
+all $2^n$ signatures.
+\emph{(2)~Dyadic-Palindromic Terrace Law (\texttt{T2a}--\texttt{T2f}):} A four-branch Euclidean
+doubling recurrence yields $M_n = 8(2^{n-1}-1)(2^{n-2}-1)(2^{n-3}-1)$,
+$H_n^{\std}(0) = (6n-9)2^{n-2}+3$, exact even/odd interleaving and interior palindromicity,
+top-bin jump $3(2^n-2)$, Moreno's $4 \mid \nu_n^{\std}$ with attained ceiling $2^{n-1}-4$
+(matching the Biss--Dugger--Isaksen bound $2^n-4n+4$ among $n\ge 4$ iff $n=4$, strictly below
+for all $n\ge 5$), and all-signature midpoint law $H_n^\gamma(2^{n-2}) = 42\cdot 2^{n-4}$.
+\emph{(3)~Coordinate Right-Multiplier Rupture (\texttt{T3a}--\texttt{T3d}):} The Euclidean
+right-compatibility graph satisfies $\omega(G_n^{\comp}) = n+5$ ($n\ge 3$) with unique universal
+multipliers $\{e_0, e_{2^{n-1}}\}$ ($n\ge 4$), breaking away from $\rho(2^n)$ at dimension~$64$
+($11 < 12$, deficit $\ge n-5$ for all $n\ge 6$) while realizing $[2^{n-1}, 2(n+4), 2^n]$ pairs.
+\emph{(4)~Sedenion Triple-42 \& Pure-Kernel Pathion Ceiling (\texttt{T4a}--\texttt{T4f}):} We
+classify all $2^{16}$ sedenion subsets ($42$ bad $2+2$ planes, pure-product re-verification of
+de~Marrais's $7\times K_{2,2,2}$ box-kites, $7+28+7=42$ maximal $10$D subspaces), classify
+$\CD_4(\gamma)$ and $\CD_5(\gamma)$ split phases, certify $H_6^{56}(20)=0$, and prove purely in
+Lean over all $2^{32}$ subsets of $\CD_5$ (retiring external MILP solvers) that
+$r_{\max}(\CD_5) = 14$ with strict $7+7$ half-balance rigidity ($280$ subspaces in Rust/Python).
+\emph{(5)~Gray-Code Bit-Locking \& Spectral-Gap Dichotomy (\texttt{T5a}--\texttt{T5c}):} For all
+$n\ge 4$, upper bits of $i\oplus j$ lock to the Binary Reflected Gray Code of $\nu_n^{\std}(i,j)/4$,
+forcing a continuous spectral band gap of width $2^{n-3}-1$ mod-$4$ bins on $(2^{n-2}, 3\cdot 2^{n-3})$
+at $\flip = 2^n-8$ ($\forall n\ge 6$) and the exact all-$n$, all-signature \emph{iff} dichotomy:
+$\CD_n(f)$ has an interior mod-$4$ gap iff $8 \mid f$ and $f \notin \{0, 8, 2^{n-1}, 2^{n-1}+8\}$
+(exactly $2^{n-3}-4$ out of $2^n$ signatures).
+\emph{(6)~Odd-Parity Zero-Divisor Exclusion (\texttt{T6a}--\texttt{T6c}):} For all $n$, any
+$\{\pm 1\}$ cocycle $\sigma$, and any $x \in \Z^{2^n}$ with odd coordinate sum, left and right
+multiplications are involutions modulo~$2$; via zero-Mathlib odd-pivot Gauss--Jordan inversion
+($B_L L_x = \Delta_L I$, $B_R R_x = \Delta_R I$ with odd $\Delta_L, \Delta_R \neq 0$), every
+signed odd-support unit $k$-blade ($3$-, $5$-, $7$-blades, \dots) is non-zero-divisor on both
+sides across all $\CD_n(\gamma)$, and every integer zero divisor satisfies $\sum x_a \equiv 0 \pmod 2$
+(sharp at $4$-blade $(e_1+e_2+e_9-e_{10})(e_4+e_{15})=0$).
+All 28 headline theorems (29 Palomar targets, 45 axiom-audited declarations) are checked in
+zero-Mathlib Lean~4.35.0 across six independent kernels and verified differentially in Rust,
+ISO~C11, and Python across all $496$ algebras $\CD_4(\gamma)$--$\CD_8(\gamma)$.
 \end{abstract}
 
 \maketitle
@@ -159,7 +141,7 @@ algebras $\CD_4(\gamma)$--$\CD_8(\gamma)$.
 \noindent\fcolorbox{oiRule}{oiBg}{%
 \begin{minipage}{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}
 \small
-\textbf{Epistemic Scope \& Verification Discipline (v2.1.0).}
+\textbf{Epistemic Scope \& Verification Discipline (v3.0.0).}
 Every mathematical claim in this paper carries an explicit verification tag:
 \tagLean{} denotes a theorem machine-checked in zero-Mathlib Lean~4.35.0 across six
 independent kernels (\texttt{lean}, \texttt{leanchecker-paranoid}, \texttt{lean4lean},
@@ -169,10 +151,10 @@ contract with zero \texttt{sorry}, zero \texttt{admit}, zero \texttt{native\_dec
 \tagComp{} denotes an exact-arithmetic computational certificate (Rust/C11/Python differential
 enumeration) outside Lean;
 \tagOpen{} denotes an open mathematical frontier explicitly \emph{not} claimed solved.
-Versions~2.0.0--2.1.0 resolve every manuscript, formal, and tooling item logged in \code{ERRATA.md},
-add kernel proofs \code{T1f}, \code{T4e}, and \code{T4f}, retire external MILP solvers from the
-proof trust base for $r_{\max}(\CD_5) = 14$, and lock automated statement-symbol and schema
-consistency checks across the entire archive.
+Version~3.0.0 extends the six-kernel suite to six pillars (28 headline theorems, 29 Palomar
+targets, 45 audited declarations) by resolving the complete all-$n$, all-signature spectral-gap
+dichotomy (\code{T5a}--\code{T5c}) and universal odd-parity / odd-support unit-blade zero-divisor
+exclusion (\code{T6a}--\code{T6c}).
 \end{minipage}}
 
 \tableofcontents
@@ -226,7 +208,7 @@ Three research trajectories provide the direct context for this work:
     heuristic scripts or external floating-point/MILP solvers.
 \end{enumerate}
 
-Motivated by these lines of inquiry, we pose and investigate four structural questions:
+Motivated by these lines of inquiry, we pose and investigate six structural questions:
 \begin{itemize}[leftmargin=2em]
   \item \emph{Q1 (All-Signature Deformation):} How does the complete $2$-blade left-annihilator
     nullity spectrum transform as the doubling signature
@@ -242,12 +224,18 @@ Motivated by these lines of inquiry, we pose and investigate four structural que
   \item \emph{Q4 (Coordinate Norm-Multiplicativity in $\SSed$, $\CD_5$, and $\CD_6$):} How do the
     $42$ sedenion bad affine $2$-planes, de~Marrais's $42$ box-kite assessors ($7 \times K_{2,2,2}$),
     and maximal $10$-dimensional norm-multiplicative coordinate subspaces fit together, and what
-    is the exact symmetric coordinate ceiling $r_{\max}(\CD_5)$ and split-signature spectral gap
-    structure at dimension~$64$?
+    is the exact symmetric coordinate ceiling $r_{\max}(\CD_5)$?
+  \item \emph{Q5 (Complete All-$n$ Spectral-Gap Classification):} Exactly which signatures
+    $f \in \{0, \dots, 2^n - 1\}$ produce interior spectral gaps $H_n^f(v) = 0$ for arbitrary
+    $n \ge 6$, how wide can continuous spectral band gaps grow, and what bitwise mechanism drives
+    them?
+  \item \emph{Q6 (Higher-Blade Zero-Divisor Exclusion):} Beyond basis $2$-blades, what universal
+    arithmetic law governs whether a general integer element $x \in \Z^{2^n}$ or a signed unit
+    $k$-blade ($k \ge 3$) can be a left or right zero divisor in $\CD_n(\gamma)$?
 \end{itemize}
 
-This work addresses these four questions through four formally verified algebraic pillars
-(Sections~\ref{sec:setup}--\ref{sec:pillar4}) backed
+This work addresses these six questions through six formally verified algebraic pillars
+(Sections~\ref{sec:setup}--\ref{sec:pillar6}) backed
 by a zero-Mathlib six-kernel Lean~4.35.0 suite and tri-language differential checks across all
 $496$ generalized algebras $\CD_4(\gamma)$--$\CD_8(\gamma)$ (Section~\ref{sec:verification});
 Section~\ref{sec:boundaries} states explicitly what remains open. Relative to the prior work of Moreno~\cite{moreno1998,moreno2004},
@@ -261,23 +249,29 @@ and the all-signature midpoint law $42 \cdot 2^{n-4}$ (\texttt{T2a}--\texttt{T2f
 potential overlap with Zhilina's Euclidean basis-pair results for the base $2$-blade
 classifications), (iii)~the exact Euclidean right-compatibility clique number $\omega(G_n^{\comp}) = n+5$,
 dimension-$64$ coordinate breakaway from $\rho(2^n)$, and $[2^{n-1}, 2(n+4), 2^n]$ doubling
-tower (\texttt{T3a}--\texttt{T3d}), and (iv)~the exhaustive $2^{16}$ sedenion $7+28+7=42$
+tower (\texttt{T3a}--\texttt{T3d}), (iv)~the exhaustive $2^{16}$ sedenion $7+28+7=42$
 classification, the pure-kernel proof over all $2^{32}$ subsets of $\CD_5$ establishing
 $r_{\max}(\CD_5) = 14$ with strict $7+7$ half-balance rigidity (\texttt{T4e}), and the
-pure-kernel certification of the dimension-$64$ split interior spectral gap $H_6^{56}(20) = 0$
-(\texttt{T4f}). Table~\ref{tab:headline_theorems} indexes all 22 \tagLean{} headline theorems
-and the 2 \tagComp{} certificates.
+pure-kernel certification of $\CD_6(56)$ (\texttt{T4f}), (v)~the universal Binary Reflected
+Gray-Code bit-locking law, exponential continuous spectral band gaps of width $2^{n-3}-1$ at
+$\flip = 2^n - 8$, and the exact all-$n$, all-signature $2^{n-3}-4$ spectral-gap dichotomy
+(\texttt{T5a}--\texttt{T5c}), and (vi)~universal all-$n$, all-signature odd-parity zero-divisor
+exclusion via mod-$2$ Frobenius involution and zero-Mathlib fraction-free odd-pivot integral matrix
+inversion, ruling out zero divisors among all odd-coordinate-sum integer elements and all signed
+odd-support unit blades (\texttt{T6a}--\texttt{T6c}). Table~\ref{tab:headline_theorems} indexes
+all 28 \tagLean{} headline theorems and the 2 \tagComp{} certificates.
 
 \begin{table}[htbp]
 \centering
-\caption{Summary of all 22 headline theorems (\code{T1a}--\code{T4f}) and 2 exact computational
-certificates across the four pillars. Every \tagLean{} row is discharged in \code{Solution.lean}
-and matched against \code{PalomarChallenge.lean} (23 targets including the master conjunction)
+\caption{Summary of all 28 headline theorems (\code{T1a}--\code{T6c}) and 2 exact computational
+certificates across the six pillars. Every \tagLean{} row is discharged in \code{Solution.lean}
+and matched against \code{PalomarChallenge.lean} (29 targets including the master conjunction)
 across six independent Lean~4.35.0 kernels.}
 \label{tab:headline_theorems}
-\footnotesize
-\setlength{\tabcolsep}{3.5pt}
-\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}p{5.8cm} >{\raggedright\arraybackslash}X l@{}}
+\scriptsize
+\renewcommand{\arraystretch}{0.95}
+\setlength{\tabcolsep}{3.0pt}
+\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}p{6.0cm} >{\raggedright\arraybackslash}X l@{}}
 \toprule
 ID & Headline Result & Lean Declaration(s) & Status \\
 \midrule
@@ -306,6 +300,14 @@ T4c & Split-phase tables: $\CD_4(\gamma)$ ($1{:}1{:}7{:}7$) \& $\CD_5(\gamma)$ (
 T4d & $[14,14,32]$, $[16,16,64]$ witnesses \& domain/$\Z$/$\Z[i]$ unit-square lemma & \code{pathion_14_and_chingon_16_witnesses}, \code{domain_sq_eq_one_imp}, \code{gaussInt_sq_eq_one_iff} & \tagLean \\
 T4e & Pure-kernel Pathion ceiling $r_{\max}(\CD_5)=14$ \& strict $7+7$ rigidity (all $2^{32}$) & \code{pathion_exact_ceiling_14_and_7_7_rigidity} & \tagLean \\
 T4f & Dimension-64 split interior spectral gap $H_6^{56}(20)=0$ (full 9-bin table) & \code{cd6_split56_interior_spectral_gap} & \tagLean \\
+\addlinespace[2pt]
+T5a & Universal all-$n$ Binary Reflected Gray-Code bit-locking of $i \oplus j$ by $\nu/4$ & \code{gray_code_bit_locking_all_n} & \tagLean \\
+T5b & Exponential continuous band gap at $\flip = 2^n - 8$ (width $2^{n-3}-1$, $\forall n \ge 6$) & \code{exponential_spectral_band_gap_all_n} & \tagLean \\
+T5c & Complete all-$n$, all-signature iff spectral-gap dichotomy ($2^{n-3}-4$ masks) & \code{complete_spectral_gap_dichotomy_all_n} & \tagLean \\
+\addlinespace[2pt]
+T6a & Universal mod-$2$ twisted-group-algebra Frobenius involution ($\forall n, \forall \sigma$) & \code{twisted_frobenius_mod2_involution} & \tagLean \\
+T6b & Odd-parity zero-divisor exclusion via odd-pivot integral inverse ($B L_x = \Delta I$) & \code{odd_parity_zero_divisor_exclusion_all_n} & \tagLean \\
+T6c & All signed odd-support unit blades non-ZD \& ZD parity conservation ($\forall n, \forall \gamma$) & \code{odd_support_unit_blades_non_zd_all_n} & \tagLean \\
 \addlinespace[2pt]
 C1 & Exhaustive split phases $\CD_6(\gamma)$--$\CD_8(\gamma)$ (448 algebras) & Rust / C11 / Python exact engines & \tagComp \\
 C2 & Exact census of $280$ 14D Pathion subspaces (100\% $7+7$, contain $\{e_0,e_{16}\}$) & Rust / Python exact branch-and-bound & \tagComp \\
@@ -596,19 +598,21 @@ $0 < v < 2^{n-1}$). Theorem~\ref{thm:t4f} (\tagLean) proves the first such gap
 \begin{table}[htbp]
 \centering
 \caption{Exhaustive split-signature phase counts across all $496$ generalized algebras
-$\CD_4(\gamma)$--$\CD_8(\gamma)$ ($n = 4, 5$ and the $n = 6, \flip = 56$ gap proved in Lean
-\tagLean{}; complete $n = 6, 7, 8$ tables certified independently by Rust, C11, and Python \tagComp{}).}
+$\CD_4(\gamma)$--$\CD_8(\gamma)$ ($n = 4, 5$, the $n = 6, \flip = 56$ table, and exact
+gapped-signature counts $2^{n-3}-4$ for all $n \ge 6$ are proved in Lean \tagLean{}; complete
+$n = 6, 7, 8$ phase tables certified independently by Rust, C11, and Python \tagComp{}).}
 \label{tab:split_summary}
 \footnotesize
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{@{}rrrrrrl@{}}
 \toprule
-$n$ & $\dim$ & Sigs $2^n$ & Phases & Midpoint $H_n^\gamma(2^{n-2})$ & Gaps & Status \\
+$n$ & $\dim$ & Sigs $2^n$ & Phases & $H_n^\gamma(2^{n-2})$ & Gaps (Masks) & Status \\
 \midrule
-$4$ & $16$  & $16$  & $4$  & $42$  & $0$  & \tagLean{} ($1{:}1{:}7{:}7$) \\
-$5$ & $32$  & $32$  & $8$  & $84$  & $0$  & \tagLean{} ($4{\times}1 + 4{\times}7$) \\
-$6$ & $64$  & $64$  & $16$ & $168$ & $2$  & \tagLean{} ($\flip=56$) + \tagComp{} (all $64$) \\
-$7$ & $128$ & $128$ & $32$ & $336$ & $6$  & \tagComp{} \\
-$8$ & $256$ & $256$ & $64$ & $672$ & $14$ & \tagComp{} \\
+$4$ & $16$  & $16$  & $4$  & $42$  & $0$ ($0$)   & \tagLean{} ($1{:}1{:}7{:}7$) \\
+$5$ & $32$  & $32$  & $8$  & $84$  & $0$ ($0$)   & \tagLean{} ($4{\times}1 + 4{\times}7$) \\
+$6$ & $64$  & $64$  & $16$ & $168$ & $2$ ($4$)   & \tagLean{} (\code{T4f}, \code{T5c}) + \tagComp{} \\
+$7$ & $128$ & $128$ & $32$ & $336$ & $6$ ($12$)  & \tagLean{} (\code{T5b}--\code{T5c}) + \tagComp{} \\
+$8$ & $256$ & $256$ & $64$ & $672$ & $14$ ($28$) & \tagLean{} (\code{T5b}--\code{T5c}) + \tagComp{} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1212,12 +1216,290 @@ fixes the remaining four bins:
 \end{figure}
 
 % ==============================================================================
+\section{Pillar 5: Binary Reflected Gray-Code Bit-Locking and Exact All-$n$ Spectral Band-Gap Theory}
+\label{sec:pillar5}
+% ==============================================================================
+
+Theorem~\ref{thm:t4f} certified a single interior spectral gap $H_6^{56}(20) = 0$ in $\CD_6(56)$.
+We now uncover the exact universal bitwise mechanism driving spectral-gap formation across
+\emph{every} dimension $2^n$ ($n \ge 6$) and \emph{every} signature $f \in \{0, \dots, 2^n - 1\}$.
+Define the \emph{Gray-code locking bit} (\code{grayLockBit} in \code{CDTerrace.SpectralGaps})
+for depth $d \in \N$ and bin index $m \in \N$ by
+\begin{equation}
+\label{eq:gray_lock_bit}
+  g(d, m) \coloneqq
+  \begin{cases}
+    \mathrm{bit}_0(m), & d = 0, \\
+    \mathrm{bit}_{d-1}(m) \oplus \mathrm{bit}_d(m), & d \ge 1.
+  \end{cases}
+\end{equation}
+For $d \ge 1$, $g(d, m)$ is precisely bit $d - 1$ of the classical \emph{Binary Reflected Gray Code}
+$m \oplus \lfloor m / 2 \rfloor$.
+
+\begin{theorem}[Universal Binary Reflected Gray-Code Bit-Locking Law, \texttt{T5a} \tagLean]
+\label{thm:t5a}
+For every $n \ge 4$, every basis pair $1 \le i < j < 2^n$ with Euclidean nullity
+$v = \nu_n^{\std}(i, j)$ and $m = v / 4$:
+\begin{enumerate}[leftmargin=2em]
+  \item \emph{Top-bit locking ($d = 0$):} Whenever $4 \le v \le 2^{n-1} - 4$,
+    \begin{equation}
+    \label{eq:gray_d0}
+      \mathrm{bit}_{n-1}(i \oplus j) = \mathrm{bit}_0(m) = g(0, m).
+    \end{equation}
+  \item \emph{Recursive Gray-code locking ($1 \le d \le n - 4$):} For every depth
+    $1 \le d \le n - 4$, whenever $2^{d+1} \le v \le 2^{n-1} - 2^{d+1} - 4$,
+    \begin{equation}
+    \label{eq:gray_dge1}
+      \mathrm{bit}_{n-1-d}(i \oplus j) = \mathrm{bit}_{d-1}(m) \oplus \mathrm{bit}_d(m) = g(d, m).
+    \end{equation}
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+We induct on $n \ge 4$ using the four-branch doubling law (Theorem~\ref{thm:t2a}). For $n = 4$,
+the only positive bin is $v = 4$ ($m = 1$, $g(0, 1) = 1$), and every sedenion zero-divisor
+$2$-blade splits across the lower and upper octonion halves, forcing $\mathrm{bit}_3(i \oplus j) = 1$.
+For the inductive step $n \to n + 1$ ($n \ge 4$), let $h = 2^n$, $v = \nu_{n+1}^{\std}(i, j) = 4m$,
+and distinguish same-half pairs ($\mathrm{bit}_n(i \oplus j) = 0$) from cross-half pairs
+($\mathrm{bit}_n(i \oplus j) = 1$).
+In the same-half branches ($j < h$ or $i > h$), $v = 2\nu_n^{\std}(a, b) = 8m'$, so $m = 2m'$ is
+even ($\mathrm{bit}_0(m) = 0 = \mathrm{bit}_n(i \oplus j)$), establishing \eqref{eq:gray_d0};
+moreover $i \oplus j = a \oplus b$ preserves all lower bits, and for $d = 1$ we have
+$4 \le \nu_n^{\std}(a, b) \le h/2 - 4$, so by the inductive $d = 0$ law
+$\mathrm{bit}_{n-1}(a \oplus b) = \mathrm{bit}_0(m') = \mathrm{bit}_1(m) = 0 \oplus \mathrm{bit}_1(m) = g(1, m)$,
+while for $d \ge 2$ we have $\mathrm{bit}_{d-2}(m') \oplus \mathrm{bit}_{d-1}(m') = \mathrm{bit}_{d-1}(m) \oplus \mathrm{bit}_d(m) = g(d, m)$.
+In the cross-half branch ($i < h < j$, $b = j - h \neq i$), $v = h - 4 - 2\nu_n^{\std}(i, b) = 4(2^{n-2} - 1 - 2m')$,
+so $m = 2^{n-2} - 1 - 2m'$ is odd ($\mathrm{bit}_0(m) = 1 = \mathrm{bit}_n(i \oplus j)$),
+establishing \eqref{eq:gray_d0}. Because $v \in [2^{d+1}, 2^n - 2^{d+1} - 4]$ maps
+$m' = (2^{n-2} - 1 - m)/2$ into the bitwise complement of $\lfloor m / 2 \rfloor$ in its low
+$n - 3$ bits, $\mathrm{bit}_k(m') = \neg\mathrm{bit}_{k+1}(m)$ for all $k < n - 3$. Hence at
+$d = 1$, $\mathrm{bit}_{n-1}(i \oplus b) = \mathrm{bit}_0(m') = \neg\mathrm{bit}_1(m) = 1 \oplus \mathrm{bit}_1(m) = g(1, m)$,
+and for $d \ge 2$ both negations cancel in XOR:
+$(\neg\mathrm{bit}_{d-1}(m)) \oplus (\neg\mathrm{bit}_d(m)) = \mathrm{bit}_{d-1}(m) \oplus \mathrm{bit}_d(m) = g(d, m)$
+(\code{gray_code_bit_locking_all_n}).
+\end{proof}
+
+\begin{theorem}[Universal Exponential Continuous Spectral Band Gap, \texttt{T5b} \tagLean]
+\label{thm:t5b}
+For every $n \ge 6$, consider the split signature with flip mask $f = 2^n - 8$
+($\gamma = (-1, -1, -1, +1, \dots, +1)$). Then:
+\begin{enumerate}[leftmargin=2em]
+  \item Every integer $v$ in the open dyadic quarter $(2^{n-2},\; 3 \cdot 2^{n-3})$---spanning
+    $2^{n-3} - 1$ consecutive multiple-of-$4$ bins---is strictly empty:
+    \begin{equation}
+    \label{eq:band_gap}
+      H_n^{2^n - 8}(v) = 0 \qquad \bigl(\forall\, v \text{ with } 2^{n-2} < v < 3 \cdot 2^{n-3}\bigr).
+    \end{equation}
+  \item Both boundary walls of the band gap are strictly populated:
+    \begin{equation}
+      H_n^{2^n - 8}(2^{n-2}) = 42 \cdot 2^{n-4}, \qquad
+      H_n^{2^n - 8}(3 \cdot 2^{n-3}) > 0.
+    \end{equation}
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+For any pair $(i, j)$ with Euclidean nullity $v = 4m \in [2^{n-3}, 3 \cdot 2^{n-3} - 4]$,
+Theorem~\ref{thm:t5a} locks \emph{every} upper bit $b \in \{3, \dots, n - 1\}$ of $i \oplus j$.
+Because $f = 2^n - 8$ has $1$-bits precisely on $\{3, \dots, n - 1\}$, the nilpotency parity
+$\parbit_n((i \oplus j) \,\&\, (2^n - 8))$ is the telescoping XOR sum
+\[
+  \mathrm{bit}_0(m) \oplus \bigoplus_{d=1}^{n-4} \bigl(\mathrm{bit}_{d-1}(m) \oplus \mathrm{bit}_d(m)\bigr)
+  = \mathrm{bit}_{n-4}(m)
+\]
+(\code{quarter_parity_locking_all_n}). Consequently, every Euclidean pair in the second quarter
+$v \in [2^{n-3}, 2^{n-2})$ has $\mathrm{bit}_{n-4}(m) = 0$ (non-nilpotent) and stays in place,
+while every Euclidean pair in the third quarter $v \in [2^{n-2}, 3 \cdot 2^{n-3})$ has
+$\mathrm{bit}_{n-4}(m) = 1$ (nilpotent) and reflects via Theorem~\ref{thm:t1d} to
+$2^{n-1} - v \in (2^{n-3}, 2^{n-2}]$. Thus \emph{zero} pairs land in the open third quarter
+$(2^{n-2}, 3 \cdot 2^{n-3})$, proving \eqref{eq:band_gap}. Theorem~\ref{thm:t2f} fixes the lower
+wall $H_n^{2^n - 8}(2^{n-2}) = 42 \cdot 2^{n-4}$, while the single explicit pair $(i, j) = (1, 25)$
+satisfies $1 \oplus 25 = 24$ (even popcount under $2^n - 8$, hence non-nilpotent) and
+$\nu_n^{\std}(1, 25) = 3 \cdot 2^{n-3}$ for every $n \ge 5$ by induction from $\nu_5^{\std}(1, 25) = 12$,
+certifying $H_n^{2^n - 8}(3 \cdot 2^{n-3}) > 0$ (\code{exponential_spectral_band_gap_all_n}).
+\end{proof}
+
+\begin{theorem}[Complete All-$n$, All-Signature Spectral-Gap Dichotomy, \texttt{T5c} \tagLean]
+\label{thm:t5c}
+Define a flip mask $f < 2^n$ ($n \ge 6$) to have an \emph{interior mod-$4$ spectral gap}
+(\code{hasInteriorMod4Gap}) if there exists $v$ with $4 \mid v$, $0 < v < 2^{n-1} - 4$, and
+$H_n^f(v) = 0$, and let \code{isGappedMask} denote the closed predicate
+\[
+  8 \mid f \quad \land \quad f \notin \bigl\{0,\; 8,\; 2^{n-1},\; 2^{n-1} + 8\bigr\}.
+\]
+Then for every $n \ge 6$:
+\begin{enumerate}[leftmargin=2em]
+  \item For every flip mask $f \in \{0, \dots, 2^n - 1\}$,
+    \begin{equation}
+      \text{$\CD_n(f)$ has an interior mod-$4$ spectral gap} \iff \text{\code{isGappedMask} $n$ $f$ = \cmd{true}}.
+    \end{equation}
+  \item Out of all $2^n$ signatures of $\CD_n(\gamma)$, \emph{exactly} $2^{n-3} - 4$ signatures
+    exhibit an interior spectral gap (asymptotic density $1/8 = 12.5\%$; \code{countPred_gapped_masks}).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Sufficiency ($\Leftarrow$):} If $8 \mid f$ and $f \notin \{0, 8, 2^{n-1}, 2^{n-1} + 8\}$,
+then $f$ has at least one middle $1$-bit $b \in \{4, \dots, n - 2\}$. Setting $d = n - 1 - b$
+($1 \le d \le n - 5$) and considering the mirror-pair bin indices
+$m_\pm = 2^{n-4} \pm 2^{d-1}$ (giving mirror nullities $v_\pm = 4m_\pm$ in the central locked
+zone $[2^{n-3}, 3 \cdot 2^{n-3} - 4]$), every Gray bit $k \neq d$ agrees at $m_+$ and $m_-$,
+whereas $g(d, m_+) = 1$ and $g(d, m_-) = 0$ (\code{grayLockBit_mirror_flip}). Because bit $b$ is
+set in $f$ and all lower bits $0, 1, 2$ are zero, the locked parity \code{lockedGrayParity} flips
+sign between $m_+$ and $m_-$. Hence one of $\{v_+, v_-\}$ loses all of its Euclidean pairs to its
+mirror while receiving none back, forcing $H_n^f(v_+) = 0$ or $H_n^f(v_-) = 0$.
+
+\emph{Necessity ($\Rightarrow$):} First, if $8 \nmid f$, then at least one low octonion bit
+$r \in \{0, 1, 2\}$ is set in $f$. By Theorem~\ref{thm:t2a}, the lower octonion automorphism group
+leaves $\nu_n^{\std}$ invariant while acting freely on the low $3$ bits of $i \oplus j$ on every
+positive Euclidean bin $4 \le v \le 2^{n-1} - 4$; we construct explicit non-nilpotent witness
+pairs at every interior mod-$4$ bin by induction on $n$ from explicit base pairs in $\CD_4$,
+proving $H_n^f(v) > 0$ for every interior $v$. Second, if $f \in \{0, 8, 2^{n-1}, 2^{n-1} + 8\}$,
+the only active bits of $f$ are $b = 3$ and $b = n - 1$; because $g(0, m) = \mathrm{bit}_0(m)$ and
+$g(n - 4, m)$ are invariant under mirror reflection $m \mapsto 2^{n-3} - m$ (for $m \notin \{0, 2^{n-3}\}$),
+every interior mirror pair $(v, 2^{n-1} - v)$ carries identical nilpotency parity on both sides or
+admits an explicit non-nilpotent witness in $\CD_n$, leaving every interior mod-$4$ bin strictly
+populated (\code{complete_spectral_gap_dichotomy_all_n}). Finally, counting multiples of $8$ in
+$[0, 2^n)$ minus the $4$ distinct excluded masks gives $2^{n-3} - 4$.
+\end{proof}
+
+% ==============================================================================
+\section{Pillar 6: Universal Odd-Parity Zero-Divisor Exclusion and Odd-Pivot Integral Matrix Inversion}
+\label{sec:pillar6}
+% ==============================================================================
+
+Pillars~1, 2, and~5 give a complete theory of basis $2$-blades. We now turn to \emph{general
+integer elements} $x = \sum_{a = 0}^{2^n - 1} x_a e_a \in \Z^{2^n}$ and arbitrary higher-order
+$k$-blades ($k \ge 3$) across \emph{all} dimensions $2^n$ and \emph{all} signatures
+$\gamma \in \{\pm 1\}^n$. For any sign function $\sigma : \N \times \N \to \{\pm 1\}$, define the
+twisted group-algebra product (\code{twistedMul} in \code{CDTerrace.OddBladeExclusion})
+\begin{equation}
+  (u *_\sigma v)_t \coloneqq \sum_{a = 0}^{2^n - 1} \sigma(a,\, a \oplus t)\, u(a)\, v(a \oplus t),
+\end{equation}
+and say that $x$ has \emph{odd coordinate sum} (\code{oddCoordSum}) if
+$\bigl(\sum_{a = 0}^{2^n - 1} x_a\bigr) \bmod 2 = 1$.
+
+\begin{theorem}[Universal Mod-$2$ Twisted-Group-Algebra Frobenius Involution, \texttt{T6a} \tagLean]
+\label{thm:t6a}
+For every $n \in \N$, every arbitrary $\{\pm 1\}$-valued sign function $\sigma$
+(with zero cocycle or Cayley--Dickson assumptions!), and every $x \in \Z^{2^n}$ with odd
+coordinate sum:
+\begin{enumerate}[leftmargin=2em]
+  \item For every $y \in \Z^{2^n}$ and every $t < 2^n$,
+    \begin{equation}
+    \label{eq:mod2_inv}
+      \bigl(x *_\sigma (x *_\sigma y)\bigr)_t \equiv y_t \pmod 2,
+      \qquad
+      \bigl((y *_\sigma x) *_\sigma x\bigr)_t \equiv y_t \pmod 2.
+    \end{equation}
+  \item For every flip mask $f$, setting $\sigma = \sigma_n^f$ matches the literal
+    product \code{cdMulCoordGamma} of $\CD_n(f)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Modulo~$2$, $+1 \equiv -1 \equiv 1$, so every sign $\sigma(a, b) \in \{\pm 1\}$ collapses to $1$
+and $*_\sigma$ reduces to ordinary convolution in the commutative characteristic-$2$ group ring
+$\F_2[\F_2^n]$. Expanding $\bigl(x *_\sigma (x *_\sigma y)\bigr)_t \pmod 2$ gives
+$\sum_{a, c < 2^n} x_a x_c y_{t \oplus a \oplus c} \pmod 2$. Off-diagonal pairs $(a, c)$ with
+$a \neq c$ cancel in symmetric pairs $(a, c)$ and $(c, a)$ modulo~$2$, leaving only the diagonal
+$a = c$ where $t \oplus a \oplus a = t$:
+\[
+  \bigl(x *_\sigma (x *_\sigma y)\bigr)_t
+  \equiv \Bigl(\sum_{a = 0}^{2^n - 1} x_a^2\Bigr) y_t
+  \equiv \Bigl(\sum_{a = 0}^{2^n - 1} x_a\Bigr) y_t
+  \equiv 1 \cdot y_t = y_t \pmod 2,
+\]
+and identically on the right (\code{twisted_frobenius_mod2_involution}).
+\end{proof}
+
+Let \code{leftMulMat} $L_x$ and \code{rightMulMat} $R_x$ be the $2^n \times 2^n$ integer matrices
+representing left and right multiplication by $x$ in $\CD_n(f)$. By Theorem~\ref{thm:t6a},
+$L_x^2 \equiv I \pmod 2$ and $R_x^2 \equiv I \pmod 2$. To lift invertibility modulo~$2$ to
+invertibility over $\Z[\tfrac{1}{\Delta}] \subset \Q \subset \R \subset \C$ \emph{without}
+Mathlib's determinant API, we prove a self-contained constructive matrix inversion theorem over $\Z$.
+
+\begin{theorem}[Universal Odd-Parity Zero-Divisor Exclusion via Odd-Pivot Integral Inversion, \texttt{T6b} \tagLean]
+\label{thm:t6b}
+For every $n \in \N$, every flip mask $f$, and every $x \in \Z^{2^n}$ with odd coordinate sum:
+\begin{enumerate}[leftmargin=2em]
+  \item There exist $2^n \times 2^n$ integer matrices $B_L, B_R$ and \emph{odd} integer scalars
+    $\Delta_L, \Delta_R \in \Z$ ($\Delta_L \equiv \Delta_R \equiv 1 \pmod 2$, hence
+    $\Delta_L, \Delta_R \neq 0$) such that
+    \begin{equation}
+    \label{eq:integral_inv}
+      B_L L_x = \Delta_L I, \qquad B_R R_x = \Delta_R I
+    \end{equation}
+    identically over $\Z$ (in particular, $L_x$ and $R_x$ are invertible over $\Q, \R, \C$ and
+    every finite field $\F_p$ with $p \nmid \Delta$).
+  \item Both left and right annihilators of $x$ in $\CD_n(f)$ are strictly trivial:
+    for every $y \in \Z^{2^n}$, $x \cdot y = 0 \implies y = 0$ and $y \cdot x = 0 \implies y = 0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+In \code{odd_mod2_inv_matrix_integral_inv}, given any $N \times N$ integer matrix $A$ admitting an
+integer mod-$2$ left inverse $U_0$ ($U_0 A \equiv I \pmod 2$), we maintain by induction on
+$k = 0, \dots, N$ triples $(L, R, U)$ satisfying $R A = L$, cleared columns $0, \dots, k - 1$ of
+$L$ with odd diagonal entries $L_{c,c} \equiv 1 \pmod 2$, and $U L \equiv I \pmod 2$. At step $k$,
+some row $r \ge k$ must have $L_{r,k}$ odd: otherwise the vector $v$ with $v_c = L_{c,k}$ ($c < k$),
+$v_k = 1$, $v_c = 0$ ($c > k$) satisfies $L v \equiv 0 \pmod 2$, contradicting
+$(U L v)_k \equiv v_k = 1 \pmod 2$. Swapping rows $k \leftrightarrow r$ in $L, R$ (and columns
+$k \leftrightarrow r$ in $U$) places an odd pivot $p = L'_{k,k}$ on the diagonal; performing
+fraction-free elimination $L''_i = p L'_i - L'_{i,k} L'_k$ ($i \neq k$) clears column $k$,
+preserves oddness of all previous diagonals ($p L'_{c,c}$ is odd), and updates column $k$ of $U$
+so that $U'' L'' \equiv I \pmod 2$ (using $p \equiv 1 \pmod 2$). At $k = N$, $L$ is diagonal with
+all diagonal entries odd; setting $\Delta = \prod_{i=0}^{N-1} L_{i,i}$ (odd) and scaling row $i$
+of $R$ by $\prod_{j \neq i} L_{j,j}$ yields $B A = \Delta I$. Applying this to $A = L_x$ and
+$A = R_x$ with $U_0 = A$ (by Theorem~\ref{thm:t6a}) proves \eqref{eq:integral_inv}, and
+multiplying $A y = 0$ on the left by $B$ gives $\Delta y = 0 \implies y = 0$
+(\code{odd_parity_zero_divisor_exclusion_all_n}).
+\end{proof}
+
+\begin{corollary}[Universal Odd-Support Unit-Blade Non-Singularity and Zero-Divisor Parity Conservation, \texttt{T6c} \tagLean]
+\label{thm:t6c}
+For every $n \in \N$ and every signature flip mask $f$:
+\begin{enumerate}[leftmargin=2em]
+  \item Every signed odd-support unit $k$-blade $x = \sum_{a \in S} \varepsilon(a)\, e_a$
+    (\code{signedBladeSum}, with $|S|$ odd, $S \subset [0, 2^n)$, and $\varepsilon(a) \in \{\pm 1\}$
+    --- including \emph{every} unit $3$-blade $e_i \pm e_j \pm e_k$, $5$-blade, $7$-blade, \dots)
+    has odd coordinate sum and is strictly non-zero-divisor on both left and right in $\CD_n(f)$.
+  \item \emph{Zero-Divisor Parity Conservation:} Every integer left or right zero divisor
+    $x \in \CD_n(f)$ must satisfy $\sum_{a = 0}^{2^n - 1} x_a \equiv 0 \pmod 2$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+Since each $\varepsilon(a) \in \{\pm 1\}$ satisfies $\varepsilon(a) \equiv 1 \pmod 2$,
+$\sum_{a \in S} \varepsilon(a) \equiv |S| \equiv 1 \pmod 2$, so Theorem~\ref{thm:t6b} applies
+immediately; part~(2) is the contrapositive (\code{odd_support_unit_blades_non_zd_all_n}).
+This parity barrier is sharp: in standard sedenions $\CD_4(0)$, the signed unit $4$-blade
+$x = e_1 + e_2 + e_9 - e_{10}$ (even coordinate sum $2$) annihilates $y = e_4 + e_{15} \neq 0$
+(machine-checked in \code{refute_even_4blade_non_zd}).
+\end{proof}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig6_gray_band_gap_and_odd_blades.pdf}
+  \caption{Pillars~5 and~6 (Theorems~\ref{thm:t5a}--\ref{thm:t6c}).
+  \textbf{Left:} Normalized $2$-blade nullity spectra at $\flip = 2^n - 8$ across $\CD_6(56)$,
+  $\CD_7(120)$, and $\CD_8(248)$, exhibiting the universal empty spectral band gap across the
+  entire open quarter $(\frac{1}{2}, \frac{3}{4})$ (width $2^{n-3} - 1$ consecutive mod-$4$ bins:
+  $1, 3, 7, \dots$) driven by Gray-code quarter parity locking.
+  \textbf{Right:} Exact fraction $(2^{n-3} - 4)/2^n \to 12.5\%$ of gapped signatures across all
+  $2^n$ signatures (Theorem~\ref{thm:t5c}), together with the universal odd-parity zero-divisor
+  exclusion law (Theorems~\ref{thm:t6a}--\ref{thm:t6c}) and its sharp even $4$-blade boundary.}
+  \label{fig:gray_gap_odd}
+\end{figure}
+
+% ==============================================================================
 \section{Six-Kernel Formal Verification and Tri-Language Architecture}
 \label{sec:verification}
 % ==============================================================================
 
 \subsection{Zero-Mathlib Lean~4.35.0 Formalization and Six-Kernel Replay}
-The entire Lean library (\code{lean/CDTerrace/*.lean}, over $6{,}400$ lines across eight modules)
+The entire Lean library (\code{lean/CDTerrace/*.lean}, over $9{,}000$ lines across ten modules,
+adding \code{SpectralGaps.lean} and \code{OddBladeExclusion.lean})
 depends strictly on Lean~4.35.0 core~\cite{demoura2021lean4} with \emph{zero} Mathlib dependency,
 \cmd{autoImplicit = false}, \cmd{relaxedAutoImplicit = false}, zero \cmd{sorry} in production
 targets, zero \cmd{admit}, zero \code{native_decide}, zero \cmd{maxRecDepth} or
@@ -1228,12 +1510,12 @@ to the textbook definitions and discharged by pure kernel \cmd{rfl}.
 
 Statement fidelity is enforced by the Palomar Comparator contract:
 \begin{itemize}[leftmargin=2em]
-  \item \code{Challenge.lean} defines the 22 theorem abbreviations \cmd{T1aStmt}--\cmd{T4fStmt}
+  \item \code{Challenge.lean} defines the 28 theorem abbreviations \cmd{T1aStmt}--\cmd{T6cStmt}
     and their conjunction \code{AllTerraceTheoremsStmt}.
-  \item \code{PalomarChallenge.lean} (excluded from \cmd{defaultTargets}) exposes the 23
+  \item \code{PalomarChallenge.lean} (excluded from \cmd{defaultTargets}) exposes the 29
     statement-only challenge signatures.
-  \item \code{PalomarSolution.lean} discharges all 23 targets from \code{Solution.lean} with zero
-    \cmd{sorry}, audited by \code{VerifyAxioms.lean} (all 35 declarations within
+  \item \code{PalomarSolution.lean} discharges all 29 targets from \code{Solution.lean} with zero
+    \cmd{sorry}, audited by \code{VerifyAxioms.lean} (all 45 declarations within
     \code{[propext, Classical.choice, Quot.sound]}).
   \item Continuous integration replays the proof export across six independent kernels (the
     Lean~4.35.0 C++ kernel, \cmd{leanchecker-paranoid}, \cmd{lean4lean}~\cite{carneiro2024lean4lean},
@@ -1246,8 +1528,8 @@ Statement fidelity is enforced by the Palomar Comparator contract:
 \end{itemize}
 
 \subsection{Non-Vacuity Witnesses and Adversarial Boundary Refutations}
-Four concrete inhabited pillar witnesses are proved in \code{CDTerrace.NonVacuity}, while
-eight refutations of natural false strengthenings are machine-checked in
+Six concrete inhabited pillar witnesses are proved in \code{CDTerrace.NonVacuity}, while
+ten refutations of natural false strengthenings are machine-checked in
 \code{CDTerrace.AdversarialTests}:
 \begin{enumerate}[leftmargin=2em]
   \item \code{refute_hurwitz_saturation_at_64}: no $12$-clique exists in $G_6^{\comp}$.
@@ -1266,6 +1548,11 @@ eight refutations of natural false strengthenings are machine-checked in
   \item \code{refute_cd6_split56_contiguous_bins}: interior nullity bin $\nu = 20$ is strictly
     empty in $\CD_6(56)$ ($H_6^{56}(20) = 0$) despite populated neighbors $H_6^{56}(16) = 168$
     and $H_6^{56}(24) = 56$.
+  \item \code{refute_even_4blade_non_zd}: sharpness of Pillar~6---the signed unit $4$-blade
+    $e_1 + e_2 + e_9 - e_{10}$ (even sum $2$) annihilates $e_4 + e_{15} \neq 0$ in $\CD_4(0)$.
+  \item \code{refute_naive_div8_gap_rule}: sharpness of Pillar~5---in $\CD_7$, $f = 8$ and
+    $f = 72 = 2^6 + 8$ are nonzero multiples of $8$ with no interior gap, while $f = 120$ has
+    the $3$-bin gap $\{36, 40, 44\}$.
 \end{enumerate}
 
 \subsection{Tri-Language Differential Verification and Cryptographic Provenance}
@@ -1285,11 +1572,14 @@ provenance attestations.
 \label{sec:boundaries}
 % ==============================================================================
 
-\begin{openproblem}[Higher-Blade Annihilator Spectra \tagOpen]
-Pillars~1 and~2 (Sections~\ref{sec:pillar1}--\ref{sec:pillar2}) classify \emph{basis $2$-blades} $e_i + e_j$. By Theorem~\ref{thm:t2b}, $2$-blades
-fall strictly short of $\mathrm{BDI}(n) = 2^n - 4n + 4$ for every $n \ge 5$. Classifying the
-annihilator stratification of $k$-blades ($k \ge 3$) and general elements of $\CD_n(\gamma)$
-remains open (adjacent to Mega-Atlas entry \code{ALG-039}).
+\begin{openproblem}[Even-Parity Higher-Blade Annihilator Spectra \tagOpen]
+Pillars~1, 2, and~5 classify \emph{basis $2$-blades} $e_i + e_j$, while Pillar~6
+(Theorems~\ref{thm:t6a}--\ref{thm:t6c}) universally excludes all integer elements of odd
+coordinate sum---including all signed odd-support unit $k$-blades ($3$-, $5$-, $7$-blades, \dots)---from
+being zero divisors in any $\CD_n(\gamma)$. Classifying the annihilator stratification of
+\emph{even-parity} higher blades ($k \ge 4$, such as $e_1 + e_2 + e_9 - e_{10}$ in
+\code{refute_even_4blade_non_zd}) and general elements of $\CD_n(\gamma)$ remains open (adjacent
+to Mega-Atlas entry \code{ALG-039}).
 \end{openproblem}
 
 \begin{openproblem}[Exact Symmetric Coordinate Ceiling $r_{\max}(\CD_n)$ for $n \ge 6$ \tagOpen]
@@ -1307,12 +1597,13 @@ cf.~\cite{yiu1990,zhangzhu2026hurwitz}), nor do they settle whether arbitrary re
 combinations inside $\CD_n$ can surpass coordinate ceilings.
 \end{openproblem}
 
-\begin{openproblem}[Asymptotic Split-Phase Counts and Spectral-Gap Classification \tagOpen]
-For $n = 4, 5$ \tagLean{} and $n = 6, 7, 8$ \tagComp{}, the $2^n$ signatures of $\CD_n(\gamma)$
-collapse into exactly $2^{n-2}$ distinct $2$-blade nullity-histogram phases, with interior
-spectral-gap phase counts $0, 0, 2, 6, 14$ for $n = 4, 5, 6, 7, 8$ (and the first gap $\CD_6(56)$
-certified in Lean by Theorem~\ref{thm:t4f}). Proving the phase count $2^{n-2}$ and classifying
-all interior spectral-gap signatures for arbitrary $n \ge 6$ remain open.
+\begin{openproblem}[Asymptotic Distinct Split-Phase Count $2^{n-2}$ \tagOpen]
+Theorem~\ref{thm:t5c} (Section~\ref{sec:pillar5}) completely resolves the all-$n$, all-signature
+interior spectral-gap classification for every $n \ge 6$ (proving exactly $2^{n-3} - 4$ gapped
+signatures out of $2^n$). For $n = 4, 5$ \tagLean{} and $n = 6, 7, 8$ \tagComp{}, the $2^n$
+signatures of $\CD_n(\gamma)$ collapse into exactly $2^{n-2}$ distinct $2$-blade
+nullity-histogram equivalence classes; proving that the distinct split-phase count equals
+$2^{n-2}$ for arbitrary $n \ge 6$ remains open.
 \end{openproblem}
 
 \subsection*{Author Contributions (CRediT)}

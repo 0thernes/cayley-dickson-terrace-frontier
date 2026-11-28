@@ -2,7 +2,7 @@
 # Copyright (c) 2026 Alexander Stephen Donahue
 """Comprehensive falsifiable, property-based, metamorphic, negative, surgical-mutation,
 schema, Lean-symbol bijection, governance/accessibility/CSP, timestamp, and cross-language
-differential verification suite for Cayley-Dickson Terrace Frontier v2.1.0.
+differential verification suite for Cayley-Dickson Terrace Frontier v3.0.0.
 """
 
 from __future__ import annotations
@@ -29,16 +29,22 @@ from cd_terrace import (
     PATHION_WITNESS_14,
     block_delta,
     cd_max_clique,
+    cd_mul_gamma_vec,
     cd_sign,
     cd_sign_gamma_direct,
     cd_sign_gamma_factored,
     doubled_right_witness,
+    gray_lock_bit,
     hurwitz_radon,
+    is_gapped_mask,
     is_norm_mult_pair,
+    left_mul_matrix_gamma,
     non_zd_formula,
     nullity_histogram,
     nullity_histogram_gamma,
+    odd_pivot_integral_inv,
     right_compat,
+    right_mul_matrix_gamma,
     total_mass_formula,
     twoblade_nullity_direct,
     twoblade_nullity_fast,
@@ -207,6 +213,86 @@ def test_pillar4_witnesses_exact_vector_norm_multiplicativity() -> None:
             assert not is_norm_mult_pair(5, cand, cand)
 
 
+def test_pillar5_gray_code_bit_locking_band_gap_and_dichotomy() -> None:
+    """Exhaustive verification of Pillar 5 (T5a, T5b, T5c) across CD_4..CD_7."""
+    # T5a: Binary Reflected Gray-Code Bit-Locking across all pairs in CD_4..CD_7
+    for n in (4, 5, 6, 7):
+        dim = 1 << n
+        half = 1 << (n - 1)
+        for i in range(1, dim):
+            for j in range(i + 1, dim):
+                d = i ^ j
+                v = twoblade_nullity_fast(n, i, j)
+                m = v // 4
+                if 4 <= v <= half - 4:
+                    assert bool((d >> (n - 1)) & 1) == gray_lock_bit(0, m)
+                for depth in range(1, n - 3):
+                    lo_b = 1 << (depth + 1)
+                    if lo_b <= v <= half - lo_b - 4:
+                        assert bool((d >> (n - 1 - depth)) & 1) == gray_lock_bit(depth, m)
+
+    # T5b & T5c: Exponential band gap at flip = 2^n - 8 and exact 2^(n-3) - 4 iff dichotomy for CD_6..CD_7
+    for n in (6, 7):
+        dim = 1 << n
+        half = 1 << (n - 1)
+        top = half - 4
+        lo_e = 1 << (n - 2)
+        hi_e = 3 * (1 << (n - 3))
+        gapped_count = 0
+        for fl in range(dim):
+            h = nullity_histogram_gamma(n, fl)
+            has_gap = any(h.get(v, 0) == 0 for v in range(4, top + 1, 4))
+            assert has_gap == is_gapped_mask(n, fl)
+            if has_gap:
+                gapped_count += 1
+            if fl == dim - 8:
+                assert h[lo_e] == 42 * (1 << (n - 4))
+                assert h[hi_e] > 0
+                for v in range(lo_e + 4, hi_e, 4):
+                    assert h.get(v, 0) == 0
+        assert gapped_count == (1 << (n - 3)) - 4
+
+
+def test_pillar6_odd_parity_inversion_and_4blade_sharpness() -> None:
+    """First-principles check of Pillar 6 (T6a, T6b, T6c) and adversarial 4-blade refutation A9."""
+    # T6a & T6b: exact odd-pivot integral matrix inverse B @ L_x == delta * I (delta odd) & B_R @ R_x == delta_R * I
+    test_vectors = [
+        [1 if t in (1, 2, 10) else 0 for t in range(16)],  # unit 3-blade
+        [1 if t in (1, 3, 5, 9, 14) else 0 for t in range(16)],  # unit 5-blade
+        [2 * (t % 3) - 1 if t != 0 else 2 for t in range(16)],  # general odd-sum integer vector (sum = 11)
+    ]
+    for fl in (0, 1, 8, 15):
+        gammas = flip_to_gammas(4, fl)
+        for x in test_vectors:
+            if sum(x) % 2 == 0:
+                x = [x[0] + 1, *x[1:]]
+            assert sum(x) % 2 == 1
+            # Check naive recursive oracle agrees with cd_mul_gamma_vec & mod-2 involution holds
+            y = [3 * t - 5 for t in range(16)]
+            xy = cd_mul_vec(x, y, gammas)
+            assert xy == cd_mul_gamma_vec(4, fl, x, y)
+            xxy = cd_mul_vec(x, xy, gammas)
+            assert all((xxy[t] - y[t]) % 2 == 0 for t in range(16))
+            # Check exact fraction-free odd-pivot integral inverse for both L_x and R_x
+            for mat in (left_mul_matrix_gamma(4, fl, x), right_mul_matrix_gamma(4, fl, x)):
+                inv, delta = odd_pivot_integral_inv(mat)
+                assert delta % 2 == 1 and delta != 0
+                for r in range(16):
+                    for c in range(16):
+                        entry = sum(inv[r][k] * mat[k][c] for k in range(16))
+                        assert entry == (delta if r == c else 0)
+
+    # A9 sharpness: even-sum unit 4-blade (e_1 + e_2 + e_9 - e_10) annihilates (e_4 + e_15) in CD_4(0)
+    x4 = [0] * 16
+    x4[1], x4[2], x4[9], x4[10] = 1, 1, 1, -1
+    y4 = [1 if t in (4, 15) else 0 for t in range(16)]
+    assert sum(x4) == 2
+    assert cd_mul_vec(x4, y4, flip_to_gammas(4, 0)) == [0] * 16
+    assert cd_mul_gamma_vec(4, 0, x4, y4) == [0] * 16
+    with pytest.raises(ValueError):
+        odd_pivot_integral_inv(left_mul_matrix_gamma(4, 0, x4))
+
+
 def test_negative_boundaries_and_error_handling() -> None:
     """Verify sharp negative boundaries and clean invalid-input rejections (including upper bounds >= 2^n)."""
     assert not right_compat(4, 1, 10)
@@ -319,13 +405,17 @@ def test_cross_language_rust_differential() -> None:
     assert rust_out["pathion_all_14d_contain_0_16"] is True
     assert rust_out["cd6_flip56_gap_bin20"] == 0
     assert rust_out["chingon_16_ok"] is True
+    assert rust_out["pillar5_dichotomy_checked_masks"] == 448
+    assert rust_out["pillar5_gapped_counts"] == [[6, 4], [7, 12], [8, 28]]
+    assert rust_out["pillar6_odd_blade_checks_ok"] is True
+    assert rust_out["pillar6_4blade_zd_ok"] is True
     for n in range(3, 8):
         py_h = {str(k): v for k, v in nullity_histogram(n).items()}
         assert rust_out["euclidean_histograms"][f"CD_{n}"] == py_h
 
 
-def test_surgical_mutation_suite_kills_8_mutants() -> None:
-    """Surgical mutation test (B13): verify 8 distinct algebraic/boundary mutants are each killed."""
+def test_surgical_mutation_suite_kills_10_mutants() -> None:
+    """Surgical mutation test (B13): verify 10 distinct algebraic/boundary mutants are each killed."""
     # Mutant 1: omit nilpotent mirror inversion in split sedenions (flip_mask = 8)
     true_h = nullity_histogram_gamma(4, 8)
     mutant_no_mirror = nullity_histogram(4)
@@ -362,6 +452,19 @@ def test_surgical_mutation_suite_kills_8_mutants() -> None:
     unbalanced_14 = [0, 1, 2, 3, 4, 5, 8, 10, 16, 17, 18, 20, 21, 24]
     assert len(unbalanced_14) == 14 and sum(x < 16 for x in unbalanced_14) == 8
     assert not is_norm_mult_pair(5, unbalanced_14, unbalanced_14)
+
+    # Mutant 9: drop the {8, 2^(n-1)+8} exceptions from Pillar 5 dichotomy (T5c) -> killed at CD_7(f=8, 72)
+    h7_8 = nullity_histogram_gamma(7, 8)
+    h7_72 = nullity_histogram_gamma(7, 72)
+    assert all(h7_8.get(v, 0) > 0 for v in range(4, 61, 4))
+    assert all(h7_72.get(v, 0) > 0 for v in range(4, 61, 4))
+    assert not is_gapped_mask(7, 8) and not is_gapped_mask(7, 72)
+
+    # Mutant 10: claim odd-blade exclusion extends to even 4-blades -> killed by (e_1+e_2+e_9-e_10)*(e_4+e_15)=0
+    x4 = [0] * 16
+    x4[1], x4[2], x4[9], x4[10] = 1, 1, 1, -1
+    y4 = [1 if t in (4, 15) else 0 for t in range(16)]
+    assert cd_mul_gamma_vec(4, 0, x4, y4) == [0] * 16
 
 
 def test_repo_yaml_validates_against_schema_and_social_preview_png() -> None:
@@ -401,7 +504,8 @@ def test_documentation_bijections_lean_symbols_and_no_stale_prose() -> None:
         lean_decls.update(decl_re.findall(lean_file.read_text(encoding="utf-8")))
     lean_modules = {
         "Basic", "MirrorConservation", "TerraceLaw", "HurwitzRupture",
-        "FiniteCertificates", "PathionRupture", "NonVacuity", "AdversarialTests",
+        "FiniteCertificates", "PathionRupture", "SpectralGaps", "OddBladeExclusion",
+        "NonVacuity", "AdversarialTests",
     }
 
     # Check every CDTerrace.<sym> and known Lean identifier in docs/statement-fidelity.md
@@ -419,11 +523,13 @@ def test_documentation_bijections_lean_symbols_and_no_stale_prose() -> None:
     # Verify every identifier-like \code{...} token in paper/main.tex that matches camelCase/snake_case Lean names
     ignore_code_tokens = {
         "ERRATA.md", "Solution.lean", "PalomarChallenge.lean", "Challenge.lean", "PalomarSolution.lean",
-        "VerifyAxioms.lean", "FiniteCertificates.lean", "PathionRupture.lean", "comparator.json",
+        "VerifyAxioms.lean", "FiniteCertificates.lean", "PathionRupture.lean", "SpectralGaps.lean",
+        "OddBladeExclusion.lean", "comparator.json",
         "check_readme_axioms.py", "data/MANIFEST.sha256", "MANIFEST.sha256", "data/MANIFEST.sha256.tsr",
         "data/MANIFEST.sha256.ots", "propext", "Classical.choice", "Quot.sound", "native_decide", "rfl",
         "Nat.bitwise", "CDTerrace.Basic", "CDTerrace.MirrorConservation", "CDTerrace.TerraceLaw",
-        "CDTerrace.HurwitzRupture", "CDTerrace.FiniteCertificates", "CDTerrace.NonVacuity",
+        "CDTerrace.HurwitzRupture", "CDTerrace.FiniteCertificates", "CDTerrace.PathionRupture",
+        "CDTerrace.SpectralGaps", "CDTerrace.OddBladeExclusion", "CDTerrace.NonVacuity",
         "CDTerrace.AdversarialTests", "lean/CDTerrace/*.lean", "rightCompat_doubling_*",
         "ALG-035", "ALG-039", "COMB-040", "T1f", "T4e", "T4f", "15",
     }
@@ -437,7 +543,7 @@ def test_documentation_bijections_lean_symbols_and_no_stale_prose() -> None:
         ):
             continue
         base = tok.split(".")[-1]
-        if base in {"lower", "upper", "axis", "cross", "odd", "15"} or re.fullmatch(r"T[1-4][a-f]", base):
+        if base in {"lower", "upper", "axis", "cross", "odd", "15"} or re.fullmatch(r"T[1-6][a-f]", base):
             continue
         assert base in lean_decls, f"paper/main.tex \\code{{{tok}}} references undeclared Lean symbol {base!r}"
 
@@ -452,19 +558,21 @@ def test_documentation_bijections_lean_symbols_and_no_stale_prose() -> None:
     assert bib_keys == tex_cites, f"BibTeX vs main.tex mismatch: {bib_keys ^ tex_cites}"
     assert bib_keys == log_keys, f"BibTeX vs literature-search-log.md mismatch: {bib_keys ^ log_keys}"
 
-    # 3. Exact 22-theorem + ALL bijection across Lean, formalization.yaml, statement-fidelity.md, blueprint.html
+    # 3. Exact 28-theorem + ALL bijection across Lean, formalization.yaml, statement-fidelity.md, blueprint.html
     expected_ids = [
         "T1a", "T1b", "T1c", "T1d", "T1e", "T1f",
         "T2a", "T2b", "T2c", "T2d", "T2e", "T2f",
         "T3a", "T3b", "T3c", "T3d",
         "T4a", "T4b", "T4c", "T4d", "T4e", "T4f",
+        "T5a", "T5b", "T5c",
+        "T6a", "T6b", "T6c",
     ]
     ch_text = (ROOT / "lean" / "Challenge.lean").read_text(encoding="utf-8")
     comp = json.loads((ROOT / "lean" / "comparator.json").read_text(encoding="utf-8"))
     fy = yaml.safe_load((ROOT / "lean" / "formalization.yaml").read_text(encoding="utf-8"))
     bp_text = (ROOT / "docs" / "site" / "blueprint.html").read_text(encoding="utf-8")
 
-    assert len(comp["theorem_names"]) == 23
+    assert len(comp["theorem_names"]) == 29
     assert [t["id"] for t in fy["theorems"]] == expected_ids
     for tid in expected_ids:
         assert f"abbrev {tid}Stmt" in ch_text, f"Missing {tid}Stmt in Challenge.lean"
@@ -474,8 +582,9 @@ def test_documentation_bijections_lean_symbols_and_no_stale_prose() -> None:
 
     # 4. Canonical title consistency & zero stale wrong formulas / Bott-Rupture / LLC regressions
     canonical_title = (
-        "The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, "
-        "and Coordinate Norm-Multiplicativity Ruptures Across Cayley-Dickson Algebras"
+        "The Dyadic-Palindromic Terrace Law, Gray-Code Spectral Band Gaps, "
+        "Odd-Parity Zero-Divisor Exclusion, and Coordinate Norm-Multiplicativity Ruptures "
+        "Across Cayley-Dickson Algebras"
     )
     cff = yaml.safe_load((ROOT / "CITATION.cff").read_text(encoding="utf-8"))
     zen = json.loads((ROOT / ".zenodo.json").read_text(encoding="utf-8"))

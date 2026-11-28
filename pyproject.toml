@@ -5,8 +5,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cayley-dickson-terrace-frontier"
-version = "2.1.0"
-description = "Zero-Mathlib Lean 4.35.0 six-kernel formalization (22 headline theorems, 23 Palomar targets) and tri-language verifiers for the Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and Coordinate Norm-Multiplicativity Ruptures across Cayley-Dickson algebras."
+version = "3.0.0"
+description = "Zero-Mathlib Lean 4.35.0 six-kernel formalization (28 headline theorems, 29 Palomar targets) and tri-language verifiers for the Dyadic-Palindromic Terrace Law, Gray-Code Spectral Band Gaps, Odd-Parity Zero-Divisor Exclusion, and Coordinate Norm-Multiplicativity Ruptures across Cayley-Dickson algebras."
 readme = "README.md"
 license = {text = "Apache-2.0"}
 authors = [{name = "Alexander Stephen Donahue", email = "0_0@0thernes.art"}]

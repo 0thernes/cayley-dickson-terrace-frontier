@@ -18,7 +18,7 @@ extern "C" {
 #endif
 
 /* Canonical release version synchronized with root VERSION. */
-#define CD_TERRACE_VERSION "2.1.0"
+#define CD_TERRACE_VERSION "3.0.0"
 
 /* Maximum algebra level supported in fixed-stack buffers (CD_8 = 256D). */
 #define CD_MAX_N 8u
@@ -61,8 +61,18 @@ bool cd_right_compat(uint32_t n, uint32_t j, uint32_t x);
 bool cd_is_norm_mult_pair(uint32_t n, const uint32_t *sl, size_t len_l,
                           const uint32_t *sr, size_t len_r);
 
+/* Pillar 5 Binary Reflected Gray-Code locking bit g(d, m). */
+bool cd_gray_lock_bit(uint32_t d, uint32_t m);
+
+/* Pillar 5 exact all-n, all-signature spectral-gap criterion (T5c) for n >= 6. */
+bool cd_is_gapped_mask(uint32_t n, uint32_t flip_mask);
+
+/* Pillar 6 exact integer bilinear multiplication out = x * y in CD_n(flip_mask). */
+bool cd_mul_gamma_vec(uint32_t n, uint32_t flip_mask, const int64_t *x, const int64_t *y, int64_t *out);
+
 /* Run exhaustive C11 audit across all 496 algebras CD_4..CD_8 (zero striding), CD_5 r_max=14,
- * and CD_6(flip=56) interior spectral gap; returns 0 on PASS. */
+ * Pillar 5 Gray-code bit-locking & spectral-gap dichotomy, and Pillar 6 odd-parity involution;
+ * returns 0 on PASS. */
 int cd_run_full_audit(bool verbose);
 
 #ifdef __cplusplus

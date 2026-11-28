@@ -1,6 +1,6 @@
 # Gold Standard Release Checklist (`docs/gold-standard-checklist.md`)
 
-Transparent item-by-item disposition against the **43-item Gold Standard Release Checklist** in *Defensible Independent AI Research Playbook v1.3* for `cayley-dickson-terrace-frontier` (`0TH-2026-019`, `v2.1.0`). External human-operated submissions (Zenodo DOI deposit, arXiv submission/endorsement, Palomar submission, and manual Software Heritage browser trigger behind Anubis PoW) are marked honestly as **Manual / Pending External Action** — never fabricated or bypassed.
+Transparent item-by-item disposition against the **43-item Gold Standard Release Checklist** in *Defensible Independent AI Research Playbook v1.3* for `cayley-dickson-terrace-frontier` (`0TH-2026-019`, `v3.0.0`). External human-operated submissions are tracked transparently and never fabricated or bypassed.
 
 ## A. Identity & Infrastructure (Items 1–6)
 
@@ -30,14 +30,14 @@ Transparent item-by-item disposition against the **43-item Gold Standard Release
 | # | Requirement | Status | Evidence / Artifact |
 | --- | --- | --- | --- |
 | 14 | Zero `sorry` / `admit` in all production proofs | **PASS** | Zero `sorry` outside statement-only `PalomarChallenge.lean` (excluded from `defaultTargets`) |
-| 15 | Zero `native_decide`, `unsafe`, `partial`, `@[extern]`, custom axioms | **PASS** | Verified by `VerifyAxioms.lean` (35/35 strictly within `[propext, Classical.choice, Quot.sound]`) and automated AST/grep tests |
-| 16 | Zero `maxRecDepth` / `maxHeartbeats` overrides | **PASS** | Pure C-primitive arithmetic, `Vtx` O(1) match, and balanced binary trees; zero overrides anywhere in `lean/` |
+| 15 | Zero `native_decide`, `unsafe`, `partial`, `@[extern]`, custom axioms | **PASS** | Verified by `VerifyAxioms.lean` (45/45 strictly within `[propext, Classical.choice, Quot.sound]`) and automated AST/grep tests |
+| 16 | Zero `maxRecDepth` / `maxHeartbeats` overrides | **PASS** | Pure C-primitive arithmetic, `Vtx` O(1) match, balanced binary trees, and fraction-free elimination; zero overrides anywhere in `lean/` |
 | 17 | Pinned Lean toolchain & zero-Mathlib minimal TCB | **PASS** | `lean/lean-toolchain` (`leanprover/lean4:v4.35.0`), `autoImplicit = false`, `relaxedAutoImplicit = false`, zero Mathlib |
 | 18 | Independent multi-kernel replay | **PASS** | 6 independent kernels in CI (`lean`, `leanchecker-paranoid`, `lean4lean`, `nanoda`, `con-leche`, `con-ron`) |
-| 19 | Palomar Comparator statement contract (`comparator.json`) | **PASS** | 23 targets (`T1a`–`T4f` + `ALL`), `Challenge.lean` (279 lines / 14.7 KB < 1,000-line / 100 KiB cap), `lake comparator --paranoid` |
+| 19 | Palomar Comparator statement contract (`comparator.json`) | **PASS** | 29 targets (`T1a`–`T6c` + `ALL`), `Challenge.lean` (< 400 lines / < 25 KiB < 1,000-line / 100 KiB cap), `lake comparator --paranoid` |
 | 20 | Real tamper-injecting negative gate in CI | **PASS** | `.github/workflows/ci.yml` injects both `sorry` and `public axiom` into a copy of `PalomarSolution.lean` and asserts non-zero rejection |
 | 21 | Statement-fidelity mapping with zero unformalized clauses | **PASS** | `docs/statement-fidelity.md` + automated `tests/test_all.py` symbol-existence & bijection checks |
-| 22 | Concrete non-vacuity witnesses & adversarial refutations | **PASS** | `CDTerrace.NonVacuity` (4 pillar witnesses) + `CDTerrace.AdversarialTests` (8 refutations `A1`–`A8`) |
+| 22 | Concrete non-vacuity witnesses & adversarial refutations | **PASS** | `CDTerrace.NonVacuity` (6 pillar witnesses) + `CDTerrace.AdversarialTests` (10 refutations `A1`–`A10`) |
 | 23 | `lean/formalization.yaml` complete Palomar metadata | **PASS** | Includes `authorship`, `origin`, `sources`, `automation` (tools/models/human_role/verification), `limitations`, `review_status` |
 
 ## D. Independent Computational Falsifiability (Items 24–30)
@@ -47,7 +47,7 @@ Transparent item-by-item disposition against the **43-item Gold Standard Release
 | 24 | Independent multi-language differential verifiers | **PASS** | Rust (`#![forbid(unsafe_code)]`), ISO C11 (`-Werror -Wconversion -Wshadow`), Python (`src/cd_terrace/`) |
 | 25 | Slow first-principles naive oracle | **PASS** | `reference/oracle.py` (naive recursive doubling + exact `fractions.Fraction` Gaussian elimination) |
 | 26 | Property-based & negative boundary testing | **PASS** | Hypothesis property tests, `test_t1f_explicit_z_basis_annihilates_and_spans_kernel`, out-of-bounds guards, and Rust `T1f` test |
-| 27 | Surgical mutation testing | **PASS** | 8/8 surgical mutants killed in `tests/test_all.py` |
+| 27 | Surgical mutation testing | **PASS** | 10/10 surgical mutants killed in `tests/test_all.py` |
 | 28 | Memory-safety sanitizers & fuzzing on native code | **PASS** | C11 ASan + UBSan (`make sanitize`), 100k fuzz across `CD_1..CD_7` (`fuzz_cd_terrace`), zero-stride 496-algebra audit |
 | 29 | Deterministic frozen JSON datasets with SHA-256 manifest | **PASS** | 4 datasets in `data/*.json` verified by `data/MANIFEST.sha256` and root `MANIFEST.sha256` |
 | 30 | Cross-language CLI differential check in tests | **PASS** | `tests/test_all.py` cross-checks Python vs. compiled Rust CLI `--json`; C11 CLI `--verify-all` runs in CI and locally |
@@ -58,12 +58,12 @@ Transparent item-by-item disposition against the **43-item Gold Standard Release
 | --- | --- | --- | --- |
 | 31 | Zero-warning AMS-LaTeX compilation | **PASS** | Tectonic compile of `paper/main.tex`: 0 Overfull, 0 Underfull, 0 Undefined, 0 Error |
 | 32 | Deterministic clean-room arXiv tarball verified | **PASS** | `dist/arxiv_submission.tar.gz` compiled cleanly in isolated temp directory (`main.tex`, `references.bib`, `main.bbl`, `00README.XXX`, `figures/*.pdf`) |
-| 33 | Publication-grade Okabe-Ito colorblind-safe vector figures | **PASS** | 5 PDF+PNG figures (`paper/figures/fig1..fig5`) + 1280×640 `docs/media/social-preview.{svg,png}`, visually inspected page-by-page |
+| 33 | Publication-grade Okabe-Ito colorblind-safe vector figures | **PASS** | 6 PDF+PNG figures (`paper/figures/fig1..fig6`) + 1280×640 `docs/media/social-preview.{svg,png}`, visually inspected page-by-page |
 | 34 | Transparent AI-assistance disclosure | **PASS** | `paper/main.tex` (Section 8), `docs/submission-packet.md`, `lean/formalization.yaml` |
 | 35 | CRediT author contribution statement | **PASS** | `paper/main.tex` (Section 8) and `docs/submission-packet.md` |
 | 36 | Conflict-of-interest & funding statement | **PASS** | `paper/main.tex` (Section 8) and `docs/submission-packet.md` |
 | 37 | Export-control / dual-use self-screen | **PASS** | 15 CFR 734.8 fundamental research statement in `paper/main.tex` (Section 8) and `docs/submission-packet.md` |
-| 38 | Zero-CDN strict-CSP WCAG 2.2 AA web observatory & blueprint | **PASS** | `docs/site/index.html` (keyboard-accessible 3D Canvas observatory) + `docs/site/blueprint.html` (26-node DAG) live on GitHub Pages |
+| 38 | Zero-CDN strict-CSP WCAG 2.2 AA web observatory & blueprint | **PASS** | `docs/site/index.html` (keyboard-accessible 3D Canvas observatory) + `docs/site/blueprint.html` (32-node DAG) live on GitHub Pages |
 | 39 | Strict Build Standard v1.2.0 schema & 90-item audit | **PASS** | `repo.yaml` validates cleanly against `repo-standard.schema.json`; `Audit-Repo.ps1` / `audit-repo.sh` score 100.0% |
 | 40 | Adversarial red-team review & 10-pass review documented | **PASS** | `docs/reviews/adversarial-red-team-review.md`, `docs/10-pass-review.md`, `HARDENING_LOG.md`, `HARDENING_INDEX.md` |
 | 41 | Cold clean-clone reproduction executed & logged | **PASS** | Fresh `git clone` verification recorded in `REPLICATION.md` and `docs/run-log.md` |

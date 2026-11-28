@@ -6,14 +6,16 @@ public import CDTerrace.Basic
 public import CDTerrace.HurwitzRupture
 public import CDTerrace.FiniteCertificates
 public import CDTerrace.PathionRupture
+public import CDTerrace.SpectralGaps
+public import CDTerrace.OddBladeExclusion
 
 /-!
 # Statement-Only Challenge Definitions (`Challenge.lean`)
 
-Defines all 22 headline theorem statement abbreviations (`T1aStmt`–`T4fStmt`) and their
+Defines all 28 headline theorem statement abbreviations (`T1aStmt`–`T6cStmt`) and their
 master conjunction (`AllTerraceTheoremsStmt`) against the core mathematical definitions
-in `CDTerrace.Basic`, `CDTerrace.HurwitzRupture`, `CDTerrace.FiniteCertificates`, and
-`CDTerrace.PathionRupture`.
+in `CDTerrace.Basic`, `CDTerrace.HurwitzRupture`, `CDTerrace.FiniteCertificates`,
+`CDTerrace.PathionRupture`, `CDTerrace.SpectralGaps`, and `CDTerrace.OddBladeExclusion`.
 -/
 
 namespace Challenge
@@ -268,12 +270,94 @@ abbrev T4fStmt : Prop :=
   nullityHistGamma 6 56 28 = 172 ∧
   nullityHistGamma 6 56 32 = 178
 
-/-- Master conjunction of all 22 headline theorems across all 4 pillars. -/
+/-- **T5a:** Universal all-$n$ Binary Reflected Gray-Code Bit-Locking Law ($n \ge 4$):
+    bit $n - 1 - d$ of $i \oplus j$ is locked deterministically to the Binary Reflected Gray Code
+    of $m = \nu_n^{\mathrm{std}}(i, j) / 4$ on $[2^{d+1},\; 2^{n-1} - 2^{d+1} - 4]$
+    (and $[4,\; 2^{n-1} - 4]$ for $d = 0$). -/
+abbrev T5aStmt : Prop :=
+  ∀ n, 4 ≤ n → ∀ i j, 0 < i → i < j → j < 2 ^ n →
+    let v := twobladeNullity n i j
+    let m := v / 4
+    ((4 ≤ v → v ≤ 2 ^ (n - 1) - 4 →
+        (i ^^^ j).testBit (n - 1) = m.testBit 0) ∧
+     (∀ d, 1 ≤ d → d ≤ n - 4 →
+        2 ^ (d + 1) ≤ v → v ≤ 2 ^ (n - 1) - 2 ^ (d + 1) - 4 →
+        (i ^^^ j).testBit (n - 1 - d) = xor (m.testBit (d - 1)) (m.testBit d)))
+
+/-- **T5b:** Universal Exponential Continuous Spectral Band Gap at `flipMask = 2^n - 8` for all
+    $n \ge 6$: every $v \in (2^{n-2},\; 3 \cdot 2^{n-3})$ (width $2^{n-3} - 1$ consecutive
+    multiples of $4$) has $H_n^{2^n - 8}(v) = 0$, flanked by populated lower edge
+    $H_n^{2^n - 8}(2^{n-2}) = 42 \cdot 2^{n-4}$ and upper edge $H_n^{2^n - 8}(3 \cdot 2^{n-3}) > 0$. -/
+abbrev T5bStmt : Prop :=
+  ∀ n, 6 ≤ n →
+    (∀ v, 2 ^ (n - 2) < v → v < 3 * 2 ^ (n - 3) →
+      nullityHistGamma n (2 ^ n - 8) v = 0) ∧
+    nullityHistGamma n (2 ^ n - 8) (2 ^ (n - 2)) = 42 * 2 ^ (n - 4) ∧
+    0 < nullityHistGamma n (2 ^ n - 8) (3 * 2 ^ (n - 3))
+
+/-- **T5c:** Exact Complete All-$n$, All-Signature Spectral-Gap Dichotomy for all $n \ge 6$:
+    $\mathrm{CD}_n(f)$ has an interior mod-4 spectral gap in $(0, 2^{n-1} - 4)$ IF AND ONLY IF
+    $8 \mid f$ and $f \notin \{0, 8, 2^{n-1}, 2^{n-1} + 8\}$, comprising exactly $2^{n-3} - 4$
+    out of all $2^n$ signatures. -/
+abbrev T5cStmt : Prop :=
+  ∀ n, 6 ≤ n →
+    (∀ f, f < 2 ^ n → (hasInteriorMod4Gap n f ↔ isGappedMask n f = true)) ∧
+    countPred (isGappedMask n) (2 ^ n) = 2 ^ (n - 3) - 4
+
+/-- **T6a:** Universal Mod-2 Twisted-Group-Algebra Frobenius Involution for arbitrary $\{\pm 1\}$
+    cocycles $\sigma$ and any $x \in \mathbb{Z}^{2^n}$ with odd coordinate sum. -/
+abbrev T6aStmt : Prop :=
+  ∀ n (σ : Nat → Nat → Int), (∀ a b, σ a b = 1 ∨ σ a b = -1) →
+    ∀ x, oddCoordSum n x →
+      (∀ y t, t < 2 ^ n → (twistedMul n σ x (twistedMul n σ x y) t - y t) % 2 = 0) ∧
+      (∀ y t, t < 2 ^ n → (twistedMul n σ (twistedMul n σ y x) x t - y t) % 2 = 0) ∧
+      (∀ f u v t, twistedMul n (cdSignGamma n f) u v t = cdMulCoordGamma n f u v t)
+
+/-- **T6b:** Universal All-$n$, All-Signature Odd-Parity Zero-Divisor Exclusion via fraction-free
+    odd-pivot integral matrix inversion ($B_L L_x = \Delta_L I$ and $B_R R_x = \Delta_R I$ with odd
+    $\Delta_L, \Delta_R$, implying invertibility over $\mathbb{Q}, \mathbb{R}, \mathbb{C}$ and
+    trivial left/right annihilators). -/
+abbrev T6bStmt : Prop :=
+  ∀ n flipMask x, oddCoordSum n x →
+    (∃ (B : Nat → Nat → Int) (Δ : Int), Δ % 2 = 1 ∧
+      ∀ i, i < 2 ^ n → ∀ j, j < 2 ^ n →
+        matMulInt (2 ^ n) B (leftMulMat n flipMask x) i j = if i == j then Δ else 0) ∧
+    (∃ (B : Nat → Nat → Int) (Δ : Int), Δ % 2 = 1 ∧
+      ∀ i, i < 2 ^ n → ∀ j, j < 2 ^ n →
+        matMulInt (2 ^ n) B (rightMulMat n flipMask x) i j = if i == j then Δ else 0) ∧
+    (∀ y, (∀ t, t < 2 ^ n → cdMulCoordGamma n flipMask x y t = 0) →
+      ∀ t, t < 2 ^ n → y t = 0) ∧
+    (∀ y, (∀ t, t < 2 ^ n → cdMulCoordGamma n flipMask y x t = 0) →
+      ∀ t, t < 2 ^ n → y t = 0)
+
+/-- **T6c:** Universal Odd-Support Unit-Blade Non-Singularity (all signed 3-blades, 5-blades,
+    ..., $(2m+1)$-blades across all $n$ and all $2^n$ signatures) & Zero-Divisor Parity
+    Conservation ($\sum x_a \equiv 0 \pmod 2$ for every integer zero divisor). -/
+abbrev T6cStmt : Prop :=
+  ∀ n flipMask,
+    (∀ (S : List Nat) (ε : Nat → Int),
+      S.length % 2 = 1 →
+      (∀ a ∈ S, a < 2 ^ n) →
+      (∀ a ∈ S, ε a = 1 ∨ ε a = -1) →
+      oddCoordSum n (signedBladeSum S ε) ∧
+      (∀ y, (∀ t, t < 2 ^ n → cdMulCoordGamma n flipMask (signedBladeSum S ε) y t = 0) →
+        ∀ t, t < 2 ^ n → y t = 0) ∧
+      (∀ y, (∀ t, t < 2 ^ n → cdMulCoordGamma n flipMask y (signedBladeSum S ε) t = 0) →
+        ∀ t, t < 2 ^ n → y t = 0)) ∧
+    (∀ (x y : Nat → Int),
+      (∃ t, t < 2 ^ n ∧ y t ≠ 0) →
+      ((∀ t, t < 2 ^ n → cdMulCoordGamma n flipMask x y t = 0) ∨
+       (∀ t, t < 2 ^ n → cdMulCoordGamma n flipMask y x t = 0)) →
+      sumInt x (2 ^ n) % 2 = 0)
+
+/-- Master conjunction of all 28 headline theorems across all 6 pillars. -/
 abbrev AllTerraceTheoremsStmt : Prop :=
   T1aStmt ∧ T1bStmt ∧ T1cStmt ∧ T1dStmt ∧ T1eStmt ∧ T1fStmt ∧
   T2aStmt ∧ T2bStmt ∧ T2cStmt ∧ T2dStmt ∧ T2eStmt ∧ T2fStmt ∧
   T3aStmt ∧ T3bStmt ∧ T3cStmt ∧ T3dStmt ∧
-  T4aStmt ∧ T4bStmt ∧ T4cStmt ∧ T4dStmt ∧ T4eStmt ∧ T4fStmt
+  T4aStmt ∧ T4bStmt ∧ T4cStmt ∧ T4dStmt ∧ T4eStmt ∧ T4fStmt ∧
+  T5aStmt ∧ T5bStmt ∧ T5cStmt ∧
+  T6aStmt ∧ T6bStmt ∧ T6cStmt
 
 end
 end Challenge

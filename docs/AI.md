@@ -1,8 +1,8 @@
 <!-- SPDX-License-Identifier: CC-BY-4.0 -->
 # AI-Contribution Statement and Venue Integrity Compliance (`docs/AI.md`)
 
-Repository: **`cayley-dickson-terrace-frontier`** (`0TH-2026-019`, `v2.1.0`)  
-Title: *The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and Coordinate Norm-Multiplicativity Ruptures Across Cayley-Dickson Algebras*
+Repository: **`cayley-dickson-terrace-frontier`** (`0TH-2026-019`, `v3.0.0`)  
+Title: *The Dyadic-Palindromic Terrace Law, Gray-Code Spectral Band Gaps, Odd-Parity Zero-Divisor Exclusion, and Coordinate Norm-Multiplicativity Ruptures Across Cayley-Dickson Algebras*
 
 Following the Defensible Independent AI-Assisted Research Playbook (v1.3) and current COPE, ICMJE, arXiv, Nature Portfolio, Zenodo, JOSS, and Palomar Registry disclosure norms:
 
@@ -14,8 +14,9 @@ Author: Alexander Stephen Donahue (ORCID 0009-0006-8168-9648), independent resea
 Human contributions (CRediT): Conceptualization; Methodology; Formal analysis
   (problem selection, definition & statement-fidelity audit); Validation; Writing – review & editing.
 AI tools used: Google Antigravity / Gemini (2026).
-  - Assisted with algebraic exploration, Lean 4 tactic synthesis (leanprover/lean4:v4.35.0, 23 Palomar
-    Comparator targets), polyglot verifier engineering, figure generation, and manuscript drafting.
+  - Assisted with algebraic exploration, Lean 4 tactic synthesis (leanprover/lean4:v4.35.0, 28 headline
+    theorems / 29 Palomar Comparator targets / 45 audited declarations across Pillars I–VI), polyglot
+    verifier engineering, figure generation, and manuscript drafting.
   - Every formal Lean theorem was checked from scratch by the Lean kernel (leanprover/lean4:v4.35.0) and
     independent proof-checking infrastructure with axioms strictly within [propext, Quot.sound, Classical.choice]
     (zero sorryAx, zero Lean.ofReduceBool, zero custom axioms).
@@ -33,7 +34,7 @@ The author takes full responsibility for all content. No AI system is listed as 
 | **arXiv** | Human author assumes full responsibility; AI is not an author; endorsement required for first category submission | Single human author (`Alexander Stephen Donahue`), full disclosure in manuscript and `docs/AI.md`; no fabricated arXiv ID |
 | **COPE / ICMJE** | Disclose exact tools used and scope; humans accountable for accuracy and citations | Disclosed in `formalization.yaml` and `docs/AI.md`; zero fabricated references |
 | **Zenodo** | AI as tool only; grounded in human-conducted research; disclose; no AI creator metadata | Single human creator in `.zenodo.json` and `CITATION.cff`; full tool disclosure |
-| **Palomar Registry** | `formalization.yaml` required; `module` header on `.lean` files; `Challenge.lean` compact; zero `sorry`/`native_decide`/custom axioms | `formalization.yaml` committed at repository root; `lean/comparator.json` (23 targets) audited strictly within `[propext, Quot.sound, Classical.choice]` |
+| **Palomar Registry** | `formalization.yaml` required; `module` header on `.lean` files; `Challenge.lean` compact; zero `sorry`/`native_decide`/custom axioms | `formalization.yaml` committed at repository root (and `lean/formalization.yaml`); `lean/comparator.json` (29 targets) audited strictly within `[propext, Quot.sound, Classical.choice]` |
 | **ORCID** | Accurate attribution of verified research works and software releases | ORCID `0009-0006-8168-9648` linked across `CITATION.cff`, `.zenodo.json`, and `formalization.yaml` |
 
 ## Transcript & Redaction Notice

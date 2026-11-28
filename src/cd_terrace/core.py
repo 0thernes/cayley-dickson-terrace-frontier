@@ -7,6 +7,7 @@ from __future__ import annotations
 from collections import Counter
 from collections.abc import Sequence
 from functools import cache
+from math import gcd
 
 PATHION_WITNESS_14: tuple[int, ...] = (0, 1, 2, 4, 5, 8, 10, 16, 17, 18, 20, 21, 24, 26)
 CHINGON_WITNESS_16: tuple[int, ...] = (
@@ -227,3 +228,107 @@ def doubled_right_witness(n: int) -> list[int]:
     h = 1 << (n - 1)
     base = cd_max_clique(n - 1)
     return base + [x + h for x in base]
+
+
+def gray_lock_bit(d: int, m: int) -> bool:
+    """Pillar 5 Binary Reflected Gray-Code locking bit g(d, m):
+    bit 0 of m for d = 0, and bit (d - 1) xor bit d of m for d >= 1."""
+    if d < 0 or m < 0:
+        raise ValueError(f"d and m must be non-negative, got d={d}, m={m}")
+    if d == 0:
+        return bool(m & 1)
+    return bool(((m >> (d - 1)) ^ (m >> d)) & 1)
+
+
+def is_gapped_mask(n: int, flip_mask: int) -> bool:
+    """Pillar 5 exact all-n, all-signature spectral-gap criterion (T5c) for n >= 6:
+    8 | flip_mask and flip_mask not in {0, 8, 2^(n-1), 2^(n-1) + 8}."""
+    if n < 6:
+        raise ValueError(f"Spectral-gap dichotomy requires n >= 6, got {n}")
+    dim = 1 << n
+    if flip_mask < 0 or flip_mask >= dim:
+        raise ValueError(f"flip_mask {flip_mask} out of range [0, {dim}) for CD_{n}")
+    half = 1 << (n - 1)
+    return (flip_mask % 8 == 0) and flip_mask not in (0, 8, half, half + 8)
+
+
+def cd_mul_gamma_vec(n: int, flip_mask: int, x: Sequence[int], y: Sequence[int]) -> list[int]:
+    """Exact integer bilinear multiplication in CD_n(flip_mask)."""
+    if n < 0:
+        raise ValueError(f"n must be non-negative, got {n}")
+    dim = 1 << n
+    if len(x) != dim or len(y) != dim:
+        raise ValueError(f"Vectors must have length {dim} for CD_{n}, got {len(x)} and {len(y)}")
+    out = [0] * dim
+    for a, xa in enumerate(x):
+        if xa == 0:
+            continue
+        for b, yb in enumerate(y):
+            if yb == 0:
+                continue
+            out[a ^ b] += cd_sign_gamma_factored(n, flip_mask, a, b) * xa * yb
+    return out
+
+
+def left_mul_matrix_gamma(n: int, flip_mask: int, x: Sequence[int]) -> list[list[int]]:
+    """Exact 2^n x 2^n integer left-multiplication matrix L_x in CD_n(flip_mask)."""
+    dim = 1 << n
+    if len(x) != dim:
+        raise ValueError(f"Vector must have length {dim} for CD_{n}")
+    return [
+        [cd_sign_gamma_factored(n, flip_mask, t ^ j, j) * x[t ^ j] for j in range(dim)]
+        for t in range(dim)
+    ]
+
+
+def right_mul_matrix_gamma(n: int, flip_mask: int, x: Sequence[int]) -> list[list[int]]:
+    """Exact 2^n x 2^n integer right-multiplication matrix R_x in CD_n(flip_mask)."""
+    dim = 1 << n
+    if len(x) != dim:
+        raise ValueError(f"Vector must have length {dim} for CD_{n}")
+    return [
+        [cd_sign_gamma_factored(n, flip_mask, j, t ^ j) * x[t ^ j] for j in range(dim)]
+        for t in range(dim)
+    ]
+
+
+def odd_pivot_integral_inv(mat: Sequence[Sequence[int]]) -> tuple[list[list[int]], int]:
+    """Pillar 6 fraction-free odd-pivot Gauss-Jordan matrix inversion over Z (T6b):
+    Given any N x N integer matrix invertible mod 2, returns (B, delta) with odd delta
+    (delta % 2 == 1, hence delta != 0) satisfying B @ mat == delta * I over Z."""
+    size = len(mat)
+    if any(len(row) != size for row in mat):
+        raise ValueError("Input matrix must be square")
+    left = [list(row) for row in mat]
+    right = [[1 if i == j else 0 for j in range(size)] for i in range(size)]
+    for k in range(size):
+        piv = next((r for r in range(k, size) if (left[r][k] & 1) == 1), None)
+        if piv is None:
+            raise ValueError(f"Matrix is not invertible modulo 2 (no odd pivot at column {k})")
+        if piv != k:
+            left[k], left[piv] = left[piv], left[k]
+            right[k], right[piv] = right[piv], right[k]
+        p = left[k][k]
+        for i in range(size):
+            if i == k:
+                continue
+            lik = left[i][k]
+            row_l = [p * left[i][j] - lik * left[k][j] for j in range(size)]
+            row_r = [p * right[i][j] - lik * right[k][j] for j in range(size)]
+            g = gcd(*row_l, *row_r)
+            if g > 1:
+                row_l = [v // g for v in row_l]
+                row_r = [v // g for v in row_r]
+            left[i] = row_l
+            right[i] = row_r
+    delta = 1
+    for i in range(size):
+        delta = (delta * left[i][i]) // gcd(delta, left[i][i])
+    inv = []
+    for i in range(size):
+        scale = delta // left[i][i]
+        inv.append([scale * v for v in right[i]])
+    if delta < 0:
+        delta = -delta
+        inv = [[-v for v in row] for row in inv]
+    return inv, delta

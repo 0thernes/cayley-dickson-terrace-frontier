@@ -1,6 +1,6 @@
 # Operations & Verification Runbook (`docs/operations.md`)
 
-## Standard Verification Ladder (`v2.1.0`)
+## Standard Verification Ladder (`v3.0.0`)
 
 1. **Lean 4.35.0 Build, Axiom Audit & Kernel Replay:**
    ```bash
@@ -24,7 +24,7 @@
    python scripts/check_readme_axioms.py
    python scripts/check_citations.py --live
    ```
-5. **Figures, 21-Page White Paper, Manifests & Cryptographic Timestamps:**
+5. **Figures, 24-Page White Paper, Manifests & Cryptographic Timestamps:**
    ```bash
    PYTHONPATH=src:. python scripts/generate_figures.py
    tectonic -X compile paper/main.tex --outdir paper/build --keep-logs
@@ -40,8 +40,8 @@
 - **Deploy GitHub Pages:** `just deploy` triggers `.github/workflows/pages.yml` (also runs automatically on pushes to `main` touching `docs/site/`).
 - **Rollback GitHub Pages / Release:** `just rollback <git-ref>` restores `docs/site/` to a verified tag or commit (e.g. `v2.0.0` or `v1.0.0`) after confirmation and redeploys cleanly.
 - **Refresh Cryptographic Timestamps:** `just timestamps` stamps `data/MANIFEST.sha256` against DigiCert RFC 3161 TSA and 3 Bitcoin OpenTimestamps calendars and runs the tamper verification test.
-- **Offline Git Bundle Backup:** `git bundle create cayley-dickson-terrace-frontier-v2.1.0.bundle --all`
-- **Master Research Archive Mirror:** Every frozen PDF, pinned commit hash, SHA-256 manifest, and timestamp is mirrored and registered under `0TH-2026-019` (`v2.1.0`) in [`0thernes/0thernes-research-archive`](https://github.com/0thernes/0thernes-research-archive).
+- **Offline Git Bundle Backup:** `git bundle create cayley-dickson-terrace-frontier-v3.0.0.bundle --all`
+- **Master Research Archive Mirror:** Every frozen PDF, pinned commit hash, SHA-256 manifest, and timestamp is mirrored and registered under `0TH-2026-019` (`v3.0.0`) in [`0thernes/0thernes-research-archive`](https://github.com/0thernes/0thernes-research-archive).
 - **Software Heritage Preservation:** Public repository is ready for permanent SWHID archival via `https://archive.softwareheritage.org/save/` (manual browser trigger required due to Anubis proof-of-work bot gate; never bypassed automatically).
 
 ## Troubleshooting

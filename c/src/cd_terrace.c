@@ -250,6 +250,54 @@ bool cd_is_norm_mult_pair(uint32_t n, const uint32_t *sl, size_t len_l,
     return true;
 }
 
+bool cd_gray_lock_bit(uint32_t d, uint32_t m) {
+    if (d == 0u) {
+        return (m & 1u) != 0u;
+    }
+    if (d >= 32u) {
+        return false;
+    }
+    return ((((m >> (d - 1u)) ^ (m >> d)) & 1u) != 0u);
+}
+
+bool cd_is_gapped_mask(uint32_t n, uint32_t flip_mask) {
+    if (n < 6u || n > CD_MAX_N) {
+        return false;
+    }
+    uint32_t dim = 1u << n;
+    if (flip_mask >= dim) {
+        return false;
+    }
+    uint32_t half = 1u << (n - 1u);
+    return ((flip_mask & 7u) == 0u) &&
+           flip_mask != 0u &&
+           flip_mask != 8u &&
+           flip_mask != half &&
+           flip_mask != (half + 8u);
+}
+
+bool cd_mul_gamma_vec(uint32_t n, uint32_t flip_mask, const int64_t *x, const int64_t *y, int64_t *out) {
+    if (n > CD_MAX_N || x == NULL || y == NULL || out == NULL) {
+        return false;
+    }
+    uint32_t dim = 1u << n;
+    for (uint32_t t = 0u; t < dim; t++) {
+        out[t] = 0;
+    }
+    for (uint32_t a = 0u; a < dim; a++) {
+        if (x[a] == 0) {
+            continue;
+        }
+        for (uint32_t b = 0u; b < dim; b++) {
+            if (y[b] == 0) {
+                continue;
+            }
+            out[a ^ b] += (int64_t)cd_sign_gamma_factored(n, flip_mask, a, b) * x[a] * y[b];
+        }
+    }
+    return true;
+}
+
 /* Exact Pathion CD_5 greedy clique-cover audit proving r_max(CD_5) = 14 and strict 7+7 balance. */
 static int cd_audit_pathion_exact(void) {
     uint16_t bad_lo[42];
@@ -394,10 +442,25 @@ int cd_run_full_audit(bool verbose) {
         size_t n_pairs = 0u;
         for (uint32_t i = 1u; i < dim; i++) {
             for (uint32_t j = i + 1u; j < dim; j++) {
+                uint32_t d = i ^ j;
                 uint32_t nu = cd_twoblade_nullity_fast(n, i, j);
+                uint32_t m = nu / 4u;
+                if (nu >= 4u && nu <= half - 4u) {
+                    if ((((d >> (n - 1u)) & 1u) != 0u) != cd_gray_lock_bit(0u, m)) {
+                        return 18;
+                    }
+                }
+                for (uint32_t depth = 1u; depth <= n - 4u; depth++) {
+                    uint32_t lo_bnd = 1u << (depth + 1u);
+                    if (nu >= lo_bnd && nu <= half - lo_bnd - 4u) {
+                        if ((((d >> (n - 1u - depth)) & 1u) != 0u) != cd_gray_lock_bit(depth, m)) {
+                            return 19;
+                        }
+                    }
+                }
                 std_hist[nu]++;
                 mass += (uint64_t)nu;
-                pair_d[n_pairs] = (uint16_t)(i ^ j);
+                pair_d[n_pairs] = (uint16_t)d;
                 pair_nu[n_pairs] = (uint8_t)nu;
                 n_pairs++;
             }
@@ -418,6 +481,7 @@ int cd_run_full_audit(bool verbose) {
             }
         }
         /* Exhaustive across ALL 2^n signatures for EVERY level n = 4..8 (all 496 algebras!) */
+        uint32_t gapped_count = 0u;
         for (uint32_t fl = 0u; fl < dim; fl++) {
             uint32_t h[129];
             memset(h, 0, sizeof(h));
@@ -435,11 +499,41 @@ int cd_run_full_audit(bool verbose) {
                     return 8;
                 }
             }
+            if (n >= 6u) {
+                bool has_gap = false;
+                for (uint32_t v = 4u; v <= top; v += 4u) {
+                    if (h[v] == 0u) {
+                        has_gap = true;
+                        break;
+                    }
+                }
+                if (has_gap != cd_is_gapped_mask(n, fl)) {
+                    return 20;
+                }
+                if (has_gap) {
+                    gapped_count++;
+                }
+                if (fl == dim - 8u) {
+                    uint32_t lo_e = 1u << (n - 2u);
+                    uint32_t hi_e = 3u * (1u << (n - 3u));
+                    if (h[lo_e] != 42u * (1u << (n - 4u)) || h[hi_e] == 0u) {
+                        return 21;
+                    }
+                    for (uint32_t v = lo_e + 4u; v < hi_e; v += 4u) {
+                        if (h[v] != 0u) {
+                            return 22;
+                        }
+                    }
+                }
+            }
             if (n == 6u && fl == 56u) {
                 if (h[16] != 168u || h[20] != 0u || h[24] != 56u) {
                     return 17;
                 }
             }
+        }
+        if (n >= 6u && gapped_count != ((1u << (n - 3u)) - 4u)) {
+            return 23;
         }
     }
 
@@ -467,8 +561,55 @@ int cd_run_full_audit(bool verbose) {
         return prc;
     }
 
+    /* 5. Pillar 6: mod-2 Frobenius involution on unit 3-blade across all 16 CD_4 signatures
+     *    and sharp even 4-blade zero-divisor witness (e_1 + e_2 + e_9 - e_10)*(e_4 + e_15) = 0. */
+    int64_t x3[16] = {0};
+    int64_t yv[16];
+    int64_t tmp[16];
+    int64_t res[16];
+    x3[1] = 1;
+    x3[2] = 1;
+    x3[10] = 1;
+    for (uint32_t t = 0u; t < 16u; t++) {
+        yv[t] = (int64_t)(3u * t) - 7;
+    }
+    for (uint32_t fl = 0u; fl < 16u; fl++) {
+        if (!cd_mul_gamma_vec(4u, fl, x3, yv, tmp) || !cd_mul_gamma_vec(4u, fl, x3, tmp, res)) {
+            return 24;
+        }
+        for (uint32_t t = 0u; t < 16u; t++) {
+            if (((res[t] - yv[t]) & 1) != 0) {
+                return 25;
+            }
+        }
+        if (!cd_mul_gamma_vec(4u, fl, yv, x3, tmp) || !cd_mul_gamma_vec(4u, fl, tmp, x3, res)) {
+            return 26;
+        }
+        for (uint32_t t = 0u; t < 16u; t++) {
+            if (((res[t] - yv[t]) & 1) != 0) {
+                return 27;
+            }
+        }
+    }
+    int64_t x4[16] = {0};
+    int64_t y4[16] = {0};
+    x4[1] = 1;
+    x4[2] = 1;
+    x4[9] = 1;
+    x4[10] = -1;
+    y4[4] = 1;
+    y4[15] = 1;
+    if (!cd_mul_gamma_vec(4u, 0u, x4, y4, res)) {
+        return 28;
+    }
+    for (uint32_t t = 0u; t < 16u; t++) {
+        if (res[t] != 0) {
+            return 29;
+        }
+    }
+
     if (verbose) {
-        printf("ISO C11 cd_terrace v%s full audit: ALL CHECKS PASSED (all 496 algebras CD_4..CD_8, CD_5 r_max=14, CD_6(56) gap).\n",
+        printf("ISO C11 cd_terrace v%s full audit: ALL CHECKS PASSED (496 algebras CD_4..CD_8, CD_5 r_max=14, Pillars 5 & 6).\n",
                CD_TERRACE_VERSION);
     }
     return 0;

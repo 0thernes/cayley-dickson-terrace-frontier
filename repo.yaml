@@ -3,7 +3,7 @@
 # Strictly validated against repo-standard.schema.json (zero additionalProperties) and read by scripts/Audit-Repo.ps1 / audit-repo.sh.
 standard: "1.2.0"
 name: "cayley-dickson-terrace-frontier"
-description: "Zero-Mathlib Lean 4.35.0 six-kernel formalization (22 headline theorems, T1a-T4f, 0TH-2026-019) of the Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, Coordinate Norm-Multiplicativity Ruptures, Pathion r_max=14 (7+7 rigidity), and Dim-64 Split Spectral Gap."
+description: "Zero-Mathlib Lean 4.35.0 six-kernel formalization (28 headline theorems, T1a-T6c, 0TH-2026-019) of the Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, Gray-Code Spectral Band Gaps, Odd-Parity Zero-Divisor Exclusion, Coordinate Norm-Multiplicativity Ruptures, and Pathion r_max=14 (7+7 rigidity)."
 owner: "0thernes"
 year: "2026"
 project_type: research
@@ -27,17 +27,17 @@ flags:
   formal: true
 items:
   A19: {status: done, note: "GitHub About description, homepage URL, and research topics configured via gh repo edit."}
-  A38: {status: done, note: "Interactive 3D Canvas Observatory & Proof Blueprint satisfy WCAG 2.2 AA: skip-link, keyboard Arrow/Home/End tablist, keyboard assessor navigation, aria-live polite announcements, prefers-reduced-motion support, responsive resize redraw, strict CSP, and Okabe-Ito colorblind-safe palette (verified in tests/test_all.py)."}
+  A38: {status: done, note: "Interactive 3D Canvas Observatory & 32-node Proof Blueprint satisfy WCAG 2.2 AA: skip-link, keyboard Arrow/Home/End tablist, keyboard assessor navigation, aria-live polite announcements, prefers-reduced-motion support, responsive resize redraw, strict CSP, and Okabe-Ito colorblind-safe palette (verified in tests/test_all.py)."}
   B03: {status: done, note: "Deterministic bit-for-bit JSON/PDF/tarball/blueprint generation verified across repeated runs and clean-clone cold reproduction."}
-  B05: {status: done, note: "Every headline claim T1a..T4f and C1..C2 has falsifiable Lean theorems and pytest tests in tests/test_all.py."}
-  B06: {status: done, note: "AdversarialTests.lean (8 formal boundary refutations A1-A8), test_negative_boundaries, 8 surgical mutation-killing tests, real tamper-injecting CI comparator gate, and RFC 3161/OTS negative tamper tests."}
-  B07: {status: done, note: "Regression tests lock the sharp n=5 BDI separation (12 < 16), concrete 11D sedenion counterexample, 15D/unbalanced-14D Pathion counterexamples, CD_6(56) H(20)=0 gap, upper-bound validation, and doc-to-Lean symbol bijection."}
+  B05: {status: done, note: "Every headline claim T1a..T6c and C1..C2 has falsifiable Lean theorems and pytest tests in tests/test_all.py."}
+  B06: {status: done, note: "AdversarialTests.lean (10 formal boundary refutations A1-A10 including A9 4-blade ZD witness and A10 naive div-8 gap refutation), test_negative_boundaries, 10 surgical mutation-killing tests, real tamper-injecting CI comparator gate, and RFC 3161/OTS negative tamper tests."}
+  B07: {status: done, note: "Regression tests lock the sharp n=5 BDI separation (12 < 16), concrete 11D sedenion counterexample, 15D/unbalanced-14D Pathion counterexamples, exact 2^{n-3}-4 spectral-gap dichotomy, odd-pivot integral matrix inverse, even 4-blade ZD witness, upper-bound validation, and doc-to-Lean symbol bijection."}
   B08: {status: done, note: "Frozen golden JSON datasets in data/ verified against SHA-256 manifests, DigiCert RFC 3161 .tsr + Bitcoin .ots timestamps, and exact assertions in tests/test_all.py."}
-  B11: {status: done, note: "tests/test_all.py cross-checks Python exact engine, Rust CLI (--json, #![forbid(unsafe_code)]), strict ISO C11 CLI (--verify-all), and naive Q-linear oracle bit-for-bit across all 496 algebras."}
+  B11: {status: done, note: "tests/test_all.py cross-checks Python exact engine, Rust CLI (--json, #![forbid(unsafe_code)]), strict ISO C11 CLI (--verify-all), and naive Q-linear oracle bit-for-bit across all 496 algebras and Pillars 1-6."}
   B12: {status: done, note: "reference/oracle.py independently implements naive recursive Cayley-Dickson multiplication and exact Fraction Gaussian elimination."}
-  B14: {status: done, note: "Hypothesis property and metamorphic tests verify mirror-pair conservation, midpoint invariance, and T1f explicit 2-sparse Z-basis kernel equations across randomized signatures."}
+  B14: {status: done, note: "Hypothesis property and metamorphic tests verify mirror-pair conservation, midpoint invariance, T1f explicit 2-sparse Z-basis kernel equations, T5a Gray-code bit-locking, and T6a/T6b odd-parity mod-2 involution across randomized signatures."}
   B20: {status: done, note: "100% exact integer, bitwise, and Fraction/Q arithmetic across all Lean, Rust, C11, and Python core computations — zero floating-point rounding in any theorem."}
-  B22: {status: done, note: "Complete zero-Mathlib Lean 4.35.0 formalization (lean/, 22 headline theorems, 23 Palomar targets, 35 audited declarations) replayed across 6 independent proof kernels."}
+  B22: {status: done, note: "Complete zero-Mathlib Lean 4.35.0 formalization (lean/, 28 headline theorems, 29 Palomar targets, 45 audited declarations) replayed across 6 independent proof kernels."}
   B23: {status: n/a, note: "Full deductive Lean 4.35.0 proofs supersede finite-state TLA+/Alloy design model checking."}
   B24: {status: done, note: "Mathematical core proved in Lean 4.35.0; differential verifier implemented in zero-dependency stdlib Rust with #![forbid(unsafe_code)]."}
   B25: {status: n/a, note: "Mathematical core is formally proved in Lean 4; C11 verifier is audited with -Werror -Wconversion -Wshadow, ASan+UBSan, and 100k CD_1..CD_7 fuzzing."}

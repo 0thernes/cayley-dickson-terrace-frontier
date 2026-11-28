@@ -3,7 +3,7 @@ set shell := ["bash", "-cu"]
 
 default: verify
 
-# Build and strictly audit all Lean 4.35.0 proofs (23 Palomar targets, 35 audited decls)
+# Build and strictly audit all Lean 4.35.0 proofs (29 Palomar targets, 45 audited decls)
 lean:
     cd lean && lake build && lake build PalomarChallenge && lake env lean VerifyAxioms.lean > ../results/lean_axioms_local.txt
     ! grep -E "sorryAx|_native|Lean\.ofReduceBool|Lean\.trustCompiler" results/lean_axioms_local.txt
@@ -45,7 +45,7 @@ deploy:
     gh workflow run pages.yml
 
 # Roll back GitHub Pages deployment to a known-good git tag or commit SHA
-rollback tag="v2.0.0":
+rollback tag="v2.1.0":
     git rev-parse --verify "{{tag}}"
     git checkout "{{tag}}" -- docs/site/
     git status -s docs/site/

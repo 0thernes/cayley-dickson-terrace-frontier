@@ -6,6 +6,8 @@ public import CDTerrace.TerraceLaw
 public import CDTerrace.HurwitzRupture
 public import CDTerrace.FiniteCertificates
 public import CDTerrace.PathionRupture
+public import CDTerrace.SpectralGaps
+public import CDTerrace.OddBladeExclusion
 
 /-!
 # CDTerrace.NonVacuity — Explicit Non-Vacuity & Witness Instantiation Checks
@@ -129,6 +131,44 @@ theorem nonvacuity_pillar4_witnesses :
   · rw [show (1023 : Nat) = 255 + 256 * 3 from rfl, isNormMultMask4_eq_hiAvoidsBad 255 3 (by omega)]
     rfl
   · intro h; injection h with hre; cases hre
+
+/-- Non-vacuity witness for Pillar 5 (`gray_code_bit_locking_all_n`,
+    `exponential_spectral_band_gap_all_n`, `complete_spectral_gap_dichotomy_all_n`):
+    In $\mathrm{CD}_7$ ($\dim = 128$) at `flipMask = 120 = 2^7 - 8`, `isGappedMask 7 120 = true`,
+    exact count of gapped masks is `12 = 2^4 - 4`, and the three consecutive interior bins
+    `36, 40, 44` are all empty (`0`) between populated edges $H_7^{120}(32) = 336$ and
+    $H_7^{120}(48) > 0$. -/
+theorem nonvacuity_pillar5_spectral_gaps :
+    isGappedMask 7 120 = true ∧
+    countPred (isGappedMask 7) (2 ^ 7) = 12 ∧
+    nullityHistGamma 7 120 32 = 336 ∧
+    nullityHistGamma 7 120 36 = 0 ∧
+    nullityHistGamma 7 120 40 = 0 ∧
+    nullityHistGamma 7 120 44 = 0 ∧
+    0 < nullityHistGamma 7 120 48 := by
+  have hbg := exponential_spectral_band_gap_all_n 7 (by omega)
+  have hdi := complete_spectral_gap_dichotomy_all_n 7 (by omega)
+  exact ⟨by decide, hdi.2, hbg.2.1,
+         hbg.1 36 (by omega) (by omega),
+         hbg.1 40 (by omega) (by omega),
+         hbg.1 44 (by omega) (by omega),
+         hbg.2.2⟩
+
+/-- Non-vacuity witness for Pillar 6 (`twisted_frobenius_mod2_involution`,
+    `odd_parity_zero_divisor_exclusion_all_n`, `odd_support_unit_blades_non_zd_all_n`):
+    In standard sedenions $\mathrm{CD}_4$ (`flipMask = 0`), the signed unit 3-blade
+    $x = e_1 + e_2 + e_{10}$ has odd coordinate sum (`3 % 2 = 1`) and trivial left and right
+    annihilators across all of $\mathbb{Z}^{16}$. -/
+theorem nonvacuity_pillar6_odd_blades :
+    let x := signedBladeSum [1, 2, 10] (fun _ => 1)
+    oddCoordSum 4 x ∧
+    (∀ y, (∀ t, t < 16 → cdMulCoordGamma 4 0 x y t = 0) → ∀ t, t < 16 → y t = 0) ∧
+    (∀ y, (∀ t, t < 16 → cdMulCoordGamma 4 0 y x t = 0) → ∀ t, t < 16 → y t = 0) := by
+  have h := (odd_support_unit_blades_non_zd_all_n 4 0).1 [1, 2, 10] (fun _ => 1)
+    (by decide)
+    (by intro a ha; simp at ha; rcases ha with rfl | rfl | rfl <;> omega)
+    (by intro _ _; exact Or.inl rfl)
+  exact h
 
 end
 

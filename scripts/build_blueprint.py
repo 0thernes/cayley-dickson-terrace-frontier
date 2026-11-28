@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Alexander Stephen Donahue
 """Generate the WCAG 2.2 AA Lean 4.35.0 Six-Kernel Proof Blueprint DAG at docs/site/blueprint.html,
-100% synchronized with Challenge.lean (22 headline theorems + ALL) and VerifyAxioms.lean (35 declarations)."""
+100% synchronized with Challenge.lean (28 headline theorems + ALL) and VerifyAxioms.lean (45 declarations)."""
 
 from __future__ import annotations
 
@@ -84,15 +84,33 @@ NODES: list[tuple[str, str, str, str, str, list[str], str]] = [
     ("T4f", "pillar4", "CDTerrace.PathionRupture", "T4f: Dimension-64 Split-Signature Interior Spectral Gap (CD_6 flip=56)",
      "Pure-kernel complete 9-bin histogram for CD_6(flip=56): {0:257, 4:422, 8:364, 12:336, 16:168, 20:0, 24:56, 28:172, 32:178}, certifying interior gap H_6^{56}(20) = 0.",
      ["T1e", "T2a", "T2f", "T4c"], "LEAN-6K"),
-    ("NV1-NV4", "audit", "CDTerrace.NonVacuity", "Non-Vacuity Witnesses (All 4 Pillars)",
-     "Concrete inhabited witnesses across CD_4, CD_5, CD_6 including T1f kernel basis cardinality 4, T4e 7+7 witness, and T4f gap bin 20.",
-     ["T1f", "T2f", "T3d", "T4e", "T4f"], "LEAN-6K"),
-    ("A1-A8", "audit", "CDTerrace.AdversarialTests", "8 Formal Adversarial Boundary Refutations",
-     "Machine-checked refutations of dim-64 saturation, 11D sedenion subspaces, BDI equality at n≥5, individual-bin invariance, 3rd universal multiplier, Gaussian i^2=1, 15D/unbalanced-14D Pathion subspaces (A7), and contiguous CD_6(56) bins (A8).",
-     ["T1e", "T2b", "T3b", "T4a", "T4d", "T4e", "T4f"], "LEAN-6K"),
-    ("ALL", "audit", "PalomarSolution", "Master Palomar Conjunction (23 Comparator Targets, 35 Axiom-Audited Decls)",
+    ("T5a", "pillar5", "CDTerrace.SpectralGaps", "T5a: Universal Binary Reflected Gray-Code Bit-Locking (∀ n ≥ 4)",
+     "Locks upper bits (i⊕j).testBit(n-1-d) deterministically to the Binary Reflected Gray Code of m = ν_n^std(i,j)/4 on [2^(d+1), 2^(n-1)-2^(d+1)-4] for every 0 ≤ d ≤ n-4.",
+     ["T2a", "T2b"], "LEAN-6K"),
+    ("T5b", "pillar5", "CDTerrace.SpectralGaps", "T5b: Exponential Continuous Spectral Band Gap at flip = 2^n - 8 (∀ n ≥ 6)",
+     "Proves H_n^{2^n-8}(v) = 0 for ALL 2^(n-2) < v < 3·2^(n-3) (width 2^(n-3)-1 consecutive mod-4 bins), flanked by H_n(2^(n-2)) = 42·2^(n-4) and H_n(3·2^(n-3)) > 0.",
+     ["T1d", "T2f", "T5a"], "LEAN-6K"),
+    ("T5c", "pillar5", "CDTerrace.SpectralGaps", "T5c: Complete All-n, All-Signature Spectral-Gap Dichotomy (∀ n ≥ 6)",
+     "Exact iff classification over ALL 2^n signatures: CD_n(f) has an interior mod-4 gap iff 8 | f ∧ f ∉ {0, 8, 2^(n-1), 2^(n-1)+8}, comprising exactly 2^(n-3) - 4 signatures.",
+     ["T1d", "T2d", "T5a", "T5b"], "LEAN-6K"),
+    ("T6a", "pillar6", "CDTerrace.OddBladeExclusion", "T6a: Mod-2 Twisted-Group-Algebra Frobenius Involution (∀ n, ∀ σ)",
+     "For ANY ±1 sign cocycle σ and ANY x ∈ Z^{2^n} with odd coordinate sum, left and right twisted multiplication by x are exact involutions modulo 2.",
+     ["B0", "T1a"], "LEAN-6K"),
+    ("T6b", "pillar6", "CDTerrace.OddBladeExclusion", "T6b: Universal Odd-Parity Zero-Divisor Exclusion via Odd-Pivot Inversion",
+     "Zero-Mathlib fraction-free odd-pivot Gauss-Jordan inversion proves B_L L_x = Δ_L I and B_R R_x = Δ_R I with odd Δ_L, Δ_R (hence Δ ≠ 0), forcing trivial left/right annihilators across all n and all 2^n signatures.",
+     ["T6a"], "LEAN-6K"),
+    ("T6c", "pillar6", "CDTerrace.OddBladeExclusion", "T6c: Odd-Support Unit-Blade Non-Singularity & ZD Parity Conservation",
+     "Every signed odd-support unit k-blade (all 3-, 5-, 7-blades, ...) is non-zero-divisor on both left and right across all CD_n(γ); every integer zero divisor MUST have even coordinate sum.",
+     ["T6b"], "LEAN-6K"),
+    ("NV1-NV6", "audit", "CDTerrace.NonVacuity", "Non-Vacuity Witnesses (All 6 Pillars)",
+     "Concrete inhabited witnesses across CD_4..CD_7 including T1f kernel basis cardinality 4, T4e 7+7 witness, T4f/T5b band gap in CD_7(120), and T6c unit 3-blade e_1+e_2+e_10.",
+     ["T1f", "T2f", "T3d", "T4e", "T4f", "T5c", "T6c"], "LEAN-6K"),
+    ("A1-A10", "audit", "CDTerrace.AdversarialTests", "10 Formal Adversarial Boundary Refutations",
+     "Machine-checked refutations of dim-64 saturation, 11D sedenions, BDI eq at n≥5, bin invariance, 3rd universal multiplier, Gaussian i^2=1, 15D/unbalanced-14D Pathions (A7), contiguous CD_6(56) bins (A8), even 4-blade ZD witness (A9), and naive div-8 gap rule (A10).",
+     ["T1e", "T2b", "T3b", "T4a", "T4d", "T4e", "T4f", "T5c", "T6c"], "LEAN-6K"),
+    ("ALL", "audit", "PalomarSolution", "Master Palomar Conjunction (29 Comparator Targets, 45 Axiom-Audited Decls)",
      "Replayed across Lean 4.35.0 C++, leanchecker-paranoid, lean4lean, nanoda, con-leche, and con-ron strictly within {propext, Classical.choice, Quot.sound}.",
-     ["T1f", "T2f", "T3d", "T4e", "T4f", "NV1-NV4", "A1-A8"], "LEAN-6K"),
+     ["T1f", "T2f", "T3d", "T4e", "T4f", "T5c", "T6c", "NV1-NV6", "A1-A10"], "LEAN-6K"),
 ]
 
 
@@ -267,7 +285,7 @@ def build_html() -> str:
     <section class="summary" aria-label="Verification metrics">
       <div class="stat"><strong>6 Kernels</strong><span>Lean C++, leanchecker-paranoid, lean4lean, nanoda, con-leche, con-ron</span></div>
       <div class="stat"><strong>Zero Mathlib &middot; Zero MILP</strong><span>Pure Lean 4.35.0 module system, 0 sorry, 0 native_decide</span></div>
-      <div class="stat"><strong>23 Palomar Targets</strong><span>22 headline theorems (T1a&ndash;T4f) + ALL + 4 non-vacuity + 8 refutations (35 audited)</span></div>
+      <div class="stat"><strong>29 Palomar Targets</strong><span>28 headline theorems (T1a&ndash;T6c) + ALL + 6 non-vacuity + 10 refutations (45 audited)</span></div>
       <div class="stat"><strong>Standard Axioms</strong><span>Strictly within {{propext, Classical.choice, Quot.sound}}</span></div>
     </section>
     <div class="filters" role="group" aria-label="Filter blueprint nodes by pillar">
@@ -276,6 +294,8 @@ def build_html() -> str:
       <button class="flt-btn" type="button" data-filter="pillar2" aria-pressed="false">Pillar 2 (T2a&ndash;T2f)</button>
       <button class="flt-btn" type="button" data-filter="pillar3" aria-pressed="false">Pillar 3 (T3a&ndash;T3d)</button>
       <button class="flt-btn" type="button" data-filter="pillar4" aria-pressed="false">Pillar 4 (T4a&ndash;T4f)</button>
+      <button class="flt-btn" type="button" data-filter="pillar5" aria-pressed="false">Pillar 5 (T5a&ndash;T5c)</button>
+      <button class="flt-btn" type="button" data-filter="pillar6" aria-pressed="false">Pillar 6 (T6a&ndash;T6c)</button>
       <button class="flt-btn" type="button" data-filter="audit" aria-pressed="false">Audit &amp; Refutations</button>
       <span id="dep-status" style="color:var(--muted);font-size:0.86rem;margin-left:auto;" aria-live="polite">Click any node to highlight its transitive dependency cone.</span>
     </div>

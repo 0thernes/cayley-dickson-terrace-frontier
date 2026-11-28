@@ -8,7 +8,7 @@ public import Solution
 /-!
 # Palomar Comparator Solution (`PalomarSolution.lean`)
 
-Complete zero-`sorry` implementation discharging all 23 Palomar Comparator targets
+Complete zero-`sorry` implementation discharging all 29 Palomar Comparator targets
 (`T1a`–`T4f` + `ALL`) directly from `Solution.lean`, verified across all 6 independent
 Lean 4.35.0 kernels via `lake comparator --config comparator.json --paranoid`.
 -/
@@ -39,6 +39,12 @@ public theorem prove_t4c : T4cStmt := Solution.prove_t4c
 public theorem prove_t4d : T4dStmt := Solution.prove_t4d
 public theorem prove_t4e : T4eStmt := Solution.prove_t4e
 public theorem prove_t4f : T4fStmt := Solution.prove_t4f
+public theorem prove_t5a : T5aStmt := Solution.prove_t5a
+public theorem prove_t5b : T5bStmt := Solution.prove_t5b
+public theorem prove_t5c : T5cStmt := Solution.prove_t5c
+public theorem prove_t6a : T6aStmt := Solution.prove_t6a
+public theorem prove_t6b : T6bStmt := Solution.prove_t6b
+public theorem prove_t6c : T6cStmt := Solution.prove_t6c
 public theorem prove_all_terrace_theorems : AllTerraceTheoremsStmt := Solution.prove_all_terrace_theorems
 
 end CDTerrace.Palomar

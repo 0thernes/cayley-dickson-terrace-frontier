@@ -6,5 +6,7 @@ public import CDTerrace.TerraceLaw
 public import CDTerrace.HurwitzRupture
 public import CDTerrace.FiniteCertificates
 public import CDTerrace.PathionRupture
+public import CDTerrace.SpectralGaps
+public import CDTerrace.OddBladeExclusion
 public import CDTerrace.NonVacuity
 public import CDTerrace.AdversarialTests

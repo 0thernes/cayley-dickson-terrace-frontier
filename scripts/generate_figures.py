@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 # Copyright (c) 2026 Alexander Stephen Donahue
-"""Generate all 5 publication-grade Okabe-Ito figures (PDF + PNG) and 1280x640 social preview (SVG + PNG)."""
+"""Generate all 6 publication-grade Okabe-Ito figures (PDF + PNG) and 1280x640 social preview (SVG + PNG)."""
 
 from __future__ import annotations
 
@@ -458,6 +458,108 @@ def make_fig5_bdi_and_symmetric_rupture() -> None:
     save_fig(fig, "fig5_bdi_and_symmetric_rupture")
 
 
+def make_fig6_gray_band_gap_and_odd_blades(split_data: dict[str, Any]) -> None:
+    """Fig 6: Pillar 5 Exponential Spectral Band Gaps & Dichotomy (T5a-T5c) + Pillar 6 Odd-Parity Exclusion (T6a-T6c)."""
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.6, 4.7), gridspec_kw={"wspace": 0.27})
+
+    # Left panel: Normalized spectral histogram at flip = 2^n - 8 for CD_6(56), CD_7(120), CD_8(248)
+    # showing the exact universal empty band gap (0.5, 0.75) of width 2^(n-3) - 1 consecutive mod-4 bins!
+    styles = [
+        (6, 56, OI_BLUE, "o", "-", r"$\mathrm{CD}_6(56)$: 1 empty bin [20]"),
+        (7, 120, OI_GREEN, "s", "--", r"$\mathrm{CD}_7(120)$: 3 empty bins [36..44]"),
+        (8, 248, OI_VERM, "^", "-", r"$\mathrm{CD}_8(248)$: 7 empty bins [68..92]"),
+    ]
+    ax1.axvspan(0.5, 0.75, color=OI_ORANGE, alpha=0.18, zorder=1, label=r"Universal empty band gap $(\frac{1}{2}, \frac{3}{4})$")
+    ax1.axvline(0.5, color=OI_DARK, linestyle=":", linewidth=1.1, zorder=2)
+    ax1.axvline(0.75, color=OI_DARK, linestyle=":", linewidth=1.1, zorder=2)
+
+    for n, fl, col, mk, ls, lbl in styles:
+        rec = next(r for r in split_data["levels"] if r["n"] == n)
+        ph = next(
+            p for p in rec["phases"]
+            if fl in p.get("flip_masks", []) or p["example_flip_mask"] == fl
+            or (n == 8 and len(p.get("spectral_gap_bins", [])) == 7 and p["histogram"].get("128", 0) == 672)
+        )
+        # Note: for n=8, flip_masks stores first 8 masks; find exact phase containing fl=248 by direct histogram if needed
+        half = 1 << (n - 1)
+        hdict = {int(k): int(v) for k, v in ph["histogram"].items()}
+        # Double-check all interior bins in (half/2, 3*half/4) are 0; if not, compute directly
+        lo_e = half // 2
+        hi_e = (3 * half) // 4
+        if any(hdict.get(v, 0) != 0 for v in range(lo_e + 4, hi_e, 4)):
+            import sys
+            sys.path.insert(0, str(ROOT / "src"))
+            from cd_terrace.core import nullity_histogram_gamma
+            hdict = nullity_histogram_gamma(n, fl)
+        bins = list(range(0, half + 1, 4))
+        xs = [v / half for v in bins]
+        total_pairs = ((1 << n) - 1) * ((1 << n) - 2) // 2
+        ys = [100.0 * hdict.get(v, 0) / total_pairs for v in bins]
+        ax1.plot(xs, ys, color=col, marker=mk, linestyle=ls, markersize=4.2, linewidth=1.65, label=lbl, zorder=4)
+
+    ax1.annotate(
+        r"Zero 2-blades ($\forall\,n \geq 6$)" "\n" r"Width $= 2^{n-3} - 1$ bins" "\n" r"(Gray-code quarter lock)",
+        xy=(0.625, 0.3),
+        xytext=(0.515, 11.8),
+        fontsize=8.0,
+        color="#9A4100",
+        fontweight="bold",
+        bbox={"boxstyle": "round,pad=0.22", "facecolor": "white", "edgecolor": OI_VERM, "alpha": 0.96},
+        arrowprops={"arrowstyle": "->", "color": OI_VERM, "lw": 1.0},
+    )
+    ax1.set_xlim(-0.03, 1.03)
+    ax1.set_ylim(-1.0, 26.5)
+    ax1.set_xlabel(r"Normalized nullity $\nu / 2^{n-1}$ at $\mathrm{flip} = 2^n - 8$")
+    ax1.set_ylabel(r"Share of 2-blades (% of $\binom{2^n-1}{2}$)")
+    ax1.set_title("Pillar 5: Exponential Spectral Band Gap (T5a–T5b)", fontweight="bold")
+    ax1.grid(axis="y", color=OI_LIGHT, linewidth=0.7, zorder=0)
+    ax1.legend(loc="upper right", fontsize=7.6, frameon=True, framealpha=0.95)
+
+    # Right panel: Exact Spectral-Gap Dichotomy (T5c: 2^(n-3) - 4 gapped signatures out of 2^n)
+    # + Pillar 6 Odd-Parity Zero-Divisor Exclusion summary box
+    ns_d = [6, 7, 8, 9, 10]
+    gapped_pct = [100.0 * ((1 << (n - 3)) - 4) / (1 << n) for n in ns_d]
+    gapped_cnt = [(1 << (n - 3)) - 4 for n in ns_d]
+    bars = ax2.bar(ns_d, gapped_pct, width=0.58, color=OI_BLUE, edgecolor="white", linewidth=0.7, zorder=3,
+                   label=r"Exact gapped fraction $(2^{n-3}-4)/2^n$ (T5c)")
+    ax2.axhline(12.5, color=OI_VERM, linestyle="--", linewidth=1.4, label=r"Asymptotic limit $1/8 = 12.5\%$", zorder=4)
+    for bar, cnt, pct in zip(bars, gapped_cnt, gapped_pct):
+        ax2.text(
+            bar.get_x() + bar.get_width() / 2,
+            pct - 0.35,
+            f"{cnt}\n({pct:.1f}%)",
+            ha="center",
+            va="top",
+            fontsize=7.8,
+            fontweight="bold",
+            color="white",
+            zorder=5,
+        )
+    ax2.text(
+        0.50,
+        0.13,
+        "Pillar 6 (T6a–T6c, all n, all signatures):\n"
+        r"Odd $\sum x_a \Rightarrow B_L L_x = \Delta_L I$ ($\Delta_L$ odd) $\Rightarrow$ NO zero divisors!" "\n"
+        r"All 3-, 5-, 7-, $(2m{+}1)$-unit blades non-ZD; sharp at 4-blade $e_1{+}e_2{+}e_9{-}e_{10}$.",
+        transform=ax2.transAxes,
+        ha="center",
+        va="center",
+        fontsize=7.6,
+        color=OI_DARK,
+        bbox={"boxstyle": "round,pad=0.35", "facecolor": "#F0FDF4", "edgecolor": OI_GREEN, "lw": 1.1, "alpha": 0.97},
+        zorder=6,
+    )
+    ax2.set_xticks(ns_d)
+    ax2.set_xticklabels([rf"$n={n}$" "\n" rf"($2^{{{n}}}$ sigs)" for n in ns_d])
+    ax2.set_ylim(0, 16.5)
+    ax2.set_ylabel(r"Gapped signatures (% of all $2^n$)")
+    ax2.set_title(r"Exact $2^{n-3}-4$ Dichotomy (T5c) & Pillar 6 Law", fontweight="bold")
+    ax2.grid(axis="y", color=OI_LIGHT, linewidth=0.7, zorder=0)
+    ax2.legend(loc="upper left", fontsize=7.8, frameon=True, framealpha=0.95)
+
+    save_fig(fig, "fig6_gray_band_gap_and_odd_blades")
+
+
 def make_social_preview_svg() -> None:
     MEDIA_DIR.mkdir(parents=True, exist_ok=True)
     svg = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640">
@@ -485,24 +587,24 @@ def make_social_preview_svg() -> None:
   </g>
   <text x="72" y="96" fill="#56B4E9" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" font-weight="700" letter-spacing="2">0TH-2026-019 · v{REPO_VERSION} · LEAN 4.35.0 (6 KERNELS) · RUST · ISO C11 · PYTHON</text>
   <text x="72" y="182" fill="#F8FAFC" font-family="Georgia, serif" font-size="50" font-weight="700">Cayley–Dickson Terrace Frontier</text>
-  <text x="72" y="242" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation,</text>
-  <text x="72" y="278" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">Pathion r_max = 14 (7+7 Rigidity) &amp; Dim-64 Coordinate Rupture</text>
+  <text x="72" y="242" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">Terrace Law, Gray-Code Spectral Band Gaps, Odd-Parity</text>
+  <text x="72" y="278" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">Zero-Divisor Exclusion &amp; Coordinate Norm-Multiplicativity Ruptures</text>
 
   <g transform="translate(72, 336)">
     <rect x="0" y="0" width="256" height="122" rx="12" fill="#16233D" stroke="#56B4E9" stroke-width="1.5"/>
-    <text x="20" y="38" fill="#56B4E9" font-family="ui-monospace, monospace" font-size="16" font-weight="700">MIDPOINT 42 LAW</text>
-    <text x="20" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="30" font-weight="700">42 · 2ⁿ⁻⁴</text>
-    <text x="20" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">Invariant across all 2ⁿ signatures</text>
+    <text x="20" y="38" fill="#56B4E9" font-family="ui-monospace, monospace" font-size="16" font-weight="700">PILLAR 5 · GRAY GAPS</text>
+    <text x="20" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="29" font-weight="700">2ⁿ⁻³ − 4 Masks</text>
+    <text x="20" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">All-n iff dichotomy · width 2ⁿ⁻³−1</text>
 
     <rect x="278" y="0" width="256" height="122" rx="12" fill="#16233D" stroke="#D55E00" stroke-width="1.5"/>
-    <text x="298" y="38" fill="#E69F00" font-family="ui-monospace, monospace" font-size="16" font-weight="700">PATHION EXACT T4e</text>
-    <text x="298" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="30" font-weight="700">r_max = 14 (7+7)</text>
-    <text x="298" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">Zero-MILP pure-kernel over 2³²</text>
+    <text x="298" y="38" fill="#E69F00" font-family="ui-monospace, monospace" font-size="16" font-weight="700">PILLAR 6 · ODD BLADES</text>
+    <text x="298" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="29" font-weight="700">B·Lₓ = Δ·I (odd)</text>
+    <text x="298" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">Zero odd-sum ZDs ∀n, ∀2ⁿ sigs</text>
 
     <rect x="556" y="0" width="256" height="122" rx="12" fill="#16233D" stroke="#009E73" stroke-width="1.5"/>
     <text x="576" y="38" fill="#009E73" font-family="ui-monospace, monospace" font-size="16" font-weight="700">ZERO-MATHLIB LEAN</text>
-    <text x="576" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="30" font-weight="700">23 / 23 Targets</text>
-    <text x="576" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">0 sorry · 6 independent kernels</text>
+    <text x="576" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="29" font-weight="700">29 / 29 Targets</text>
+    <text x="576" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">45 decls · 0 sorry · 6 kernels</text>
   </g>
 
   <text x="72" y="556" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="20">Alexander Stephen Donahue · ORCID 0009-0006-8168-9648 · github.com/0thernes/cayley-dickson-terrace-frontier</text>
@@ -549,20 +651,20 @@ def make_social_preview_png() -> None:
     ax.text(72, 466, "Cayley–Dickson Terrace Frontier", color="#F8FAFC", fontsize=37, fontweight="bold", family="serif")
     ax.text(
         72, 412,
-        "The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation,",
+        "Terrace Law, Gray-Code Spectral Band Gaps, Odd-Parity",
         color="#CBD5E1", fontsize=18.5, family="sans-serif",
     )
     ax.text(
         72, 378,
-        "Pathion r_max = 14 (7+7 Rigidity) & Dim-64 Coordinate Rupture",
+        "Zero-Divisor Exclusion & Coordinate Norm-Multiplicativity Ruptures",
         color="#CBD5E1", fontsize=18.5, family="sans-serif",
     )
 
     # Three KPI cards (generous padding so every glyph stays cleanly inside its rounded card)
     cards = [
-        (72, OI_SKY, "MIDPOINT 42 LAW", r"$42 \cdot 2^{n-4}$", r"Invariant across all $2^n$ signatures"),
-        (372, OI_VERM, "PATHION EXACT T4e", r"$r_{\max} = 14$ (7+7)", r"Zero-MILP pure-kernel over $2^{32}$"),
-        (672, OI_GREEN, "ZERO-MATHLIB LEAN", "23 / 23 Targets", "0 sorry · 6 independent kernels"),
+        (72, OI_SKY, "PILLAR 5 · GRAY GAPS", r"$2^{n-3}-4$ Masks", r"All-$n$ iff dichotomy · gap $2^{n-3}-1$"),
+        (372, OI_VERM, "PILLAR 6 · ODD BLADES", r"$B L_x = \Delta I$ (odd)", r"Zero odd-sum ZDs $\forall n, \forall 2^n$ sigs"),
+        (672, OI_GREEN, "ZERO-MATHLIB LEAN", "29 / 29 Targets", "45 decls · 0 sorry · 6 kernels"),
     ]
     for x0, border_col, ktitle, kval, ksub in cards:
         box = FancyBboxPatch(
@@ -598,9 +700,10 @@ def main() -> None:
     make_fig3_hurwitz_rupture(hr_data)
     make_fig4_sedenion_triple_42(sedenion_data)
     make_fig5_bdi_and_symmetric_rupture()
+    make_fig6_gray_band_gap_and_odd_blades(split_data)
     make_social_preview_svg()
     make_social_preview_png()
-    print("Generated all 5 figures (PDF+PNG) and 1280x640 social-preview.{svg,png} successfully.")
+    print("Generated all 6 figures (PDF+PNG) and 1280x640 social-preview.{svg,png} successfully.")
 
 
 if __name__ == "__main__":

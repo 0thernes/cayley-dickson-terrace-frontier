@@ -41,6 +41,21 @@ fn main() {
         println!("  \"pathion_all_14d_contain_0_16\": {},", summary.pathion_all_14d_contain_0_16);
         println!("  \"cd6_flip56_gap_bin20\": {},", summary.cd6_flip56_gap_bin20);
         println!("  \"chingon_16_ok\": {},", summary.chingon_16_ok);
+        println!(
+            "  \"pillar5_dichotomy_checked_masks\": {},",
+            summary.pillar5_dichotomy_checked_masks
+        );
+        let gcounts: Vec<String> = summary
+            .pillar5_gapped_counts
+            .iter()
+            .map(|(n, c)| format!("[{}, {}]", n, c))
+            .collect();
+        println!("  \"pillar5_gapped_counts\": [{}],", gcounts.join(", "));
+        println!(
+            "  \"pillar6_odd_blade_checks_ok\": {},",
+            summary.pillar6_odd_blade_checks_ok
+        );
+        println!("  \"pillar6_4blade_zd_ok\": {},", summary.pillar6_4blade_zd_ok);
         println!("  \"split_phases\": [");
         for (idx, (n, classes, mults, mid, gap)) in summary.split_phase_counts.iter().enumerate() {
             let comma = if idx + 1 < summary.split_phase_counts.len() { "," } else { "" };
@@ -120,6 +135,14 @@ fn main() {
             summary.pathion_greedy_ge8_failures,
             summary.cd6_flip56_gap_bin20,
             summary.chingon_16_ok
+        );
+        println!(
+            "Pillar 5: Gray-Code Bit-Locking & Spectral-Gap Dichotomy verified across {} masks (gapped counts {:?})",
+            summary.pillar5_dichotomy_checked_masks, summary.pillar5_gapped_counts
+        );
+        println!(
+            "Pillar 6: Odd-Parity Mod-2 Involution ok={}, Sharp Even 4-Blade ZD Witness ok={}",
+            summary.pillar6_odd_blade_checks_ok, summary.pillar6_4blade_zd_ok
         );
         println!("ALL CHECKS PASSED.");
     }

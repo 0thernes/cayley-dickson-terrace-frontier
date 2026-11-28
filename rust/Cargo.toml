@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: Apache-2.0
 [package]
 name = "cd-terrace"
-version = "2.1.0"
+version = "3.0.0"
 edition = "2021"
 rust-version = "1.75"
 authors = ["Alexander Stephen Donahue <0_0@0thernes.art>"]
 license = "Apache-2.0"
-description = "Exact zero-dependency verifier for the Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and Coordinate Norm-Multiplicativity Ruptures across Generalized Cayley-Dickson Algebras"
+description = "Exact zero-dependency verifier for the Dyadic-Palindromic Terrace Law, Gray-Code Spectral Band Gaps, Odd-Parity Zero-Divisor Exclusion, and Coordinate Norm-Multiplicativity Ruptures across Generalized Cayley-Dickson Algebras"
 repository = "https://github.com/0thernes/cayley-dickson-terrace-frontier"
 
 [dependencies]

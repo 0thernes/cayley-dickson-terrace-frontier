@@ -44,8 +44,8 @@ def main() -> int:
     readme_text = readme_path.read_text(encoding="utf-8")
 
     parsed = parse_axiom_lines(axioms_text)
-    if len(parsed) < 35:
-        print(f"ERROR: expected >= 35 audited declarations, found {len(parsed)}", file=sys.stderr)
+    if len(parsed) < 45:
+        print(f"ERROR: expected >= 45 audited declarations, found {len(parsed)}", file=sys.stderr)
         return 1
 
     for decl, axs in parsed.items():

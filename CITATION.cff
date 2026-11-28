@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and Coordinate Norm-Multiplicativity Ruptures Across Cayley-Dickson Algebras"
+title: "The Dyadic-Palindromic Terrace Law, Gray-Code Spectral Band Gaps, Odd-Parity Zero-Divisor Exclusion, and Coordinate Norm-Multiplicativity Ruptures Across Cayley-Dickson Algebras"
 message: "If you use this software, Lean 4 formalization, datasets, or white paper, please cite it as below."
 type: software
 authors:
@@ -8,16 +8,17 @@ authors:
     orcid: "https://orcid.org/0009-0006-8168-9648"
     email: "0_0@0thernes.art"
     affiliation: "Independent Researcher, Spokane, WA, USA"
-version: "2.1.0"
-date-released: "2026-11-27"
+version: "3.0.0"
+date-released: "2026-11-28"
 license: "Apache-2.0"
 repository-code: "https://github.com/0thernes/cayley-dickson-terrace-frontier"
 url: "https://0thernes.github.io/cayley-dickson-terrace-frontier/"
 abstract: >-
-  Zero-Mathlib Lean 4.35.0 six-kernel formalization (22 headline theorems,
-  23 Palomar Comparator targets, 35 axiom-audited declarations strictly within
+  Zero-Mathlib Lean 4.35.0 six-kernel formalization (28 headline theorems T1a-T6c,
+  29 Palomar Comparator targets, 45 axiom-audited declarations strictly within
   propext, Classical.choice, Quot.sound) and tri-language Rust/ISO C11/Python
-  differential verifiers covering: (1) universal all-n, all-signature Nilpotent
+  differential verifiers covering six algebraic pillars across generalized
+  Cayley-Dickson algebras CD_n(gamma): (1) universal all-n, all-signature Nilpotent
   Mirror Conservation, full bilinear 2-blade nilpotency, and the exact 2x2 block
   linear-algebra Z-basis isomorphism for ker L_{e_i + e_j} (T1a-T1f); (2) the
   Euclidean Dyadic-Palindromic Terrace Law, Moreno's 2-blade divisibility 4 | nu,
@@ -29,13 +30,24 @@ abstract: >-
   pure-product re-verification of de Marrais's 7xK_{2,2,2} box-kites, 42 maximal
   10D subspaces with Fano split 7+28+7), pure-kernel Pathion ceiling r_max(CD_5)=14
   with strict 7+7 half-balance rigidity across all 2^32 subsets retiring MILP from
-  the proof trust base (T4e), and pure-kernel certification of the dimension-64
-  split interior spectral gap H_6^{56}(20)=0 (T4f).
+  the proof trust base (T4e), and pure-kernel certification of CD_6(56) (T4f);
+  (5) universal all-n Binary Reflected Gray-Code bit-locking of i xor j by nu/4 (T5a),
+  exponentially wide continuous spectral band gaps of width 2^{n-3}-1 at flip = 2^n-8
+  for every n >= 6 (T5b), and the exact all-n all-signature iff spectral-gap dichotomy
+  counting 2^{n-3}-4 gapped signatures (T5c); and (6) universal all-n all-signature
+  mod-2 twisted-group-algebra Frobenius involution (T6a), fraction-free odd-pivot
+  integral matrix inversion excluding all odd-coordinate-sum integer zero divisors
+  across every dimension and signature (T6b), and non-singularity of every signed
+  odd-support unit k-blade (3-, 5-, 7-blades, ...) with zero-divisor parity
+  conservation (T6c).
 keywords:
   - cayley-dickson-algebras
   - sedenions
   - pathions
   - zero-divisors
+  - gray-code
+  - spectral-band-gap
+  - odd-parity-exclusion
   - hurwitz-radon
   - sums-of-squares
   - box-kites

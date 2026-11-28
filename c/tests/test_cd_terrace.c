@@ -51,6 +51,17 @@ int main(int argc, char **argv) {
     assert(cd_twoblade_nullity_fast(99u, 0u, 1u) == 0u);
     assert(cd_twoblade_nullity_gamma(99u, 0u, 0u, 1u) == 0u);
 
+    /* Pillar 5 & 6 boundary checks */
+    assert(cd_is_gapped_mask(6u, 56u));
+    assert(!cd_is_gapped_mask(6u, 0u));
+    assert(!cd_is_gapped_mask(6u, 8u));
+    assert(!cd_is_gapped_mask(6u, 32u));
+    assert(!cd_is_gapped_mask(6u, 40u));
+    assert(cd_is_gapped_mask(7u, 120u));
+    assert(!cd_is_gapped_mask(7u, 72u));
+    assert(!cd_is_gapped_mask(5u, 24u));
+    assert(!cd_mul_gamma_vec(99u, 0u, NULL, NULL, NULL));
+
     if (verify_all) {
         printf("CLI --verify-all PASS.\n");
     } else {

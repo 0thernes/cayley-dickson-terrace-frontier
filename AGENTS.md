@@ -6,7 +6,7 @@ This repository (`cayley-dickson-terrace-frontier`, Archive ID `0TH-2026-019`) i
 1. **Lean 4.35.0 Strictness (`lean/`):**
    - Zero Mathlib. Every `.lean` file begins with `module`.
    - Zero `sorry` (except the intentional statement-only contract `lean/PalomarChallenge.lean`, which is excluded from `defaultTargets`), zero `admit`, zero `native_decide`, zero custom axioms.
-   - Every headline theorem (`T1a`–`T4f` + master conjunction, 23 Palomar targets), 4 non-vacuity witnesses, and 8 adversarial refutations (35 audited declarations) must audit via `VerifyAxioms.lean` strictly within `{propext, Classical.choice, Quot.sound}`.
+   - Every headline theorem (`T1a`–`T6c` + master conjunction, 29 Palomar targets), 6 non-vacuity witnesses (`NV1`–`NV6`), and 10 adversarial refutations (`A1`–`A10`) (45 audited declarations) must audit via `VerifyAxioms.lean` strictly within `{propext, Classical.choice, Quot.sound}`.
    - `README.md` must contain the exact verbatim output of `results/lean_axioms.txt` (enforced by `scripts/check_readme_axioms.py`).
 2. **Epistemic Integrity:**
    - Strictly separate `[LEAN-6K]` (6-kernel machine-checked), `[EXACT-COMP]` (deterministic exact Rust/C11/Python certificates), and `[OPEN]` claims. Never claim `ALG-035`, `ALG-039`, `COMB-040`, or general real sums-of-squares solved.

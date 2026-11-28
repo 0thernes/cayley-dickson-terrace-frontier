@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
-  <title>Proof Blueprint v2.1.0 — Cayley-Dickson Terrace Frontier (Lean 4.35.0, 6 Kernels)</title>
+  <title>Proof Blueprint v3.0.0 — Cayley-Dickson Terrace Frontier (Lean 4.35.0, 6 Kernels)</title>
   <style>
     :root {
       --bg: #0b1020;
@@ -137,7 +137,7 @@
   <a class="skip-link" href="#blueprint-main">Skip to proof blueprint graph</a>
   <header>
     <div class="wrap">
-      <h1>Lean 4.35.0 Six-Kernel Proof Blueprint (v2.1.0)</h1>
+      <h1>Lean 4.35.0 Six-Kernel Proof Blueprint (v3.0.0)</h1>
       <p class="sub">Cayley-Dickson Terrace Frontier (0TH-2026-019) &mdash; Zero-Mathlib, Zero-MILP Constructive Dependency Graph</p>
       <nav aria-label="Primary navigation">
         <a href="index.html">&larr; Interactive 3D Canvas Observatory</a>
@@ -150,15 +150,17 @@
     <section class="summary" aria-label="Verification metrics">
       <div class="stat"><strong>6 Kernels</strong><span>Lean C++, leanchecker-paranoid, lean4lean, nanoda, con-leche, con-ron</span></div>
       <div class="stat"><strong>Zero Mathlib &middot; Zero MILP</strong><span>Pure Lean 4.35.0 module system, 0 sorry, 0 native_decide</span></div>
-      <div class="stat"><strong>23 Palomar Targets</strong><span>22 headline theorems (T1a&ndash;T4f) + ALL + 4 non-vacuity + 8 refutations (35 audited)</span></div>
+      <div class="stat"><strong>29 Palomar Targets</strong><span>28 headline theorems (T1a&ndash;T6c) + ALL + 6 non-vacuity + 10 refutations (45 audited)</span></div>
       <div class="stat"><strong>Standard Axioms</strong><span>Strictly within {propext, Classical.choice, Quot.sound}</span></div>
     </section>
     <div class="filters" role="group" aria-label="Filter blueprint nodes by pillar">
-      <button class="flt-btn" type="button" data-filter="all" aria-pressed="true">All (26 Nodes)</button>
+      <button class="flt-btn" type="button" data-filter="all" aria-pressed="true">All (32 Nodes)</button>
       <button class="flt-btn" type="button" data-filter="pillar1" aria-pressed="false">Pillar 1 (T1a&ndash;T1f)</button>
       <button class="flt-btn" type="button" data-filter="pillar2" aria-pressed="false">Pillar 2 (T2a&ndash;T2f)</button>
       <button class="flt-btn" type="button" data-filter="pillar3" aria-pressed="false">Pillar 3 (T3a&ndash;T3d)</button>
       <button class="flt-btn" type="button" data-filter="pillar4" aria-pressed="false">Pillar 4 (T4a&ndash;T4f)</button>
+      <button class="flt-btn" type="button" data-filter="pillar5" aria-pressed="false">Pillar 5 (T5a&ndash;T5c)</button>
+      <button class="flt-btn" type="button" data-filter="pillar6" aria-pressed="false">Pillar 6 (T6a&ndash;T6c)</button>
       <button class="flt-btn" type="button" data-filter="audit" aria-pressed="false">Audit &amp; Refutations</button>
       <span id="dep-status" style="color:var(--muted);font-size:0.86rem;margin-left:auto;" aria-live="polite">Click any node to highlight its transitive dependency cone.</span>
     </div>
@@ -393,35 +395,95 @@
         <p class="desc">Pure-kernel complete 9-bin histogram for CD_6(flip=56): {0:257, 4:422, 8:364, 12:336, 16:168, 20:0, 24:56, 28:172, 32:178}, certifying interior gap H_6^{56}(20) = 0.</p>
         <p class="deps"><strong>Depends on:</strong> T1e, T2a, T2f, T4c</p>
       </article>
-      <article class="node" data-id="NV1-NV4" data-pillar="audit" tabindex="0">
+      <article class="node" data-id="T5a" data-pillar="pillar5" tabindex="0">
         <div class="node-head">
-          <span class="nid">NV1-NV4</span>
+          <span class="nid">T5a</span>
           <span class="badge">LEAN-6K</span>
         </div>
-        <h3>Non-Vacuity Witnesses (All 4 Pillars)</h3>
-        <p class="mod"><code>CDTerrace.NonVacuity</code></p>
-        <p class="desc">Concrete inhabited witnesses across CD_4, CD_5, CD_6 including T1f kernel basis cardinality 4, T4e 7+7 witness, and T4f gap bin 20.</p>
-        <p class="deps"><strong>Depends on:</strong> T1f, T2f, T3d, T4e, T4f</p>
+        <h3>T5a: Universal Binary Reflected Gray-Code Bit-Locking (∀ n ≥ 4)</h3>
+        <p class="mod"><code>CDTerrace.SpectralGaps</code></p>
+        <p class="desc">Locks upper bits (i⊕j).testBit(n-1-d) deterministically to the Binary Reflected Gray Code of m = ν_n^std(i,j)/4 on [2^(d+1), 2^(n-1)-2^(d+1)-4] for every 0 ≤ d ≤ n-4.</p>
+        <p class="deps"><strong>Depends on:</strong> T2a, T2b</p>
       </article>
-      <article class="node" data-id="A1-A8" data-pillar="audit" tabindex="0">
+      <article class="node" data-id="T5b" data-pillar="pillar5" tabindex="0">
         <div class="node-head">
-          <span class="nid">A1-A8</span>
+          <span class="nid">T5b</span>
           <span class="badge">LEAN-6K</span>
         </div>
-        <h3>8 Formal Adversarial Boundary Refutations</h3>
+        <h3>T5b: Exponential Continuous Spectral Band Gap at flip = 2^n - 8 (∀ n ≥ 6)</h3>
+        <p class="mod"><code>CDTerrace.SpectralGaps</code></p>
+        <p class="desc">Proves H_n^{2^n-8}(v) = 0 for ALL 2^(n-2) &lt; v &lt; 3·2^(n-3) (width 2^(n-3)-1 consecutive mod-4 bins), flanked by H_n(2^(n-2)) = 42·2^(n-4) and H_n(3·2^(n-3)) &gt; 0.</p>
+        <p class="deps"><strong>Depends on:</strong> T1d, T2f, T5a</p>
+      </article>
+      <article class="node" data-id="T5c" data-pillar="pillar5" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T5c</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T5c: Complete All-n, All-Signature Spectral-Gap Dichotomy (∀ n ≥ 6)</h3>
+        <p class="mod"><code>CDTerrace.SpectralGaps</code></p>
+        <p class="desc">Exact iff classification over ALL 2^n signatures: CD_n(f) has an interior mod-4 gap iff 8 | f ∧ f ∉ {0, 8, 2^(n-1), 2^(n-1)+8}, comprising exactly 2^(n-3) - 4 signatures.</p>
+        <p class="deps"><strong>Depends on:</strong> T1d, T2d, T5a, T5b</p>
+      </article>
+      <article class="node" data-id="T6a" data-pillar="pillar6" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T6a</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T6a: Mod-2 Twisted-Group-Algebra Frobenius Involution (∀ n, ∀ σ)</h3>
+        <p class="mod"><code>CDTerrace.OddBladeExclusion</code></p>
+        <p class="desc">For ANY ±1 sign cocycle σ and ANY x ∈ Z^{2^n} with odd coordinate sum, left and right twisted multiplication by x are exact involutions modulo 2.</p>
+        <p class="deps"><strong>Depends on:</strong> B0, T1a</p>
+      </article>
+      <article class="node" data-id="T6b" data-pillar="pillar6" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T6b</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T6b: Universal Odd-Parity Zero-Divisor Exclusion via Odd-Pivot Inversion</h3>
+        <p class="mod"><code>CDTerrace.OddBladeExclusion</code></p>
+        <p class="desc">Zero-Mathlib fraction-free odd-pivot Gauss-Jordan inversion proves B_L L_x = Δ_L I and B_R R_x = Δ_R I with odd Δ_L, Δ_R (hence Δ ≠ 0), forcing trivial left/right annihilators across all n and all 2^n signatures.</p>
+        <p class="deps"><strong>Depends on:</strong> T6a</p>
+      </article>
+      <article class="node" data-id="T6c" data-pillar="pillar6" tabindex="0">
+        <div class="node-head">
+          <span class="nid">T6c</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>T6c: Odd-Support Unit-Blade Non-Singularity &amp; ZD Parity Conservation</h3>
+        <p class="mod"><code>CDTerrace.OddBladeExclusion</code></p>
+        <p class="desc">Every signed odd-support unit k-blade (all 3-, 5-, 7-blades, ...) is non-zero-divisor on both left and right across all CD_n(γ); every integer zero divisor MUST have even coordinate sum.</p>
+        <p class="deps"><strong>Depends on:</strong> T6b</p>
+      </article>
+      <article class="node" data-id="NV1-NV6" data-pillar="audit" tabindex="0">
+        <div class="node-head">
+          <span class="nid">NV1-NV6</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>Non-Vacuity Witnesses (All 6 Pillars)</h3>
+        <p class="mod"><code>CDTerrace.NonVacuity</code></p>
+        <p class="desc">Concrete inhabited witnesses across CD_4..CD_7 including T1f kernel basis cardinality 4, T4e 7+7 witness, T4f/T5b band gap in CD_7(120), and T6c unit 3-blade e_1+e_2+e_10.</p>
+        <p class="deps"><strong>Depends on:</strong> T1f, T2f, T3d, T4e, T4f, T5c, T6c</p>
+      </article>
+      <article class="node" data-id="A1-A10" data-pillar="audit" tabindex="0">
+        <div class="node-head">
+          <span class="nid">A1-A10</span>
+          <span class="badge">LEAN-6K</span>
+        </div>
+        <h3>10 Formal Adversarial Boundary Refutations</h3>
         <p class="mod"><code>CDTerrace.AdversarialTests</code></p>
-        <p class="desc">Machine-checked refutations of dim-64 saturation, 11D sedenion subspaces, BDI equality at n≥5, individual-bin invariance, 3rd universal multiplier, Gaussian i^2=1, 15D/unbalanced-14D Pathion subspaces (A7), and contiguous CD_6(56) bins (A8).</p>
-        <p class="deps"><strong>Depends on:</strong> T1e, T2b, T3b, T4a, T4d, T4e, T4f</p>
+        <p class="desc">Machine-checked refutations of dim-64 saturation, 11D sedenions, BDI eq at n≥5, bin invariance, 3rd universal multiplier, Gaussian i^2=1, 15D/unbalanced-14D Pathions (A7), contiguous CD_6(56) bins (A8), even 4-blade ZD witness (A9), and naive div-8 gap rule (A10).</p>
+        <p class="deps"><strong>Depends on:</strong> T1e, T2b, T3b, T4a, T4d, T4e, T4f, T5c, T6c</p>
       </article>
       <article class="node" data-id="ALL" data-pillar="audit" tabindex="0">
         <div class="node-head">
           <span class="nid">ALL</span>
           <span class="badge">LEAN-6K</span>
         </div>
-        <h3>Master Palomar Conjunction (23 Comparator Targets, 35 Axiom-Audited Decls)</h3>
+        <h3>Master Palomar Conjunction (29 Comparator Targets, 45 Axiom-Audited Decls)</h3>
         <p class="mod"><code>PalomarSolution</code></p>
         <p class="desc">Replayed across Lean 4.35.0 C++, leanchecker-paranoid, lean4lean, nanoda, con-leche, and con-ron strictly within {propext, Classical.choice, Quot.sound}.</p>
-        <p class="deps"><strong>Depends on:</strong> T1f, T2f, T3d, T4e, T4f, NV1-NV4, A1-A8</p>
+        <p class="deps"><strong>Depends on:</strong> T1f, T2f, T3d, T4e, T4f, T5c, T6c, NV1-NV6, A1-A10</p>
       </article>
     </section>
   </main>
@@ -432,7 +494,7 @@
   </footer>
 <script>
 "use strict";
-const DEPS = {"B0": [], "T1a": ["B0"], "T1b": ["T1a"], "T1c": ["T1a"], "T1d": ["T1b", "T1c"], "T1e": ["T1d"], "T1f": ["B0"], "T2a": ["B0"], "T2b": ["T2a"], "T2c": ["T2a", "T2b"], "T2d": ["T2a", "T2b"], "T2e": ["T2c", "T2d"], "T2f": ["T1e", "T2d"], "T3a": ["T2a", "T2b"], "T3b": ["T3a"], "T3c": ["T3b"], "T3d": ["T3b"], "T4a": ["B0"], "T4b": ["B0", "T1c"], "T4c": ["T1e", "T2a", "T2f"], "T4d": ["B0"], "T4e": ["T4a", "T4d"], "T4f": ["T1e", "T2a", "T2f", "T4c"], "NV1-NV4": ["T1f", "T2f", "T3d", "T4e", "T4f"], "A1-A8": ["T1e", "T2b", "T3b", "T4a", "T4d", "T4e", "T4f"], "ALL": ["T1f", "T2f", "T3d", "T4e", "T4f", "NV1-NV4", "A1-A8"]};
+const DEPS = {"B0": [], "T1a": ["B0"], "T1b": ["T1a"], "T1c": ["T1a"], "T1d": ["T1b", "T1c"], "T1e": ["T1d"], "T1f": ["B0"], "T2a": ["B0"], "T2b": ["T2a"], "T2c": ["T2a", "T2b"], "T2d": ["T2a", "T2b"], "T2e": ["T2c", "T2d"], "T2f": ["T1e", "T2d"], "T3a": ["T2a", "T2b"], "T3b": ["T3a"], "T3c": ["T3b"], "T3d": ["T3b"], "T4a": ["B0"], "T4b": ["B0", "T1c"], "T4c": ["T1e", "T2a", "T2f"], "T4d": ["B0"], "T4e": ["T4a", "T4d"], "T4f": ["T1e", "T2a", "T2f", "T4c"], "T5a": ["T2a", "T2b"], "T5b": ["T1d", "T2f", "T5a"], "T5c": ["T1d", "T2d", "T5a", "T5b"], "T6a": ["B0", "T1a"], "T6b": ["T6a"], "T6c": ["T6b"], "NV1-NV6": ["T1f", "T2f", "T3d", "T4e", "T4f", "T5c", "T6c"], "A1-A10": ["T1e", "T2b", "T3b", "T4a", "T4d", "T4e", "T4f", "T5c", "T6c"], "ALL": ["T1f", "T2f", "T3d", "T4e", "T4f", "T5c", "T6c", "NV1-NV6", "A1-A10"]};
 const cards = Array.from(document.querySelectorAll(".node"));
 const fltBtns = Array.from(document.querySelectorAll(".flt-btn"));
 const statusEl = document.getElementById("dep-status");

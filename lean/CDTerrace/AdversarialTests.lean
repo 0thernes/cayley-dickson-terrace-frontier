@@ -6,11 +6,13 @@ public import CDTerrace.TerraceLaw
 public import CDTerrace.HurwitzRupture
 public import CDTerrace.FiniteCertificates
 public import CDTerrace.PathionRupture
+public import CDTerrace.SpectralGaps
+public import CDTerrace.OddBladeExclusion
 
 /-!
 # CDTerrace.AdversarialTests — Zero-Axiom Adversarial Refutations & Boundary Checks
 
-Formal machine-checked refutations of 8 natural false strengthenings, verifying that EVERY
+Formal machine-checked refutations of 10 natural false strengthenings, verifying that EVERY
 quantifier bound, exception set, and strict inequality in `CDTerrace` is sharp and cannot be
 weakened:
 1. **A1 (`refute_hurwitz_saturation_at_64`):** $\omega(G_6^{\mathrm{comp}}) = 11 < 12 = \rho(64)$
@@ -37,6 +39,13 @@ weakened:
 8. **A8 (`refute_cd6_split56_contiguous_bins`):** At dimension 64, split-signature histograms are
    NO LONGER supported on contiguous multiples of 4: in $\mathrm{CD}_6(\gamma)$ at `flipMask = 56`,
    $H_6^{56}(16) > 0$ and $H_6^{56}(24) > 0$, yet $H_6^{56}(20) = 0$.
+9. **A9 (`refute_even_4blade_non_zd`):** The odd-parity hypothesis of Pillar VI (`T6b`/`T6c`) is
+   sharp: in standard sedenions $\mathrm{CD}_4(0)$, the unit 4-blade $x = e_1 + e_2 + e_9 - e_{10}$
+   (even coordinate sum `2`) annihilates $y = e_4 + e_{15} \neq 0$ (`x * y = 0`).
+10. **A10 (`refute_naive_div8_gap_rule`):** The 4-mask exception set $\{0, 8, 2^{n-1}, 2^{n-1}+8\}$
+    in Pillar V (`T5c`) is exact and cannot be dropped: in $\mathrm{CD}_7$, `f = 8` and `f = 72`
+    both satisfy `8 ∣ f` yet have NO interior mod-4 spectral gap, whereas `f = 120` has a
+    3-bin interior band gap `[36, 40, 44]`.
 -/
 
 namespace CDTerrace
@@ -132,6 +141,35 @@ theorem refute_cd6_split56_contiguous_bins :
     0 < nullityHistGamma 6 56 24 := by
   have h := cd6_split56_interior_spectral_gap
   exact ⟨by omega, h.2.2.2.2.2.1, by omega⟩
+
+/-- **Adversarial Refutation A9:** Sharpness of Pillar VI's odd-parity hypothesis — the signed
+    unit 4-blade $x = e_1 + e_2 + e_9 - e_{10}$ (even coordinate sum `2`) IS a genuine left zero
+    divisor in standard sedenions $\mathrm{CD}_4(0)$, annihilating $y = e_4 + e_{15} \neq 0$. -/
+theorem refute_even_4blade_non_zd :
+    let x := signedBladeSum [1, 2, 9, 10] (fun a => if a == 10 then -1 else 1)
+    let y := signedBladeSum [4, 15] (fun _ => 1)
+    sumInt x 16 = 2 ∧
+    y 4 ≠ 0 ∧
+    (∀ t, t < 16 → cdMulCoordGamma 4 0 x y t = 0) := by
+  have hprod : ∀ t : Fin 16,
+      cdMulCoordGamma 4 0
+        (signedBladeSum [1, 2, 9, 10] (fun a => if a == 10 then -1 else 1))
+        (signedBladeSum [4, 15] (fun _ => 1)) t.val = 0 := by decide
+  refine ⟨by decide, by decide, fun t ht => hprod ⟨t, ht⟩⟩
+
+/-- **Adversarial Refutation A10:** Sharpness of Pillar V's exact dichotomy (`T5c`) — in
+    $\mathrm{CD}_7$, `f = 8` and `f = 72 = 2^6 + 8` are nonzero multiples of 8 that have NO
+    interior mod-4 spectral gap, whereas `f = 120 = 2^7 - 8` DOES have an interior mod-4 gap. -/
+theorem refute_naive_div8_gap_rule :
+    8 % 8 = 0 ∧ 72 % 8 = 0 ∧ 120 % 8 = 0 ∧
+    ¬ hasInteriorMod4Gap 7 8 ∧
+    ¬ hasInteriorMod4Gap 7 72 ∧
+    hasInteriorMod4Gap 7 120 := by
+  have hdi := (complete_spectral_gap_dichotomy_all_n 7 (by omega)).1
+  refine ⟨rfl, rfl, rfl, ?_, ?_, ?_⟩
+  · intro h; have h1 := (hdi 8 (by omega)).mp h; revert h1; decide
+  · intro h; have h1 := (hdi 72 (by omega)).mp h; revert h1; decide
+  · exact (hdi 120 (by omega)).mpr (by decide)
 
 end
 

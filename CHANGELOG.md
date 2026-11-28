@@ -2,6 +2,23 @@
 
 All notable changes to `cayley-dickson-terrace-frontier` are documented here following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and Semantic Versioning.
 
+## [3.0.0] - 2026-11-28
+
+### Added
+- **Pillar 5 — Universal Binary Reflected Gray-Code Bit-Locking & Complete All-$n$ Spectral Band-Gap Theory (`lean/CDTerrace/SpectralGaps.lean`, `[LEAN-6K]`):**
+  - **Theorem `T5a` (`gray_code_bit_locking_all_n`):** Proves for EVERY $n \ge 4$ and $1 \le i < j < 2^n$ with $v = \nu_n^{\mathrm{std}}(i,j) = 4m$ that upper XOR bit $(i \oplus j).\mathrm{testBit}(n-1-d)$ is locked deterministically to the Binary Reflected Gray Code of $m$ (`m.testBit 0` for $d=0$ on $[4, 2^{n-1}-4]$; `xor (m.testBit (d-1)) (m.testBit d)` for $1 \le d \le n-4$ on $[2^{d+1}, 2^{n-1}-2^{d+1}-4]$).
+  - **Theorem `T5b` (`exponential_spectral_band_gap_all_n`):** Telescoping the Gray-code XOR sum yields the Dyadic-Quarter Parity Locking Law and proves an exponentially wide continuous spectral band gap at `flip = 2^n - 8` for EVERY $n \ge 6$: $H_n^{2^n-8}(v) = 0$ for all $2^{n-2} < v < 3 \cdot 2^{n-3}$ (width $2^{n-3} - 1$ consecutive mod-4 bins), flanked by $H_n^{2^n-8}(2^{n-2}) = 42 \cdot 2^{n-4}$ and $H_n^{2^n-8}(3 \cdot 2^{n-3}) > 0$ (witnessed universally by pair `(1, 25)`).
+  - **Theorem `T5c` (`complete_spectral_gap_dichotomy_all_n`):** Proves the exact all-$n$ ($n \ge 6$), all-$2^n$-signature `iff` classification: $\mathrm{CD}_n(f)$ has an interior mod-4 gap in $(0, 2^{n-1}-4)$ if and only if $8 \mid f \land f \notin \{0, 8, 2^{n-1}, 2^{n-1}+8\}$, comprising **exactly $2^{n-3} - 4$ out of $2^n$ signatures**.
+- **Pillar 6 — Universal Odd-Parity Zero-Divisor Exclusion & Odd-Pivot Integral Matrix Inversion (`lean/CDTerrace/OddBladeExclusion.lean`, `[LEAN-6K]`):**
+  - **Theorem `T6a` (`twisted_frobenius_mod2_involution`):** Proves for EVERY $n$, EVERY arbitrary $\{\pm 1\}$ sign cocycle $\sigma$, and EVERY $x \in \mathbb{Z}^{2^n}$ with odd coordinate sum that left and right twisted multiplications by $x$ are exact involutions modulo 2.
+  - **Theorem `T6b` (`odd_parity_zero_divisor_exclusion_all_n`):** Proves a self-contained zero-Mathlib fraction-free odd-pivot Gauss–Jordan matrix inversion theorem (`odd_mod2_inv_matrix_integral_inv`), yielding $B_L L_x = \Delta_L I$ and $B_R R_x = \Delta_R I$ with odd integer scalars $\Delta_L, \Delta_R$ ($\Delta \ne 0$) and trivial left/right annihilators for every odd-coordinate-sum element across every $n$ and every signature $\gamma \in \{\pm 1\}^n$.
+  - **Theorem `T6c` (`odd_support_unit_blades_non_zd_all_n`):** Proves that EVERY signed odd-support unit $k$-blade (all 3-blades, 5-blades, 7-blades, ...) is strictly non-zero-divisor on both left and right across all $\mathrm{CD}_n(\gamma)$, and contrapositively that EVERY integer zero divisor must have even coordinate sum $\sum_a x_a \equiv 0 \pmod 2$.
+- **Two New Non-Vacuity Witnesses (`NV5`–`NV6`) & Two New Adversarial Refutations (`A9`–`A10`):**
+  - `nonvacuity_pillar5_spectral_gaps` (`CD_7(120)` 3-bin gap `[36, 40, 44]`) and `nonvacuity_pillar6_odd_blades` (unit 3-blade `e_1 + e_2 + e_{10}`).
+  - `refute_even_4blade_non_zd` (`A9`: explicit unit 4-blade zero divisor `(e_1 + e_2 + e_9 - e_{10})*(e_4 + e_{15}) = 0` in $\mathrm{CD}_4(0)$ with even sum `2`) and `refute_naive_div8_gap_rule` (`A10`: `f = 8, 72` in $\mathrm{CD}_7$ are nonzero multiples of 8 with no interior gap while `f = 120` has a gap).
+  - Expands the Lean 4.35.0 six-kernel suite to **28 headline theorems, 29 Palomar Comparator targets, and 45 axiom-audited declarations** (strictly within `[propext, Classical.choice, Quot.sound]`).
+- **Tri-Language Pillar 5 & 6 Verification, Figure 6 & 32-Node Proof Blueprint:** Added exact Pillar 5 & 6 verification to Rust (`lib.rs`, `main.rs`), ISO C11 (`cd_terrace.c`, `test_cd_terrace.c`, 100k `fuzz_cd_terrace.c`), and Python (`core.py` incl. `odd_pivot_integral_inv`, `test_all.py` incl. 10 surgical mutants); added Okabe-Ito vector Figure 6 (`fig6_gray_band_gap_and_odd_blades`) and 32-node interactive Proof Blueprint (`docs/site/blueprint.html`).
+
 ## [2.1.0] - 2026-11-27
 
 ### Added

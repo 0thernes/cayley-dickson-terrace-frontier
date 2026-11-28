@@ -21,26 +21,26 @@
     <line x1="880" y1="217" x2="1200" y2="402"/>
     <line x1="1200" y1="217" x2="880" y2="402"/>
   </g>
-  <text x="72" y="96" fill="#56B4E9" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" font-weight="700" letter-spacing="2">0TH-2026-019 · v2.1.0 · LEAN 4.35.0 (6 KERNELS) · RUST · ISO C11 · PYTHON</text>
+  <text x="72" y="96" fill="#56B4E9" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" font-weight="700" letter-spacing="2">0TH-2026-019 · v3.0.0 · LEAN 4.35.0 (6 KERNELS) · RUST · ISO C11 · PYTHON</text>
   <text x="72" y="182" fill="#F8FAFC" font-family="Georgia, serif" font-size="50" font-weight="700">Cayley–Dickson Terrace Frontier</text>
-  <text x="72" y="242" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation,</text>
-  <text x="72" y="278" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">Pathion r_max = 14 (7+7 Rigidity) &amp; Dim-64 Coordinate Rupture</text>
+  <text x="72" y="242" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">Terrace Law, Gray-Code Spectral Band Gaps, Odd-Parity</text>
+  <text x="72" y="278" fill="#CBD5E1" font-family="system-ui, -apple-system, sans-serif" font-size="25">Zero-Divisor Exclusion &amp; Coordinate Norm-Multiplicativity Ruptures</text>
 
   <g transform="translate(72, 336)">
     <rect x="0" y="0" width="256" height="122" rx="12" fill="#16233D" stroke="#56B4E9" stroke-width="1.5"/>
-    <text x="20" y="38" fill="#56B4E9" font-family="ui-monospace, monospace" font-size="16" font-weight="700">MIDPOINT 42 LAW</text>
-    <text x="20" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="30" font-weight="700">42 · 2ⁿ⁻⁴</text>
-    <text x="20" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">Invariant across all 2ⁿ signatures</text>
+    <text x="20" y="38" fill="#56B4E9" font-family="ui-monospace, monospace" font-size="16" font-weight="700">PILLAR 5 · GRAY GAPS</text>
+    <text x="20" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="29" font-weight="700">2ⁿ⁻³ − 4 Masks</text>
+    <text x="20" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">All-n iff dichotomy · width 2ⁿ⁻³−1</text>
 
     <rect x="278" y="0" width="256" height="122" rx="12" fill="#16233D" stroke="#D55E00" stroke-width="1.5"/>
-    <text x="298" y="38" fill="#E69F00" font-family="ui-monospace, monospace" font-size="16" font-weight="700">PATHION EXACT T4e</text>
-    <text x="298" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="30" font-weight="700">r_max = 14 (7+7)</text>
-    <text x="298" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">Zero-MILP pure-kernel over 2³²</text>
+    <text x="298" y="38" fill="#E69F00" font-family="ui-monospace, monospace" font-size="16" font-weight="700">PILLAR 6 · ODD BLADES</text>
+    <text x="298" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="29" font-weight="700">B·Lₓ = Δ·I (odd)</text>
+    <text x="298" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">Zero odd-sum ZDs ∀n, ∀2ⁿ sigs</text>
 
     <rect x="556" y="0" width="256" height="122" rx="12" fill="#16233D" stroke="#009E73" stroke-width="1.5"/>
     <text x="576" y="38" fill="#009E73" font-family="ui-monospace, monospace" font-size="16" font-weight="700">ZERO-MATHLIB LEAN</text>
-    <text x="576" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="30" font-weight="700">23 / 23 Targets</text>
-    <text x="576" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">0 sorry · 6 independent kernels</text>
+    <text x="576" y="78" fill="#FFFFFF" font-family="Georgia, serif" font-size="29" font-weight="700">29 / 29 Targets</text>
+    <text x="576" y="106" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="14">45 decls · 0 sorry · 6 kernels</text>
   </g>
 
   <text x="72" y="556" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="20">Alexander Stephen Donahue · ORCID 0009-0006-8168-9648 · github.com/0thernes/cayley-dickson-terrace-frontier</text>

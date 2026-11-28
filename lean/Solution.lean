@@ -61,11 +61,21 @@ theorem prove_t4d : T4dStmt :=
 theorem prove_t4e : T4eStmt := pathion_exact_ceiling_14_and_7_7_rigidity
 theorem prove_t4f : T4fStmt := cd6_split56_interior_spectral_gap
 
+theorem prove_t5a : T5aStmt := gray_code_bit_locking_all_n
+theorem prove_t5b : T5bStmt := exponential_spectral_band_gap_all_n
+theorem prove_t5c : T5cStmt := complete_spectral_gap_dichotomy_all_n
+
+theorem prove_t6a : T6aStmt := twisted_frobenius_mod2_involution
+theorem prove_t6b : T6bStmt := odd_parity_zero_divisor_exclusion_all_n
+theorem prove_t6c : T6cStmt := odd_support_unit_blades_non_zd_all_n
+
 theorem prove_all_terrace_theorems : AllTerraceTheoremsStmt :=
   ⟨prove_t1a, prove_t1b, prove_t1c, prove_t1d, prove_t1e, prove_t1f,
    prove_t2a, prove_t2b, prove_t2c, prove_t2d, prove_t2e, prove_t2f,
    prove_t3a, prove_t3b, prove_t3c, prove_t3d,
-   prove_t4a, prove_t4b, prove_t4c, prove_t4d, prove_t4e, prove_t4f⟩
+   prove_t4a, prove_t4b, prove_t4c, prove_t4d, prove_t4e, prove_t4f,
+   prove_t5a, prove_t5b, prove_t5c,
+   prove_t6a, prove_t6b, prove_t6c⟩
 
 end
 end Solution

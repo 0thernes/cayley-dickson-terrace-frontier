@@ -57,6 +57,52 @@ int main(int argc, char **argv) {
                 fprintf(stderr, "Fuzz failure: nullity range at n=%u\n", n);
                 return 5;
             }
+            /* Pillar 5 (T5a): Binary Reflected Gray-Code Bit-Locking */
+            if (n >= 4u) {
+                uint32_t d_xor = i ^ j;
+                uint32_t m_bin = nu_f / 4u;
+                if (nu_f >= 4u && nu_f <= half - 4u) {
+                    if ((((d_xor >> (n - 1u)) & 1u) != 0u) != cd_gray_lock_bit(0u, m_bin)) {
+                        fprintf(stderr, "Fuzz failure: Gray bit d=0 at n=%u i=%u j=%u\n", n, i, j);
+                        return 6;
+                    }
+                }
+                for (uint32_t depth = 1u; depth <= n - 4u; depth++) {
+                    uint32_t lo_bnd = 1u << (depth + 1u);
+                    if (nu_f >= lo_bnd && nu_f <= half - lo_bnd - 4u) {
+                        if ((((d_xor >> (n - 1u - depth)) & 1u) != 0u) != cd_gray_lock_bit(depth, m_bin)) {
+                            fprintf(stderr, "Fuzz failure: Gray bit d=%u at n=%u i=%u j=%u\n", depth, n, i, j);
+                            return 7;
+                        }
+                    }
+                }
+            }
+        }
+        /* Pillar 6 (T6a): randomized odd-coordinate-sum Frobenius mod-2 involution on CD_1..CD_4 */
+        if (n <= 4u && (step & 15ULL) == 0ULL) {
+            int64_t x[16];
+            int64_t y[16];
+            int64_t tmp[16];
+            int64_t res[16];
+            int64_t sum_x = 0;
+            for (uint32_t t = 0u; t < dim; t++) {
+                uint64_t rt = splitmix64(&rng);
+                x[t] = (int64_t)((int32_t)(rt & 7ULL) - 3);
+                y[t] = (int64_t)((int32_t)((rt >> 8) & 7ULL) - 3);
+                sum_x += x[t];
+            }
+            if ((sum_x & 1) == 0) {
+                x[0] += 1;
+            }
+            if (!cd_mul_gamma_vec(n, flip, x, y, tmp) || !cd_mul_gamma_vec(n, flip, x, tmp, res)) {
+                return 8;
+            }
+            for (uint32_t t = 0u; t < dim; t++) {
+                if (((res[t] - y[t]) & 1) != 0) {
+                    fprintf(stderr, "Fuzz failure: Pillar 6 left mod-2 involution at n=%u flip=%u\n", n, flip);
+                    return 9;
+                }
+            }
         }
     }
     printf("Deterministic C11 fuzzer: %llu iterations PASSED.\n", (unsigned long long)iters);

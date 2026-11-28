@@ -1,9 +1,9 @@
 {
-  "title": "The Dyadic-Palindromic Terrace Law, Nilpotent Mirror Conservation, and Coordinate Norm-Multiplicativity Ruptures Across Cayley-Dickson Algebras",
-  "description": "Zero-Mathlib Lean 4.35.0 six-kernel formalization (22 headline theorems T1a-T4f, 23 Palomar Comparator targets, 35 axiom-audited declarations), tri-language Rust/ISO C11/Python differential verifiers across all 496 generalized algebras CD_4(gamma)-CD_8(gamma), interactive 3D Canvas observatory, cryptographic RFC 3161 and Bitcoin OpenTimestamps proofs, and 21-page AMS-LaTeX preprint (0TH-2026-019).",
+  "title": "The Dyadic-Palindromic Terrace Law, Gray-Code Spectral Band Gaps, Odd-Parity Zero-Divisor Exclusion, and Coordinate Norm-Multiplicativity Ruptures Across Cayley-Dickson Algebras",
+  "description": "Zero-Mathlib Lean 4.35.0 six-kernel formalization (28 headline theorems T1a-T6c, 29 Palomar Comparator targets, 45 axiom-audited declarations), tri-language Rust/ISO C11/Python differential verifiers across all 496 generalized algebras CD_4(gamma)-CD_8(gamma), interactive 3D Canvas observatory, cryptographic RFC 3161 and Bitcoin OpenTimestamps proofs, and AMS-LaTeX preprint (0TH-2026-019).",
   "upload_type": "software",
-  "version": "2.1.0",
-  "publication_date": "2026-11-27",
+  "version": "3.0.0",
+  "publication_date": "2026-11-28",
   "creators": [
     {
       "name": "Donahue, Alexander Stephen",
@@ -18,6 +18,9 @@
     "sedenions",
     "pathions",
     "zero divisors",
+    "Binary Reflected Gray Code",
+    "spectral band gap",
+    "odd-parity zero-divisor exclusion",
     "Hurwitz-Radon numbers",
     "sums of squares",
     "box-kites",

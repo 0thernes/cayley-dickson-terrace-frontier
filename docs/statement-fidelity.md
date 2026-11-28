@@ -1,6 +1,6 @@
 # Statement Fidelity Audit (`docs/statement-fidelity.md`)
 
-This document maps every mathematical definition and all **22 headline theorems (`T1a`–`T4f`) plus their master conjunction (`ALL`, 23 Palomar Comparator targets)** in the white paper (`paper/main.tex`, `v2.1.0`) directly to their exact formal Lean 4.35.0 specifications in `lean/Challenge.lean` and `lean/PalomarChallenge.lean`. All seven statement-fidelity gaps logged by the 2026-11-26 audit (see [`ERRATA.md`](../ERRATA.md)) are closed, and `tests/test_all.py` enforces automated symbol-existence and bijection checks so this table can never drift from `lean/Challenge.lean`.
+This document maps every mathematical definition and all **28 headline theorems (`T1a`–`T6c`) plus their master conjunction (`ALL`, 29 Palomar Comparator targets)** in the white paper (`paper/main.tex`, `v3.0.0`) directly to their exact formal Lean 4.35.0 specifications in `lean/Challenge.lean` and `lean/PalomarChallenge.lean`. All seven statement-fidelity gaps logged by the 2026-11-26 audit (see [`ERRATA.md`](../ERRATA.md)) are closed, and `tests/test_all.py` enforces automated symbol-existence and bijection checks so this table can never drift from `lean/Challenge.lean`.
 
 ## Core Definition Alignment
 
@@ -18,8 +18,10 @@ This document maps every mathematical definition and all **22 headline theorems 
 | $\rho(2^n)$ | Closed Hurwitz–Radon formula $8\lfloor n/4\rfloor + 2^{n \bmod 4}$ (classical identification with maximal real $[2^n, r, 2^n]$ composition dimension cited from Hurwitz 1922 / Radon 1922 / Adams 1962) | `CDTerrace.hurwitzRadon` | `CDTerrace.Basic` |
 | $[|S_L|, |S_R|, 2^n]$ | Coordinate norm-multiplicative pair / bitmask in Euclidean $\mathrm{CD}_n$ | `CDTerrace.isNormMultPair`, `CDTerrace.isNormMultMask`, `CDTerrace.isNormMultList` | `HurwitzRupture`, `FiniteCertificates` |
 | Box-kite vanishing product | Pure algebraic $(e_i+e_j)(e_k \pm e_l) = 0$ across all 16 coordinates | `CDTerrace.bladeProdCoord4`, `CDTerrace.boxKiteAdj` | `CDTerrace.FiniteCertificates` |
+| $g(d, m)$, `isGappedMask`, interior gap | Binary Reflected Gray-Code locking bit, exact gapped-mask predicate, and interior mod-4 spectral gap | `CDTerrace.grayLockBit`, `CDTerrace.isGappedMask`, `CDTerrace.hasInteriorMod4Gap` | `CDTerrace.SpectralGaps` |
+| $(x *_\sigma y)_t$, $L_x$, $R_x$, odd-sum | Arbitrary $\{\pm 1\}$-cocycle twisted product, multiplication matrices, odd coordinate sum, signed unit blades | `CDTerrace.twistedMul`, `CDTerrace.leftMulMat`, `CDTerrace.rightMulMat`, `CDTerrace.oddCoordSum`, `CDTerrace.signedBladeSum` | `CDTerrace.OddBladeExclusion` |
 
-## Complete Theorem Fidelity Map (22 Headline Theorems, 23 Palomar Targets)
+## Complete Theorem Fidelity Map (28 Headline Theorems, 29 Palomar Targets)
 
 | ID | Paper Theorem | Palomar Target / Statement Abbrev | Underlying Lean Theorem(s) & Exact Formula / Scope |
 | --- | --- | --- | --- |
@@ -45,23 +47,19 @@ This document maps every mathematical definition and all **22 headline theorems 
 | `T4d` | Pathion/Chingon Witnesses & Ring-Axiom Unit-Square Lemma | `prove_t4d` / `T4dStmt` | `pathion_14_and_chingon_16_witnesses` ($[14,14,32]$ & $[16,16,64]$), `domain_sq_eq_one_imp`, `int_sq_eq_one_iff`, `gaussInt_sq_eq_one_iff` (derived from commutative-domain ring axioms, zero pre-factored hypothesis) |
 | `T4e` | Pure-Kernel Pathion Ceiling $r_{\max}(\mathrm{CD}_5)=14$ & Strict $7+7$ Rigidity | `prove_t4e` / `T4eStmt` | `pathion_exact_ceiling_14_and_7_7_rigidity`: over ALL $2^{32}$ masks and all duplicate-free lists `isNormMultPair 5 S S`, $|S| \le 14$ and $|S|=14 \implies |S_{\mathrm{lo}}|=7 \land |S_{\mathrm{hi}}|=7$ (retiring external MILP solvers) |
 | `T4f` | Dimension-64 Split-Signature Interior Spectral Gap | `prove_t4f` / `T4fStmt` | `cd6_split56_interior_spectral_gap`: complete 9-bin histogram `(257, 422, 364, 336, 168, 0, 56, 172, 178)` at $\mathrm{CD}_6(\mathrm{flip}=56)$, proving interior gap $H_6^{56}(20) = 0$ |
-| `ALL` | Unified 22-Theorem Master Bundle | `prove_all_terrace_theorems` / `AllTerraceTheoremsStmt` | Conjunction of `T1aStmt`–`T4fStmt` (23rd Palomar Comparator target) |
-
-## Resolution of All 7 Audit Findings from 2026-11-26
-
-1. **Full algebra & linear-map kernel (`T1f`):** Added `cdMulCoordGamma`, `singularOrbitRepsGamma`, `twobladeKernelBasisVec`, and `twoblade_left_annihilator_basis_exact` proving an explicit 2-sparse $\mathbb{Z}$-basis isomorphism between $\ker L_{e_i+e_j}$ and the singular $2\times 2$ blocks counted by `twobladeNullityGamma`.
-2. **Cross term of $(e_i+e_j)^2$ (`T1c`):** Upgraded `T1cStmt` to assert both `cdSignGamma_anticomm` and full coordinate-wise vanishing under `cdMulCoordGamma` (`twoblade_nilpotent_full_iff`).
-3. **Uniqueness of BDI equality at $n=4$ (`T2b`):** Added `twoblade_ceiling_attained` and `twoblade_bdi_eq_iff_four` ($\forall n \ge 4$, equality $\iff n = 4$) directly into `T2bStmt`.
-4. **Hurwitz–Radon scope alignment (`T3c`):** Manuscript and Lean both explicitly distinguish the algebraic coordinate-clique bound $\omega(G_n^{\mathrm{comp}}) = n + 5$ (`T3b`), the arithmetic comparison against `hurwitzRadon n` (`T3c`), and Hurwitz/Radon/Adams's classical theorem.
-5. **Sedenion $2+2$ bad-plane splitting (`T4a`):** Proved directly in `sedenion_bad_planes_split_2_2` (`FiniteCertificates.lean`) and included in `T4aStmt`.
-6. **Non-circular box-kite inter-strut disjointness (`T4b`):** Defined `boxKiteAdj` via pure 16-coordinate vanishing product `bladeProdCoord4` (proved equal to `cdMulCoordGamma` in `bladeProdCoord4_eq_cdMul`) with zero XOR pre-filtering.
-7. **Unfactored unit-square lemma (`T4d`):** Derived `domain_sq_eq_one_imp` directly from the commutative integral-domain ring axioms (`gaussInt_sq_eq_one_iff`, `int_sq_eq_one_iff`) without pre-factoring $(c-1)(c+1)=0$.
+| `T5a` | Universal Binary Reflected Gray-Code Bit-Locking Law | `prove_t5a` / `T5aStmt` | `gray_code_bit_locking_all_n`: $\forall n \ge 4$, $1 \le i < j < 2^n$, $v = \nu_n^{\mathrm{std}}(i,j)$, $m = v/4$: bit $n-1$ of $i\oplus j$ equals bit $0$ of $m$ on $[4, 2^{n-1}-4]$, and bit $n-1-d$ equals $\mathrm{bit}_{d-1}(m)\oplus\mathrm{bit}_d(m)$ on $[2^{d+1}, 2^{n-1}-2^{d+1}-4]$ for all $1 \le d \le n-4$ |
+| `T5b` | Universal Exponential Continuous Spectral Band Gap | `prove_t5b` / `T5bStmt` | `exponential_spectral_band_gap_all_n`: $\forall n \ge 6$ at `flip = 2^n - 8`, $H_n^{2^n-8}(v) = 0$ for all $2^{n-2} < v < 3\cdot 2^{n-3}$ (width $2^{n-3}-1$ mod-4 bins), with $H_n^{2^n-8}(2^{n-2}) = 42\cdot 2^{n-4}$ and $H_n^{2^n-8}(3\cdot 2^{n-3}) > 0$ |
+| `T5c` | Complete All-$n$, All-Signature Spectral-Gap Dichotomy | `prove_t5c` / `T5cStmt` | `complete_spectral_gap_dichotomy_all_n`: $\forall n \ge 6$, $\forall f < 2^n$, `hasInteriorMod4Gap n f ↔ isGappedMask n f = true` ($8 \mid f \land f \notin \{0, 8, 2^{n-1}, 2^{n-1}+8\}$), and `countPred (isGappedMask n) (2^n) = 2^(n-3) - 4` |
+| `T6a` | Universal Mod-2 Twisted-Group-Algebra Frobenius Involution | `prove_t6a` / `T6aStmt` | `twisted_frobenius_mod2_involution`: $\forall n$, arbitrary $\{\pm 1\}$ cocycle $\sigma$, and $x \in \mathbb{Z}^{2^n}$ with `oddCoordSum n x`, left & right twisted multiplications by $x$ are involutions mod 2, matching `cdMulCoordGamma` when $\sigma = \mathrm{cdSignGamma}$ |
+| `T6b` | Universal Odd-Parity Zero-Divisor Exclusion & Odd-Pivot Integral Matrix Inversion | `prove_t6b` / `T6bStmt` | `odd_parity_zero_divisor_exclusion_all_n` (via `odd_mod2_inv_matrix_integral_inv`): $\forall n, f, x$ with `oddCoordSum n x`, $\exists B_L, \Delta_L$ (odd) with $B_L L_x = \Delta_L I$ and $\exists B_R, \Delta_R$ (odd) with $B_R R_x = \Delta_R I$, forcing trivial left and right annihilators |
+| `T6c` | Universal Odd-Support Unit-Blade Non-Singularity & ZD Parity Conservation | `prove_t6c` / `T6cStmt` | `odd_support_unit_blades_non_zd_all_n`: $\forall n, f$, every signed odd-support unit $k$-blade (`S.length % 2 = 1`, $\varepsilon \in \{\pm 1\}$) is non-zero-divisor on left and right; contrapositively every integer zero divisor has `sumInt x (2^n) % 2 = 0` |
+| `ALL` | Unified 28-Theorem Master Bundle | `prove_all_terrace_theorems` / `AllTerraceTheoremsStmt` | Conjunction of `T1aStmt`–`T6cStmt` (29th Palomar Comparator target) |
 
 ## Palomar Comparator Contract (`lean/comparator.json`)
-- **Challenge module:** `PalomarChallenge` (imports `Challenge.lean`, states all 23 targets `CDTerrace.Palomar.prove_t1a` .. `prove_t4f` and `prove_all_terrace_theorems` with intentional `sorry`; excluded from `defaultTargets`).
-- **Solution module:** `PalomarSolution` (discharges all 23 targets from `Solution.lean` with zero `sorry` and strictly standard axioms).
-- **Comparator enforcement:** `lake comparator --config comparator.json --paranoid` verifies definitional equivalence of all 23 theorem types between `PalomarChallenge` and `PalomarSolution` across all 6 independent kernels and enforces `permitted_axioms = ["propext", "Quot.sound", "Classical.choice"]`. CI also runs a real tamper-injecting negative test on `PalomarSolution` verifying that both comparator and axiom gates reject injected `sorry` and custom axioms.
+- **Challenge module:** `PalomarChallenge` (imports `Challenge.lean`, states all 29 targets `CDTerrace.Palomar.prove_t1a` .. `prove_t6c` and `prove_all_terrace_theorems` with intentional `sorry`; excluded from `defaultTargets`).
+- **Solution module:** `PalomarSolution` (discharges all 29 targets from `Solution.lean` with zero `sorry` and strictly standard axioms).
+- **Comparator enforcement:** `lake comparator --config comparator.json --paranoid` verifies definitional equivalence of all 29 theorem types between `PalomarChallenge` and `PalomarSolution` across all 6 independent kernels and enforces `permitted_axioms = ["propext", "Quot.sound", "Classical.choice"]`. CI also runs a real tamper-injecting negative test on `PalomarSolution` verifying that both comparator and axiom gates reject injected `sorry` and custom axioms.
 
 ## Non-Vacuity & Boundary Sharpness Guardrails
-- `CDTerrace.NonVacuity` instantiates 4 concrete non-vacuous witnesses covering all four pillars (`n = 4, 5, 6`, `flipMask = 8` and `56`, `cdMaxClique 6`, `doubledRightWitness 6`, `1023`, `pathionWitness14`, `chingonWitness16`, `GaussInt ⟨0, 1⟩`).
-- `CDTerrace.AdversarialTests` proves 8 explicit refutations (`A1`–`A8`), including `refute_pathion_15d_or_unbalanced_14d` (`A7`) and `refute_cd6_split56_contiguous_bins` (`A8`).
+- `CDTerrace.NonVacuity` instantiates 6 concrete non-vacuous witnesses covering all six pillars (`n = 4, 5, 6, 7`, `flipMask = 8, 56, 120`, `cdMaxClique 6`, `doubledRightWitness 6`, `1023`, `pathionWitness14`, `chingonWitness16`, `GaussInt ⟨0, 1⟩`, and unit 3-blade `e_1 + e_2 + e_{10}`).
+- `CDTerrace.AdversarialTests` proves 10 explicit refutations (`A1`–`A10`), including `refute_pathion_15d_or_unbalanced_14d` (`A7`), `refute_cd6_split56_contiguous_bins` (`A8`), `refute_even_4blade_non_zd` (`A9`: `(e_1+e_2+e_9-e_{10})(e_4+e_{15}) = 0` with even sum `2`), and `refute_naive_div8_gap_rule` (`A10`: `f = 8, 72` in $\mathrm{CD}_7$ are nonzero multiples of 8 with no interior gap, while `f = 120` has a gap).

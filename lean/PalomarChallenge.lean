@@ -40,6 +40,12 @@ public theorem prove_t4c : T4cStmt := by sorry
 public theorem prove_t4d : T4dStmt := by sorry
 public theorem prove_t4e : T4eStmt := by sorry
 public theorem prove_t4f : T4fStmt := by sorry
+public theorem prove_t5a : T5aStmt := by sorry
+public theorem prove_t5b : T5bStmt := by sorry
+public theorem prove_t5c : T5cStmt := by sorry
+public theorem prove_t6a : T6aStmt := by sorry
+public theorem prove_t6b : T6bStmt := by sorry
+public theorem prove_t6c : T6cStmt := by sorry
 public theorem prove_all_terrace_theorems : AllTerraceTheoremsStmt := by sorry
 
 end CDTerrace.Palomar
